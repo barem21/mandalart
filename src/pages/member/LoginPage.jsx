@@ -27,27 +27,20 @@ const LoginForm = styled.div`
 
 function LoginPage() {
   return (
-    <Router>
-      <LoginForm>
-        <h1>회원 로그인</h1>
-        <div className="loginForm">
-          <input type="text" name="id" placeholder="이메일" />
-          <input type="text" name="id" placeholder="비밀번호" />
-          <div>
-            <button type="button">로그인</button>
-          </div>
-        </div>
+    <LoginForm>
+      <h1>회원 로그인</h1>
+      <div className="loginForm">
+        <input type="text" name="id" placeholder="이메일" />
+        <input type="text" name="id" placeholder="비밀번호" />
         <div>
-          <Link to="/">회원가입</Link>
-          <Link to="/">아이디/비밀번호 찾기</Link>
+          <button type="button">로그인</button>
         </div>
-
-        <Routes>
-          <Route path="/" />
-          <Route path="/" />
-        </Routes>
-      </LoginForm>
-    </Router>
+      </div>
+      <div>
+        <Link to={"/join"}>회원가입</Link>
+        <Link to={"/find"}>아이디/비밀번호 찾기</Link>
+      </div>
+    </LoginForm>
   );
 }
 export default LoginPage;

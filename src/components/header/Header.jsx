@@ -1,27 +1,77 @@
 import styled from "@emotion/styled";
-import Menual from "./menual";
+import { Link } from "react-router-dom";
 const HeaderStyle = styled.div`
   display: flex;
-
-  max-width: 1200px;
-  height: 100px;
+  align-items: center;
   justify-content: space-between;
-  margin: 0 auto;
-  background-color: skyblue;
+  min-width: 1200px;
+  height: 100px;
+  padding: 0px 30px 0px 50px;
+  background-color: #fff;
 `;
-const LogoStyle = styled.div`
+
+const TopLeft = styled.div`
+  display: flex;
+  ul {
+    display: flex;
+    gap: 50px;
+  }
+  a {
+    font-size: 20px;
+    font-weight: 400;
+  }
+`;
+
+const TopLogo = styled.div`
   display: flex;
   width: 200px;
-  background-color: blue;
   align-items: center;
-  justify-content: center;
+`;
+
+const TopRight = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  span {
+    color: #ccc;
+    font-size: 11px;
+  }
+  a {
+    color: #666;
+    font-size: 14px;
+  }
 `;
 
 const Header = () => {
   return (
     <HeaderStyle>
-      <LogoStyle>logo</LogoStyle>
-      <Menual />
+      <TopLeft>
+        <TopLogo>
+          <Link to={"/"}>my.manda</Link>
+        </TopLogo>
+
+        <ul>
+          <li>
+            <Link to={"/about"}>만다라트란?</Link>
+          </li>
+          <li>
+            <Link to={"/mypage"}>나의 만다라트</Link>
+          </li>
+          <li>
+            <Link to={"/share"}>만다라트 공유</Link>
+          </li>
+          <li>
+            <Link to={"/calendar"}>계획표 캘린더</Link>
+          </li>
+        </ul>
+      </TopLeft>
+
+      <TopRight>
+        <Link to={"/login"}>로그인</Link>
+        <span>|</span>
+        <Link to={"/join"}>회원가입</Link>
+      </TopRight>
+      {/* <Menual /> */}
     </HeaderStyle>
   );
 };
