@@ -1,10 +1,11 @@
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 
 const MenuStyle = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-
+  /*
   .menuLists {
     position: absolute;
     right: 30px;
@@ -25,12 +26,14 @@ const MenuStyle = styled.div`
     align-items: center;
     top: 30px;
   }
+  */
 `;
 
 const Menual = () => {
   return (
     <MenuStyle>
       <nav className="menuLists">
+        {/*
         <div className="menuListDiv">
           <div>
             <a href="#">Menu-1</a>
@@ -69,6 +72,7 @@ const Menual = () => {
             </ul>
           </div>
         </div>
+        */}
       </nav>
     </MenuStyle>
   );
