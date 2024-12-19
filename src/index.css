@@ -104,31 +104,55 @@ a {
   text-decoration: none;
   font-family: "Noto Sans KR", sans-serif;
 }
-h1 {
-  padding: 40px 0px;
-  padding-left: 50px;
+img {
+  max-width: 100%;
+}
+select,
+input[type="text"],
+input[type="password"] {
+  height: 50px;
+  padding-left: 10px;
+  border: 1px solid #eee;
+  font-size: 15px;
+}
+textarea {
+  border: 1px solid #eee;
+  font-size: 15px;
+  font-family: "Noto Sans KR", sans-serif;
+}
+input::placeholder,
+textarea::placeholder {
+  color: #999;
+}
+input::-webkit-input-placeholder,
+textarea::-webkit-input-placeholder {
+  color: #999;
+}
+input:-ms-input-placeholder,
+textarea:-ms-input-placeholder {
+  color: #999;
+}
+
+h1.subTitle {
+  padding: 40px 0px 60px 0px;
   font-size: 64px;
   font-weight: bold;
+  letter-spacing: -1px;
+  text-align: center;
 }
 
-.btnLine {
-  height: 40px;
-  margin: 0px 2px;
-  padding: 0px 20px;
-  border: 1px solid #eee;
-  background-color: #fff;
-  cursor: pointer;
+::selection {
+  background: #ffd548;
+  color: #242424;
 }
-.btnColor {
-  height: 40px;
-  margin: 0px 2px;
-  padding: 0px 20px;
-  border: none;
-  background-color: #55ad9b;
-  color: #fff;
-  cursor: pointer;
+::-moz-selection {
+  background: #ffd548;
+  color: #242424;
 }
-
+::-webkit-selection {
+  background: #ffd548;
+  color: #242424;
+}
 /* 웹서비스 개발시 권장 */
 html,
 body:root {
@@ -137,3 +161,63 @@ body:root {
   overflow-x: hidden;
 }
 /* 웹서비스 개발시 권장 */
+
+.btnLine {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  margin: 0px 2px;
+  padding: 0px 20px;
+  border: 1px solid #eee;
+  background-color: #fff;
+  color: #666;
+  font-size: 16px;
+  cursor: pointer;
+}
+.btnColor {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 50px;
+  margin: 0px 2px;
+  padding: 0px 20px;
+  border: none;
+  background-color: #55ad9b;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+.btnPopLine {
+  height: 40px;
+  padding: 4px 20px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  background-color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+.btnPupColor {
+  height: 40px;
+  padding: 4px 20px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  background-color: #f0f0f0;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.popupInput {
+  height: 40px !important;
+  padding: 4px 10px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  background-color: #fff;
+  font-size: 14px;
+}
+.popupTextarea {
+  padding: 7px 10px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  background-color: #fff;
+}
