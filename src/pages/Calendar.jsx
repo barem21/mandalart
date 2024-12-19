@@ -338,256 +338,259 @@ const Calendar = () => {
 
   // 컴포넌트 UI 렌더링
   return (
-    <div style={{ width: "80%", height: "100%", margin: "0 auto" }}>
-      {/* 로딩 인디케이터 */}
-      {isLoading && (
-        <div
-          style={{
-            position: "fixed",
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            backgroundColor: "rgba(0,0,0,0.5)",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            zIndex: 1000,
-          }}
-        >
-          <div style={{ color: "white" }}>Loading...</div>
-        </div>
-      )}
-
-      {/* 에러 메시지 표시 */}
-      {error && (
-        <div
-          style={{
-            position: "fixed",
-            top: "20px",
-            right: "20px",
-            backgroundColor: "#ff4444",
-            color: "white",
-            padding: "10px",
-            borderRadius: "4px",
-            zIndex: 1000,
-          }}
-        >
-          {error}
-          <button
-            onClick={() => setError(null)}
+    <>
+      <h1 className="subTitle">계획표 캘린더</h1>
+      <div style={{ maxWidth: "75%", height: "100%", margin: "0 auto" }}>
+        {/* 로딩 인디케이터 */}
+        {isLoading && (
+          <div
             style={{
-              marginLeft: "10px",
-              border: "none",
-              background: "none",
-              color: "white",
-              cursor: "pointer",
+              position: "fixed",
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              backgroundColor: "rgba(0,0,0,0.5)",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              zIndex: 1000,
             }}
           >
-            ✕
-          </button>
-        </div>
-      )}
+            <div style={{ color: "white" }}>Loading...</div>
+          </div>
+        )}
 
-      {/* FullCalendar 컴포넌트 */}
-      <FullCalendar
-        // 캘린더에 필요한 플러그인들을 추가
-        plugins={[dayGridPlugin]}
-        // 초기 캘린더 뷰를 월간으로 설정
-        initialView="dayGridMonth"
-        // 날짜 선택 가능하도록 설정
-        selectable={true}
-        // 캘린더에 표시할 이벤트 데이터
-        events={events}
-        // 날짜 범위 선택 시 실행될 핸들러
-        select={handleDateSelect}
-        // 날짜 클릭 시 실행될 핸들러
-        dateClick={handleDateClick}
-        // 이벤트 클릭 시 실행될 핸들러
-        eventClick={handleEventClick}
-        // 이벤트 시간 표시 형식 설정
-        eventTimeFormat={{
-          hour: "2-digit",
-          minute: "2-digit",
-          hour12: false,
-        }}
-        // 캘린더 상단 툴바 구성 설정
-        headerToolbar={{
-          left: "prev,next",
-          center: "title",
-          right: "today",
-        }}
-        // 업무 시간 표시 활성화
-        businessHours={true}
-        // 현재 시간 표시선 활성화
-        nowIndicator={true}
-        // 캘린더 높이를 컨텐츠에 맞게 자동 조정
-        height="auto"
-        // 한국어 로케일 설정
-        locale="ko"
-        // 이벤트가 캘린더에 마운트될 때 실행되는 콜백
-        eventDidMount={info => {
-          if (info.event.end) {
-            info.el.style.borderRadius = "15px";
-          }
-        }}
-        //드래그로 수정하기 가능하도록
-        editable={true}
-      />
-
-      {/* 일정 추가/수정 모달 */}
-      {isModalOpen && (
-        <div
-          style={{
-            position: "fixed",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            backgroundColor: "white",
-            padding: "20px",
-            borderRadius: "8px",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
-            zIndex: 1000,
-          }}
-        >
-          <h2>{isEditMode ? "일정 수정" : "새 일정 추가"}</h2>
-          <form onSubmit={isEditMode ? handleUpdateEvent : handleAddEvent}>
-            {/* 일정 제목 입력 필드 */}
-            <div style={{ marginBottom: "10px" }}>
-              <input
-                type="text"
-                placeholder="일정 제목"
-                value={newEventData.title}
-                onChange={e =>
-                  setNewEventData({ ...newEventData, title: e.target.value })
-                }
-                style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
-              />
-            </div>
-
-            {/* 날짜 입력 필드 */}
-            <div style={{ marginBottom: "10px" }}>
-              <input
-                type="date"
-                value={newEventData.startDate}
-                onChange={e =>
-                  setNewEventData({
-                    ...newEventData,
-                    startDate: e.target.value,
-                  })
-                }
-                style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
-              />
-            </div>
-            <div style={{ marginBottom: "10px" }}>
-              <input
-                type="date"
-                value={newEventData.end}
-                onChange={e =>
-                  setNewEventData({ ...newEventData, start: e.target.value })
-                }
-                style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
-              />
-            </div>
-
-            {/* 시간 입력 필드 */}
-            <div style={{ marginBottom: "10px" }}>
-              <input
-                type="time"
-                value={newEventData.time}
-                onChange={e =>
-                  setNewEventData({ ...newEventData, time: e.target.value })
-                }
-                style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
-              />
-            </div>
-
-            {/* 일정 설명 입력 필드 */}
-            <div style={{ marginBottom: "10px" }}>
-              <textarea
-                placeholder="일정 설명"
-                value={newEventData.description}
-                onChange={e =>
-                  setNewEventData({
-                    ...newEventData,
-                    description: e.target.value,
-                  })
-                }
-                style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
-              />
-            </div>
-            {/* 배경색 선택 필드 */}
-            <div style={{ marginBottom: "10px" }}>
-              <input
-                type="color"
-                value={newEventData.backgroundColor}
-                onChange={e =>
-                  setNewEventData({
-                    ...newEventData,
-                    backgroundColor: e.target.value,
-                  })
-                }
-                style={{ width: "100%", marginBottom: "8px" }}
-              />
-            </div>
-            {/* 버튼 그룹 */}
-            <div
+        {/* 에러 메시지 표시 */}
+        {error && (
+          <div
+            style={{
+              position: "fixed",
+              top: "20px",
+              right: "20px",
+              backgroundColor: "#ff4444",
+              color: "white",
+              padding: "10px",
+              borderRadius: "4px",
+              zIndex: 1000,
+            }}
+          >
+            {error}
+            <button
+              onClick={() => setError(null)}
               style={{
-                display: "flex",
-                justifyContent: "flex-end",
-                gap: "8px",
+                marginLeft: "10px",
+                border: "none",
+                background: "none",
+                color: "white",
+                cursor: "pointer",
               }}
             >
-              {/* 삭제 버튼 (수정 모드일 때만 표시) */}
-              {isEditMode && (
+              ✕
+            </button>
+          </div>
+        )}
+
+        {/* FullCalendar 컴포넌트 */}
+        <FullCalendar
+          // 캘린더에 필요한 플러그인들을 추가
+          plugins={[dayGridPlugin]}
+          // 초기 캘린더 뷰를 월간으로 설정
+          initialView="dayGridMonth"
+          // 날짜 선택 가능하도록 설정
+          selectable={true}
+          // 캘린더에 표시할 이벤트 데이터
+          events={events}
+          // 날짜 범위 선택 시 실행될 핸들러
+          select={handleDateSelect}
+          // 날짜 클릭 시 실행될 핸들러
+          dateClick={handleDateClick}
+          // 이벤트 클릭 시 실행될 핸들러
+          eventClick={handleEventClick}
+          // 이벤트 시간 표시 형식 설정
+          eventTimeFormat={{
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          }}
+          // 캘린더 상단 툴바 구성 설정
+          headerToolbar={{
+            left: "prev,next",
+            center: "title",
+            right: "today",
+          }}
+          // 업무 시간 표시 활성화
+          businessHours={true}
+          // 현재 시간 표시선 활성화
+          nowIndicator={true}
+          // 캘린더 높이를 컨텐츠에 맞게 자동 조정
+          height="auto"
+          // 한국어 로케일 설정
+          locale="ko"
+          // 이벤트가 캘린더에 마운트될 때 실행되는 콜백
+          eventDidMount={info => {
+            if (info.event.end) {
+              info.el.style.borderRadius = "15px";
+            }
+          }}
+          //드래그로 수정하기 가능하도록
+          editable={true}
+        />
+
+        {/* 일정 추가/수정 모달 */}
+        {isModalOpen && (
+          <div
+            style={{
+              position: "fixed",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              backgroundColor: "white",
+              padding: "20px",
+              borderRadius: "8px",
+              boxShadow: "0 2px 10px rgba(0,0,0,0.1)",
+              zIndex: 1000,
+            }}
+          >
+            <h2>{isEditMode ? "일정 수정" : "새 일정 추가"}</h2>
+            <form onSubmit={isEditMode ? handleUpdateEvent : handleAddEvent}>
+              {/* 일정 제목 입력 필드 */}
+              <div style={{ marginBottom: "10px" }}>
+                <input
+                  type="text"
+                  placeholder="일정 제목"
+                  value={newEventData.title}
+                  onChange={e =>
+                    setNewEventData({ ...newEventData, title: e.target.value })
+                  }
+                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
+                />
+              </div>
+
+              {/* 날짜 입력 필드 */}
+              <div style={{ marginBottom: "10px" }}>
+                <input
+                  type="date"
+                  value={newEventData.startDate}
+                  onChange={e =>
+                    setNewEventData({
+                      ...newEventData,
+                      startDate: e.target.value,
+                    })
+                  }
+                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
+                />
+              </div>
+              <div style={{ marginBottom: "10px" }}>
+                <input
+                  type="date"
+                  value={newEventData.end}
+                  onChange={e =>
+                    setNewEventData({ ...newEventData, start: e.target.value })
+                  }
+                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
+                />
+              </div>
+
+              {/* 시간 입력 필드 */}
+              <div style={{ marginBottom: "10px" }}>
+                <input
+                  type="time"
+                  value={newEventData.time}
+                  onChange={e =>
+                    setNewEventData({ ...newEventData, time: e.target.value })
+                  }
+                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
+                />
+              </div>
+
+              {/* 일정 설명 입력 필드 */}
+              <div style={{ marginBottom: "10px" }}>
+                <textarea
+                  placeholder="일정 설명"
+                  value={newEventData.description}
+                  onChange={e =>
+                    setNewEventData({
+                      ...newEventData,
+                      description: e.target.value,
+                    })
+                  }
+                  style={{ width: "100%", padding: "8px", marginBottom: "8px" }}
+                />
+              </div>
+              {/* 배경색 선택 필드 */}
+              <div style={{ marginBottom: "10px" }}>
+                <input
+                  type="color"
+                  value={newEventData.backgroundColor}
+                  onChange={e =>
+                    setNewEventData({
+                      ...newEventData,
+                      backgroundColor: e.target.value,
+                    })
+                  }
+                  style={{ width: "100%", marginBottom: "8px" }}
+                />
+              </div>
+              {/* 버튼 그룹 */}
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "flex-end",
+                  gap: "8px",
+                }}
+              >
+                {/* 삭제 버튼 (수정 모드일 때만 표시) */}
+                {isEditMode && (
+                  <button
+                    type="button"
+                    onClick={() => handleDeleteEvent(selectedEvent.id)}
+                    style={{
+                      padding: "8px 16px",
+                      backgroundColor: "#dc3545",
+                      color: "white",
+                      border: "none",
+                    }}
+                  >
+                    삭제
+                  </button>
+                )}
+                {/* 취소 버튼 */}
                 <button
                   type="button"
-                  onClick={() => handleDeleteEvent(selectedEvent.id)}
+                  onClick={() => {
+                    setIsModalOpen(false);
+                    setIsEditMode(false);
+                    setSelectedEvent(null);
+                    setNewEventData({
+                      title: "",
+                      description: "",
+                      backgroundColor: "#3788d8",
+                      time: "",
+                    });
+                  }}
+                  style={{ padding: "8px 16px" }}
+                >
+                  취소
+                </button>
+                {/* 추가/수정 버튼 */}
+                <button
+                  type="submit"
                   style={{
                     padding: "8px 16px",
-                    backgroundColor: "#dc3545",
+                    backgroundColor: "#3788d8",
                     color: "white",
                     border: "none",
                   }}
                 >
-                  삭제
+                  {isEditMode ? "수정" : "추가"}
                 </button>
-              )}
-              {/* 취소 버튼 */}
-              <button
-                type="button"
-                onClick={() => {
-                  setIsModalOpen(false);
-                  setIsEditMode(false);
-                  setSelectedEvent(null);
-                  setNewEventData({
-                    title: "",
-                    description: "",
-                    backgroundColor: "#3788d8",
-                    time: "",
-                  });
-                }}
-                style={{ padding: "8px 16px" }}
-              >
-                취소
-              </button>
-              {/* 추가/수정 버튼 */}
-              <button
-                type="submit"
-                style={{
-                  padding: "8px 16px",
-                  backgroundColor: "#3788d8",
-                  color: "white",
-                  border: "none",
-                }}
-              >
-                {isEditMode ? "수정" : "추가"}
-              </button>
-            </div>
-          </form>
-        </div>
-      )}
-    </div>
+              </div>
+            </form>
+          </div>
+        )}
+      </div>
+    </>
   );
 };
 
