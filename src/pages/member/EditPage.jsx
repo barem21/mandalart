@@ -4,10 +4,13 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { deleteMember, patchMember } from "../../apis/member";
+import { deleteMember, getSession, patchMember } from "../../apis/member";
 import SubpageVisual from "../../components/subpageVisual/SubpageVisual";
 import { UserInfoContext } from "../../contexts/UserInfoContext";
-import PopupLayout from "../../contexts/PopupLayout";
+import PopupLayout from "../../components/PopupLayout";
+
+//세션 생성
+const LOGIN_SESSION_KEY = "login_session";
 
 const MemberJoinWrap = styled.div`
   padding: 0px 50px;
@@ -90,22 +93,24 @@ function EditPage() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { userInfo } = useContext(UserInfoContext);
   const navigate = useNavigate();
+  const sessionData = getSession(LOGIN_SESSION_KEY);
 
   const closeModal = () => {
     setIsModalVisible(false);
   };
 
   const {
-    handleSubmit,
     register,
+    handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      email: userInfo?.userId,
+      email: "",
       password: "",
       new_password: "",
       new_password_confirm: "",
-      nickname: userInfo?.userNickname,
+      nickname: "",
     },
     mode: "onBlur",
     resolver: yupResolver(schema),
@@ -133,7 +138,7 @@ function EditPage() {
       const result = await deleteMember(data); //axios 전송하기(삭제)
       if (result.data) {
         alert("회원탈퇴가 완료되었습니다.");
-        navigate("/");
+        navigate("/logout");
       } else {
         alert("회원탈퇴가 실패되었습니다.\n다시 시도해 주세요.");
       }
@@ -144,13 +149,17 @@ function EditPage() {
 
   useEffect(() => {
     //console.log(userInfo);
-    if (!userInfo.userId) {
+    if (!sessionData) {
       alert("회원 로그인이 필요합니다.");
       navigate("/login");
     }
     return () => {};
   }, []);
 
+  useEffect(() => {
+    setValue("email", sessionData.resultData.userId);
+    setValue("nickname", sessionData.resultData.nickName);
+  });
   return (
     <>
       <SubpageVisual></SubpageVisual>
@@ -163,7 +172,7 @@ function EditPage() {
               <label>
                 이메일 <span>*</span>
               </label>
-              <input type="text" value={userInfo?.userId} readOnly />
+              <input type="text" {...register("email")} readOnly />
             </div>
 
             <div className="inputBox">
@@ -262,7 +271,7 @@ function EditPage() {
             onClose={closeModal}
             title={"회원탈퇴하기"}
           >
-            <form onSubmit={handleOutSubmit()}>
+            <form onSubmit={e => handleOutSubmit(e)}>
               <div className="guideText inputBox">
                 회원을 탈퇴하시면 등록하신 만다라트 계획표 및 공유 게시물이 모두
                 삭제됩니다. 탈퇴하시겠습니까?

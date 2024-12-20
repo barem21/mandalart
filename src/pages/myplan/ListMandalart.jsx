@@ -6,7 +6,11 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { UserInfoContext } from "../../contexts/UserInfoContext";
-import PopupLayout from "../../contexts/PopupLayout";
+import PopupLayout from "../../components/PopupLayout";
+import { getSession } from "../../apis/member";
+
+//세션 생성
+const LOGIN_SESSION_KEY = "login_session";
 
 //임시 데이터
 const sampleData = [
@@ -86,6 +90,7 @@ function MyPlan() {
   const [isModalVisible, setIsModalVisible] = useState(false);
   const { userInfo } = useContext(UserInfoContext);
   const navigate = useNavigate();
+  const sessionData = getSession(LOGIN_SESSION_KEY);
 
   const closeModal = () => {
     setIsModalVisible(false);
@@ -113,7 +118,7 @@ function MyPlan() {
 
   useEffect(() => {
     //console.log(userInfo);
-    if (!userInfo.userId) {
+    if (!sessionData) {
       alert("회원 로그인이 필요합니다.");
       navigate("/login?url=/myplan");
       return;

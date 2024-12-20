@@ -1,12 +1,15 @@
 import styled from "@emotion/styled";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { loginMember } from "../../apis/member";
+import { getSession, loginMember, setSession } from "../../apis/member";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SubpageVisual from "../../components/subpageVisual/SubpageVisual";
 import { UserInfoContext } from "../../contexts/UserInfoContext";
+
+//세션 생성
+const LOGIN_SESSION_KEY = "login_session";
 
 const LoginWrap = styled.div`
   .loginForm {
@@ -14,17 +17,20 @@ const LoginWrap = styled.div`
     margin: 0px auto;
     padding: 0px 50px;
   }
-  .inputBox {
+  .loginForm .inputBox {
+    display: block;
     margin-bottom: 5px;
+    padding: 0px;
+    border: none;
   }
-  .inputBox label {
+  .loginForm .inputBox label {
     display: inline-block;
     margin: 10px 0px;
   }
-  .inputBox input {
+  .loginForm .inputBox input {
     width: 100%;
   }
-  button {
+  .loginForm button {
     width: 100%;
     margin: 0px;
   }
@@ -63,6 +69,7 @@ const schema = yup.object({
 function LoginPage() {
   const { setUserInfo } = useContext(UserInfoContext);
   const navigate = useNavigate();
+  const sessionData = getSession(LOGIN_SESSION_KEY);
 
   const {
     handleSubmit,
@@ -80,11 +87,18 @@ function LoginPage() {
   const onSubmit = async data => {
     try {
       const result = await loginMember(data); //axios 전송하기
-      if (result.data) {
+      //console.log(result);
+
+      if (result) {
+        //if (result.data) {
+        //session storage에 보관
+        setSession(LOGIN_SESSION_KEY, result);
+        //setSession(result.data);
+
         setUserInfo({
-          userId: "gogildong@gmail.com",
-          userNickname: "고길동",
-          userPic: "asdf.png",
+          userId: result.resultData.userId,
+          userNickname: result.resultData.nickName,
+          userPic: result.resultData.pic,
           userRole: "member",
         });
 
@@ -96,6 +110,12 @@ function LoginPage() {
       console.log("로그인 실패:", error);
     }
   };
+
+  useEffect(() => {
+    if (sessionData) {
+      navigate("/");
+    }
+  }, []);
 
   return (
     <>
