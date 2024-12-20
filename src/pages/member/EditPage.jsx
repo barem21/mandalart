@@ -45,7 +45,7 @@ const MemberJoinWrap = styled.div`
 `;
 const ErrorMessage = styled.p`
   margin-left: 10px;
-  color: #ff3300;
+  color: #55ad9b;
   font-size: 13px;
 `;
 
@@ -69,7 +69,10 @@ const ButtonWrap = styled.div`
 //yup 관련 설정
 //1. schema를 먼저 설정한다.
 const schema = yup.object({
-  password: yup.string().required("비밀번호는 필수입니다."),
+  password: yup
+    .string()
+    .required("비밀번호는 필수입니다.")
+    .min(8, "비밀번호는 8자리 이상입니다."),
   /*
   new_password: yup
     .string()
@@ -159,7 +162,8 @@ function EditPage() {
   useEffect(() => {
     setValue("email", sessionData.resultData.userId);
     setValue("nickname", sessionData.resultData.nickName);
-  });
+    return () => {};
+  }, []);
   return (
     <>
       <SubpageVisual></SubpageVisual>
@@ -172,7 +176,12 @@ function EditPage() {
               <label>
                 이메일 <span>*</span>
               </label>
-              <input type="text" {...register("email")} readOnly />
+              <input
+                type="text"
+                {...register("email")}
+                style={{ backgroundColor: "#f5f5f5" }}
+                readOnly
+              />
             </div>
 
             <div className="inputBox">

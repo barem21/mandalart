@@ -46,7 +46,7 @@ const LoopContent = ({ datas }) => {
     <ShowMandalartList>
       {datas.map(data => (
         <div className="loopContent" key={data.id}>
-          <Link to={`/share/detail?id=${data.id}`}>
+          <Link to={`/share/view?id=${data.id}`}>
             <div className="profileImage">
               <img src={data.img} alt="" />
               <div className="voteCount">추천 {data.vote}</div>

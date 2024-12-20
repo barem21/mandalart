@@ -26,7 +26,7 @@ const MandalartDetailView = styled.div`
   }
   .detailWrap .inputBox label {
     display: inline-block;
-    min-width: 160px;
+    min-width: 200px;
   }
   .detailWrap .viewType {
     display: flex;
@@ -36,7 +36,7 @@ const MandalartDetailView = styled.div`
 const ButtonWrap = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   padding-top: 40px;
   border-top: 1px solid #eee;
 `;
@@ -93,7 +93,8 @@ const chartData = [
   },
 ];
 
-function DetailMandalart() {
+function ViewMandalart() {
+  const divBox = 81; //총 div
   const [isDeleteVisible, setIsDeleteVisible] = useState(false); //삭제하기 팝업
   const navigate = useNavigate();
 
@@ -134,7 +135,10 @@ function DetailMandalart() {
           <label>작성자/작성일</label>
           <span>마르고닮도록 / 2024-12-01</span>
         </div>
-        <div className="inputBox borderNone">
+        <div
+          className="inputBox borderNone"
+          style={{ alignItems: "flex-start" }}
+        >
           <label>계획표 보기</label>
           <div className="viewType">
             <button className="btnColor">만다라트로 보기</button>
@@ -143,7 +147,42 @@ function DetailMandalart() {
         </div>
         <div className="inputBox">
           <label></label>
-          <div>만다라트 계획표 출력</div>
+          <div>
+            {/* 만다라트 계획표 출력 */}
+
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                flexWrap: "wrap",
+                width: "1003px",
+                border: "2px solid #666",
+              }}
+            >
+              {/* 만다라트 계획표 출력 */}
+              {[...Array(divBox)].map((item, index) => {
+                return index < divBox ? (
+                  <div
+                    key={index}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      width: "111px",
+                      height: "111px",
+                      borderRight: "1px solid #eee",
+                      borderBottom: "1px solid #eee",
+                      backgroundColor: `${index === 40 ? "#D8EFD3" : ""}`,
+                    }}
+                  >
+                    {index + 1}
+                  </div>
+                ) : (
+                  ""
+                );
+              })}
+            </div>
+          </div>
         </div>
 
         <div className="inputBox borderNone">
@@ -250,4 +289,4 @@ function DetailMandalart() {
   );
 }
 
-export default DetailMandalart;
+export default ViewMandalart;

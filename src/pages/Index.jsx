@@ -76,9 +76,13 @@ const MainLayout = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 90%;
-    margin: 0 auto;
     margin-bottom: 15px;
+    padding: 0px 5% 0px 5%;
+  }
+  .mainContent .titleWrap h4 {
+    font-size: 36px;
+    font-weight: 300;
+    letter-spacing: -3px;
   }
   .mainContent .titleWrap .btnMore {
     color: #999;
@@ -145,7 +149,12 @@ function Index() {
 
       <div className="mainContent">
         <div className="titleWrap">
-          <h4>만다라트 공유하기</h4>
+          <h4>
+            <span style={{ color: "#55ad9b", fontWeight: "700" }}>
+              만다라트
+            </span>{" "}
+            공유하기
+          </h4>
           <Link to={"/share"} className="btnMore">
             + 더보기
           </Link>

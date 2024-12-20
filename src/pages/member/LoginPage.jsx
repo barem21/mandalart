@@ -38,7 +38,7 @@ const LoginWrap = styled.div`
 
 const ErrorMessage = styled.p`
   margin-bottom: 10px;
-  color: #ff3300;
+  color: #55ad9b;
   font-size: 13px;
 `;
 

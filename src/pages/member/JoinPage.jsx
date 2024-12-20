@@ -36,7 +36,7 @@ const MemberJoinWrap = styled.div`
 `;
 const ErrorMessage = styled.p`
   margin-left: 10px;
-  color: #ff3300;
+  color: #55ad9b;
   font-size: 13px;
 `;
 
@@ -254,9 +254,7 @@ function JoinPage() {
 
                 {/* 에러내용 출력 */}
                 {errors.policy && (
-                  <span style={{ color: "#ff3300", fontSize: "14px" }}>
-                    ({errors.policy?.message})
-                  </span>
+                  <ErrorMessage>({errors.policy?.message})</ErrorMessage>
                 )}
               </div>
             </Agreements>

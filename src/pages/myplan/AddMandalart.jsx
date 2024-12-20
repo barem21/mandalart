@@ -141,6 +141,7 @@ function AddMandalart() {
               <br />
               4. 계획표 관리 : 계획표를 정기적으로 검토하고 수정하며 실행합니다.
             </div>
+
             <div
               style={{
                 display: "flex",
