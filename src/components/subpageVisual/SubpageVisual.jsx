@@ -2,7 +2,12 @@ import styled from "@emotion/styled";
 import { useLocation } from "react-router-dom";
 
 const SubVisualTop = styled.div`
-  min-height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 150px;
+  font-size: 0px;
+  overflow: hidden;
   img {
     object-fit: cover;
     max-width: none;

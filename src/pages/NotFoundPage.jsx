@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { Link } from "react-router-dom";
 
 const NotFoundContent = styled.div`
   position: fixed;
@@ -11,17 +12,8 @@ const NotFoundContent = styled.div`
   background: #f5f5f5;
   align-items: center;
 
-  h1 {
-    margin-bottom: 20px;
-  }
-
-  button {
-    margin-right: 10px;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    background: #ddd;
-    cursor: pointer;
+  .ButtonWrap {
+    display: flex;
   }
 `;
 
@@ -29,10 +21,14 @@ function NotFoundPage() {
   return (
     <NotFoundContent>
       <div>
-        <h1>요청하신 페이지를 찾을 수 없습니다.</h1>
-        <div>
-          <button type="button">이전 페이지로</button>
-          <button type="button">메인 페이지로</button>
+        <h1 className="subTitle">요청하신 페이지를 찾을 수 없습니다.</h1>
+        <div className="ButtonWrap">
+          <Link to={"/"} className="btnLine">
+            이전 페이지로
+          </Link>
+          <Link to={"/"} className="btnColor">
+            메인 페이지로
+          </Link>
         </div>
       </div>
     </NotFoundContent>

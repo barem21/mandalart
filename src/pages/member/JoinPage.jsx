@@ -1,5 +1,4 @@
 import styled from "@emotion/styled";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
@@ -107,7 +106,6 @@ const schema = yup.object({
   policy: yup.boolean().oneOf([true], "필수"),
 });
 
-//2. schema가 만들어지면 hookform과 연결한다.(resolver)
 function JoinPage() {
   const navigate = useNavigate();
 
@@ -130,17 +128,14 @@ function JoinPage() {
 
   const onSubmit = async data => {
     try {
-      navigate("/login");
-      /*
-      const result = await postMember(data); //axios 전송하기
+      const result = await postMember(data); //axios 전송하기(등록)
       if (result.data) {
-        //로그인 페이지로 이동
+        alert("회원정보 수정이 완료되었습니다.");
         navigate("/login");
       } else {
         //회원가입 실패
         alert("회원가입이 실패되었습니다.\n다시 시도해 주세요.");
       }
-      */
     } catch (error) {
       console.log("회원가입 실패:", error);
     }

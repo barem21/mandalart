@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import LoopContent from "../../components/mandalart/LoopContent";
 
 //임시 데이터
-const SampleData = [
+const sampleData = [
   {
     id: 1,
     img: "share_mandalart.png",
@@ -68,7 +68,7 @@ function ListMandalart() {
     <>
       <h1 className="subTitle">만다라트 공유</h1>
       <BoardTop>
-        <p className="">등록된 만라다트 계획표 : {SampleData?.length}건</p>
+        <p className="">등록된 만라다트 계획표 : {sampleData?.length}건</p>
 
         <form>
           <div className="boardSearch">
@@ -91,7 +91,7 @@ function ListMandalart() {
         </form>
       </BoardTop>
 
-      <LoopContent datas={SampleData} />
+      <LoopContent datas={sampleData} />
 
       <ButtonWrap>
         <Link to={"/share/add"} className="btnColor">

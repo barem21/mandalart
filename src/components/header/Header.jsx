@@ -1,5 +1,7 @@
 import styled from "@emotion/styled";
+import { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { UserInfoContext } from "../../contexts/UserInfoContext";
 
 const HeaderWrap = styled.div`
   display: flex;
@@ -14,7 +16,6 @@ const HeaderWrap = styled.div`
 const HeaderLeft = styled.div`
   display: flex;
 `;
-
 const HeaderLogo = styled.div`
   display: flex;
   width: 200px;
@@ -43,17 +44,28 @@ const HeaderRight = styled.div`
   display: flex;
   align-items: center;
   gap: 15px;
-  span {
-    color: #ccc;
-    font-size: 11px;
-  }
   a {
     color: #666;
     font-size: 14px;
   }
+  .vLine {
+    color: #ccc;
+    font-size: 11px;
+  }
+  .userInfo {
+    margin-right: 20px;
+    color: #666;
+    font-size: 14px;
+  }
+  .userInfo span {
+    color: #55ad9b;
+    font-weight: 700;
+  }
 `;
 
 const Header = () => {
+  const { userInfo } = useContext(UserInfoContext);
+
   const location = useLocation(); //현재 페이지 확인
 
   return (
@@ -92,9 +104,22 @@ const Header = () => {
       </HeaderLeft>
 
       <HeaderRight>
-        <Link to={"/login"}>로그인</Link>
-        <span>|</span>
-        <Link to={"/join"}>회원가입</Link>
+        {userInfo.userId ? (
+          <>
+            <p className="userInfo">
+              <span>{userInfo.userNickname}</span>님, 환영합니다.
+            </p>
+            <Link to={"/logout"}>로그아웃</Link>
+            <span className="vLine">|</span>
+            <Link to={"/modify"}>정보수정</Link>
+          </>
+        ) : (
+          <>
+            <Link to={"/login"}>로그인</Link>
+            <span className="vLine">|</span>
+            <Link to={"/join"}>회원가입</Link>
+          </>
+        )}
       </HeaderRight>
     </HeaderWrap>
   );
