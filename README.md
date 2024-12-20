@@ -1,4 +1,4 @@
-# 첫 프로젝트 연습(TODO)
+# 첫 프로젝트(MANDALART)
 
 ## 📅 프로젝트 개발기간
 
@@ -6,8 +6,8 @@
 
 ## 👨‍👩‍👦‍👦 팀구성 및 역할
 
-- FE : 김재범(팀장), 서동욱(팀원)
-- BE : -
+- FE : 김재범(팀장), 서동욱
+- BE : 사공수기(팀장), 권혜지, 송은아, 임현찬, 장재웅
 
 ## 📚 Overview
 
@@ -97,19 +97,22 @@ git push origin 브랜치명
 
 ```
 todo_project
+├─ .gitignore
 ├─ .prettierrc
 ├─ eslint.config.js
 ├─ index.html
 ├─ package-lock.json
 ├─ package.json
 ├─ public
+│  ├─ about_mandalart.png
 │  ├─ main_swiper1.png
 │  ├─ main_swiper2.png
 │  ├─ main_swiper3.png
 │  ├─ share_mandalart.png
 │  ├─ share_mandalart2.png
 │  ├─ top_about.png
-│  └─ top_member.png
+│  ├─ top_member.png
+│  └─ top_member_orig.png
 ├─ README.md
 ├─ src
 │  ├─ apis
@@ -125,28 +128,36 @@ todo_project
 │  │  ├─ Layout.jsx
 │  │  ├─ mandalart
 │  │  │  └─ LoopContent.jsx
+│  │  ├─ ScrollTop.jsx
+│  │  ├─ ShareSns.jsx
 │  │  └─ subpageVisual
 │  │     └─ SubpageVisual.jsx
 │  ├─ contants
+│  ├─ contexts
+│  │  ├─ PopupLayout.jsx
+│  │  └─ UserInfoContext.jsx
 │  ├─ index.css
 │  ├─ main.jsx
 │  ├─ pages
 │  │  ├─ About.jsx
 │  │  ├─ Calendar.jsx
 │  │  ├─ Index.jsx
-│  │  ├─ mandalart
-│  │  │  ├─ DetailMandalart.jsx
-│  │  │  ├─ EditMandalart.jsx
-│  │  │  ├─ ListMandalart.jsx
-│  │  │  └─ WriteMandalart.jsx
 │  │  ├─ member
 │  │  │  ├─ EditPage.jsx
 │  │  │  ├─ JoinPage.jsx
-│  │  │  └─ LoginPage.jsx
-│  │  ├─ mypage
+│  │  │  ├─ LoginPage.jsx
+│  │  │  └─ LogoutPage.jsx
+│  │  ├─ myplan
+│  │  │  ├─ AddMandalart.jsx
 │  │  │  ├─ DetailMandalart.jsx
+│  │  │  ├─ EditMandalart.jsx
 │  │  │  └─ ListMandalart.jsx
-│  │  └─ NotFoundPage.jsx
+│  │  ├─ NotFoundPage.jsx
+│  │  └─ share
+│  │     ├─ DetailMandalart.jsx
+│  │     ├─ EditMandalart.jsx
+│  │     ├─ ListMandalart.jsx
+│  │     └─ WriteMandalart.jsx
 │  └─ utils
 └─ vite.config.js
 ```
