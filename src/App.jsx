@@ -13,8 +13,8 @@ import ModifyPage from "./pages/member/EditPage";
 import ListMandalart from "./pages/share/ListMandalart";
 import AddMandalart from "./pages/myplan/AddMandalart";
 import AddShareMandalart from "./pages/share/AddMandalart";
-import DetailShareMandalart from "./pages/share/DetailMandalart";
-import DetailMandalart from "./pages/myplan/DetailMandalart";
+import ViewShareMandalart from "./pages/share/ViewMandalart";
+import ViewMandalart from "./pages/myplan/ViewMandalart";
 import EditMandalart from "./pages/myplan/EditMandalart";
 import EditShareMandalart from "./pages/share/EditMandalart";
 import ScrollToTop from "./components/ScrollTop";
@@ -36,7 +36,7 @@ function App() {
             <Route path="/myplan">
               <Route index element={<Mypage />} />
               <Route path="/myplan/add" element={<AddMandalart />} />
-              <Route path="/myplan/detail" element={<DetailMandalart />} />
+              <Route path="/myplan/view" element={<ViewMandalart />} />
               <Route path="/myplan/edit" element={<EditMandalart />} />
             </Route>
 
@@ -44,7 +44,7 @@ function App() {
             <Route path="/share">
               <Route index element={<ListMandalart />} />
               <Route path="/share/add" element={<AddShareMandalart />} />
-              <Route path="/share/detail" element={<DetailShareMandalart />} />
+              <Route path="/share/view" element={<ViewShareMandalart />} />
               <Route path="/share/edit" element={<EditShareMandalart />} />
             </Route>
 

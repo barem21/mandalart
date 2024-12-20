@@ -39,6 +39,9 @@ const HeaderNav = styled.div`
     font-size: 20px;
     font-weight: 400;
   }
+  a:hover {
+    color: #55ad9b;
+  }
   .active {
     color: #55ad9b;
   }

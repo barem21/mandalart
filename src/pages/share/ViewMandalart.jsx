@@ -59,7 +59,7 @@ const MandalartDetailView = styled.div`
   }
   .detailWrap .inputBox label {
     display: inline-block;
-    min-width: 160px;
+    min-width: 200px;
   }
   .detailWrap .writeComment {
     gap: 5px;
@@ -82,12 +82,13 @@ const MandalartDetailView = styled.div`
 const ButtonWrap = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   padding-top: 40px;
   border-top: 1px solid #eee;
 `;
 
-function DetailMandalart() {
+function ViewMandalart() {
+  const divBox = 81; //총 div
   const [isCopyVisible, setIsCopyVisible] = useState(false); //복사하기 팝업
   const [isDeleteVisible, setIsDeleteVisible] = useState(false); //삭제하기 팝업
   const navigate = useNavigate();
@@ -130,7 +131,7 @@ function DetailMandalart() {
 
   return (
     <MandalartDetailView>
-      <h1 className="subTitle">만다라트 상세보기</h1>
+      <h1 className="subTitle">공유 만다라트 상세보기</h1>
       <div className="detailWrap">
         <div className="inputBox">
           <label>제목</label>
@@ -141,12 +142,50 @@ function DetailMandalart() {
           <span>마르고닮도록 / 2024-12-01</span>
         </div>
 
-        <div className="inputBox">
+        <div
+          className="inputBox borderNone"
+          style={{ alignItems: "flex-start" }}
+        >
           <label>계획표 보기</label>
-          <div>만다라트 계획표 출력</div>
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              flexWrap: "wrap",
+              width: "994px",
+              border: "2px solid #666",
+            }}
+          >
+            {/* 만다라트 계획표 출력 */}
+            {[...Array(divBox)].map((item, index) => {
+              return index < divBox ? (
+                <div
+                  key={index}
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    width: "110px",
+                    height: "110px",
+                    borderRight: "1px solid #eee",
+                    borderBottom: "1px solid #eee",
+                    backgroundColor: `${index === 40 ? "#D8EFD3" : ""}`,
+                  }}
+                >
+                  {index + 1}
+                </div>
+              ) : (
+                ""
+              );
+            })}
+          </div>
         </div>
 
-        <div className="inputBox" style={{ justifyContent: "center" }}>
+        <div
+          className="inputBox"
+          style={{ paddingBottom: "50px", justifyContent: "center" }}
+        >
+          <label></label>
           <button className="btnColor">추천 10</button>
         </div>
 
@@ -255,4 +294,4 @@ function DetailMandalart() {
   );
 }
 
-export default DetailMandalart;
+export default ViewMandalart;
