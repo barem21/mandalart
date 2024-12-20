@@ -12,7 +12,7 @@ import JoinPage from "./pages/member/JoinPage";
 import ModifyPage from "./pages/member/EditPage";
 import ListMandalart from "./pages/share/ListMandalart";
 import AddMandalart from "./pages/myplan/AddMandalart";
-import WriteShareMandalart from "./pages/share/WriteMandalart";
+import AddShareMandalart from "./pages/share/AddMandalart";
 import DetailShareMandalart from "./pages/share/DetailMandalart";
 import DetailMandalart from "./pages/myplan/DetailMandalart";
 import EditMandalart from "./pages/myplan/EditMandalart";
@@ -43,7 +43,7 @@ function App() {
             {/* 만다라트 공유 */}
             <Route path="/share">
               <Route index element={<ListMandalart />} />
-              <Route path="/share/add" element={<WriteShareMandalart />} />
+              <Route path="/share/add" element={<AddShareMandalart />} />
               <Route path="/share/detail" element={<DetailShareMandalart />} />
               <Route path="/share/edit" element={<EditShareMandalart />} />
             </Route>

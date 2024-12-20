@@ -1,6 +1,8 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import PopupLayout from "../../components/PopupLayout";
+import { deleteShare, postCopy } from "../../apis/share";
 
 //임시 데이터
 const SampleData = [
@@ -37,39 +39,41 @@ const SampleData = [
 ];
 
 const MandalartDetailView = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  .borderNone {
+  .detailWrap {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .detailWrap .borderNone {
     border-bottom: none !important;
   }
-  .share {
+  .detailWrap .share {
     margin-left: 10px;
     color: #55ad9b;
     font-weight: 500;
   }
-  .inputBox {
+  .detailWrap .inputBox {
     display: flex;
     align-items: center;
     padding: 15px 0px;
     border-bottom: 1px solid #eee;
   }
-  .inputBox label {
+  .detailWrap .inputBox label {
     display: inline-block;
     min-width: 160px;
   }
-  .writeComment {
+  .detailWrap .writeComment {
     gap: 5px;
   }
-  .viewType {
+  .detailWrap .viewType {
     display: flex;
   }
-  .writeComment input {
+  .detailWrap .writeComment input {
     width: 100%;
   }
-  .writeComment button {
+  .detailWrap .writeComment button {
     width: 150px;
   }
-  .commentList {
+  .detailWrap .commentList {
     color: #666;
     font-size: 14px;
   }
@@ -84,47 +88,66 @@ const ButtonWrap = styled.div`
 `;
 
 function DetailMandalart() {
-  const [copydata, setcopydata] = useState(false);
+  const [isCopyVisible, setIsCopyVisible] = useState(false); //복사하기 팝업
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false); //삭제하기 팝업
+  const navigate = useNavigate();
 
-  //만다라트 복사하기 버튼 처리
-  const handlerCopy = value => {
-    setcopydata(value);
+  const closeModal = () => {
+    setIsCopyVisible(false);
+  };
+
+  const handleCopySubmit = async data => {
+    data.preventDefault(); //submit 동작 방지
+
+    try {
+      const result = await postCopy(data); //axios 전송하기(복사요청)
+      if (result.data) {
+        alert("만다라트 복제가 완료되었습니다.");
+        navigate("/myplan");
+      } else {
+        alert("만다라트 복제가 실패되었습니다.\n다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.log("만다라트 복제 실패:", error);
+    }
+  };
+
+  const handleDeleteSubmit = async data => {
+    data.preventDefault(); //submit 동작 방지
+
+    try {
+      const result = await deleteShare(data); //axios 전송하기(복사요청)
+      if (result.data) {
+        alert("만다라트 공유글을 삭제하였습니다.");
+        navigate("/share");
+      } else {
+        alert("만다라트 공유글 삭제가 실패되었습니다.\n다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.log("만다라트 공유글 삭제 실패:", error);
+    }
   };
 
   return (
-    <>
+    <MandalartDetailView>
       <h1 className="subTitle">만다라트 상세보기</h1>
-      <MandalartDetailView>
+      <div className="detailWrap">
         <div className="inputBox">
           <label>제목</label>
-          <span>
-            마르고닮도록 님의 6개월 런닝 계획표
-            <span className="share">[공유중]</span>
-          </span>
+          <span>마르고닮도록 님의 6개월 런닝 계획표</span>
         </div>
         <div className="inputBox">
           <label>작성자/작성일</label>
           <span>마르고닮도록 / 2024-12-01</span>
         </div>
-        <div className="inputBox borderNone">
-          <label>계획표 보기</label>
-          <div className="viewType">
-            <button className="btnColor">만다라트로 보기</button>
-            <button className="btnLine">캘린더로 보기</button>
-          </div>
-        </div>
+
         <div className="inputBox">
-          <label></label>
+          <label>계획표 보기</label>
           <div>만다라트 계획표 출력</div>
         </div>
 
         <div className="inputBox" style={{ justifyContent: "center" }}>
           <button className="btnColor">추천 10</button>
-        </div>
-
-        <div className="inputBox">
-          <label>통계보기</label>
-          <div>그래프 출력</div>
         </div>
 
         <div className="inputBox writeComment borderNone">
@@ -143,17 +166,13 @@ function DetailMandalart() {
             <colgroup>
               <col width=""></col>
               <col width="120"></col>
-              <col width="120"></col>
-              <col width="30"></col>
             </colgroup>
             <tbody>
               {SampleData.map(item => (
                 <tr key={item.id}>
                   <td>{item.title}</td>
-                  <td align="center">{item.writer}</td>
-                  <td align="center">{item.date}</td>
                   <td align="center">
-                    <button type="button">×</button>
+                    {item.writer} / {item.date}
                   </td>
                 </tr>
               ))}
@@ -162,43 +181,77 @@ function DetailMandalart() {
         </div>
 
         <ButtonWrap>
-          <button className="btnColor" onClick={() => handlerCopy(true)}>
+          <button className="btnColor" onClick={() => setIsCopyVisible(true)}>
             복사하기
           </button>
-          <button className="btnLine">삭제하기</button>
-          <button className="btnLine">수정하기</button>
+          <button className="btnLine" onClick={() => setIsDeleteVisible(true)}>
+            삭제하기
+          </button>
+          <Link to={"/share/edit?id=1"} className="btnLine">
+            수정하기
+          </Link>
           <Link to={"/share"} className="btnLine">
             목록으로
           </Link>
         </ButtonWrap>
+      </div>
 
-        {copydata && (
-          <div
-            style={{
-              width: "300px",
-              padding: "20px",
-              border: "2px solid #242424",
-            }}
-          >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-              }}
-            >
-              <h4>만다라트 복사하기</h4>
-              <button onClick={() => handlerCopy(false)}>×</button>
+      {isCopyVisible && (
+        <PopupLayout
+          isVisible={isCopyVisible}
+          onClose={closeModal}
+          title={"만다라트 복사하기"}
+        >
+          <form onSubmit={e => handleCopySubmit(e)}>
+            <input type="hidden" name="idx" value="1" />
+            <input type="hidden" name="mid" value="test@test.com" />
+            <div className="guideText inputBox">
+              해당 만다라트 계획표를 나의 만다라트로 복사하시겠습니까?
             </div>
-            <div>
-              <div>
-                해당 만다라트 계획표를 나의 만다라트로 복사하시겠습니까?
-              </div>
-              <button type="button">복사하기</button>
+            <div className="buttonWrap">
+              <button
+                type="button"
+                className="btnPopLine"
+                onClick={() => setIsCopyVisible(false)}
+              >
+                취소하기
+              </button>
+              <button type="submit" className="btnPupColor">
+                복사하기
+              </button>
             </div>
-          </div>
-        )}
-      </MandalartDetailView>
-    </>
+          </form>
+        </PopupLayout>
+      )}
+
+      {isDeleteVisible && (
+        <PopupLayout
+          isVisible={isDeleteVisible}
+          onClose={closeModal}
+          title={"만다라트 삭제하기"}
+        >
+          <form onSubmit={e => handleDeleteSubmit(e)}>
+            <input type="hidden" name="idx" value="1" />
+            <input type="hidden" name="mid" value="test@test.com" />
+            <div className="guideText inputBox">
+              만다라트 공유글을 삭제하시겠습니까?
+            </div>
+            <div className="buttonWrap">
+              <button
+                type="button"
+                className="btnPopLine"
+                onClick={() => setIsDeleteVisible(false)}
+              >
+                취소하기
+              </button>
+              <button type="submit" className="btnPupColor">
+                삭제하기
+              </button>
+            </div>
+          </form>
+        </PopupLayout>
+      )}
+    </MandalartDetailView>
   );
 }
 

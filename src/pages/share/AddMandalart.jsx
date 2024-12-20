@@ -29,12 +29,16 @@ function WriteMandalart() {
         <h1 className="subTitle">만다라트 공유하기</h1>
         <div>
           <div className="inputBox">
-            <label>제목</label>
+            <label>
+              제목 <span>*</span>
+            </label>
             <input type="text" name="title" />
           </div>
           <div className="inputBox">
-            <label>공유 만다라트 선택</label>
-            <select name="share">
+            <label htmlFor="share">
+              공유 만다라트 선택 <span>*</span>
+            </label>
+            <select name="share" id="share">
               <option>선택해주세요.</option>
               <option value="1">홍길동 님의 6개월 런닝 계획표</option>
               <option>홍길동 님의 3개월 다이어트 플랜</option>

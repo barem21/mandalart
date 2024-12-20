@@ -118,6 +118,7 @@ input[type="password"] {
 }
 textarea {
   border: 1px solid #eee;
+  color: #666;
   font-size: 15px;
   font-family: "Noto Sans KR", sans-serif;
 }
@@ -162,6 +163,28 @@ body:root {
   overflow-x: hidden;
 }
 /* 웹서비스 개발시 권장 */
+
+.inputBox {
+  display: flex;
+  align-items: center;
+  padding: 15px 0px;
+  border-bottom: 1px solid #eee;
+}
+.inputBox label {
+  display: inline-block;
+  min-width: 200px;
+}
+.inputBox label span {
+  color: #ff3300;
+  font-weight: 500;
+}
+.inputBox.borderNone {
+  border-bottom: none !important;
+}
+.buttonWrap {
+  display: flex;
+  gap: 10px;
+}
 
 .btnLine {
   display: flex;

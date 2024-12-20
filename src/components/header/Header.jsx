@@ -2,6 +2,10 @@ import styled from "@emotion/styled";
 import { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { UserInfoContext } from "../../contexts/UserInfoContext";
+import { getSession } from "../../apis/member";
+
+//세션 생성
+const LOGIN_SESSION_KEY = "login_session";
 
 const HeaderWrap = styled.div`
   display: flex;
@@ -64,9 +68,10 @@ const HeaderRight = styled.div`
 `;
 
 const Header = () => {
-  const { userInfo } = useContext(UserInfoContext);
-
+  //const { userInfo } = useContext(UserInfoContext);
   const location = useLocation(); //현재 페이지 확인
+  const sessionData = getSession(LOGIN_SESSION_KEY);
+  //console.log(sessionData);
 
   return (
     <HeaderWrap>
@@ -104,10 +109,10 @@ const Header = () => {
       </HeaderLeft>
 
       <HeaderRight>
-        {userInfo.userId ? (
+        {sessionData ? (
           <>
             <p className="userInfo">
-              <span>{userInfo.userNickname}</span>님, 환영합니다.
+              <span>{sessionData.resultData.nickName}</span>님, 환영합니다.
             </p>
             <Link to={"/logout"}>로그아웃</Link>
             <span className="vLine">|</span>
