@@ -6,7 +6,7 @@ import LoopContent from "../components/mandalart/LoopContent";
 import "swiper/css";
 
 //임시 데이터
-const SampleData = [
+const sampleData = [
   {
     id: 1,
     img: "share_mandalart.png",
@@ -160,7 +160,7 @@ function Index() {
           </Link>
         </div>
 
-        <LoopContent datas={SampleData} />
+        <LoopContent location={"share"} datas={sampleData} />
       </div>
     </MainLayout>
   );

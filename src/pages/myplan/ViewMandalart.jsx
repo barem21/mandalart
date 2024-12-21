@@ -9,6 +9,7 @@ const MandalartDetailView = styled.div`
   .detailWrap {
     max-width: 1200px;
     margin: 0 auto;
+    border-top: 4px solid #242424;
   }
   .detailWrap .borderNone {
     border-bottom: none !important;
@@ -21,7 +22,7 @@ const MandalartDetailView = styled.div`
   .detailWrap .inputBox {
     display: flex;
     align-items: center;
-    padding: 15px 0px;
+    padding: 20px 0px;
     border-bottom: 1px solid #eee;
   }
   .detailWrap .inputBox label {
@@ -155,7 +156,8 @@ function ViewMandalart() {
                 display: "flex",
                 flexDirection: "row",
                 flexWrap: "wrap",
-                width: "1003px",
+                width: "994px",
+                margin: "20px 0px 20px 0px",
                 border: "2px solid #666",
               }}
             >
@@ -168,8 +170,8 @@ function ViewMandalart() {
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
-                      width: "111px",
-                      height: "111px",
+                      width: "110px",
+                      height: "110px",
                       borderRight: "1px solid #eee",
                       borderBottom: "1px solid #eee",
                       backgroundColor: `${index === 40 ? "#D8EFD3" : ""}`,
@@ -181,6 +183,37 @@ function ViewMandalart() {
                   ""
                 );
               })}
+            </div>
+
+            <div>
+              교감과 공감을 표현한 ‘스타 화가’ 1840년 영국 런던에서 태어난
+              ‘브리튼 리비에르’는 옥스퍼드대학에서 미술 전공 교수로 활동한
+              아버지를 이어
+              <br />
+              4대째 정통 미술교육을 받은 화가 집안의 사람이었어요. 12살 때부터
+              전시회를 열만큼 뛰어난 재능을 자랑했던 그는 아버지가 재직 중인
+              옥스퍼드
+              <br />
+              대학에서 미술을 공부하며 화가로 성장합니다.
+              <br />
+              <br />
+              리비에르가 활동했던 빅토리아 시대에는 주로 종교나 역사, 문학을
+              소재로 한 그림이 유행했었어요. 하지만 이런 소재들은 그에게 특별한
+              감흥을
+              <br />
+              주지 못했죠. 그러던 중, 그가 25세가 되던 해에 ‘사람과 교감하는
+              반려동물’의 모습에서 영감을 얻어 관련 그림을 그리기 시작합니다.
+              리비에르가
+              <br />
+              표현하는 동물의 모습은 여느 화가들의 묘사와는 매우 달랐어요.
+              인형이나 소품처럼 사람 옆에 우두커니 서 있는 동물이 아닌, 사람과의
+              교감과
+              <br />
+              공감을 그림 안에 녹여냈거든요.
+              <br />
+              <br />
+              그의 작품들은 대중들의 마음을 사로잡았고, 그에 힘입어 리비에르는
+              스타 화가의 반열*에 오릅니다.
             </div>
           </div>
         </div>
@@ -252,7 +285,7 @@ function ViewMandalart() {
           <Link to={"/myplan/detail?id=1"} className="btnLine">
             수정하기
           </Link>
-          <Link to={"/myplan"} className="btnLine">
+          <Link to={"/myplan"} className="btnColor">
             목록으로
           </Link>
         </ButtonWrap>

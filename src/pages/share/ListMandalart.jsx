@@ -91,7 +91,7 @@ function ListMandalart() {
         </form>
       </BoardTop>
 
-      <LoopContent datas={sampleData} />
+      <LoopContent location={"share"} datas={sampleData} />
 
       <ButtonWrap>
         <Link to={"/share/add"} className="btnColor">

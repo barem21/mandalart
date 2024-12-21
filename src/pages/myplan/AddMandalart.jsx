@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 
 import styled from "@emotion/styled";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,7 +11,18 @@ import PopupLayout from "../../components/PopupLayout";
 const MyplanWrap = styled.div`
   max-width: 1200px;
   margin: 0 auto;
-  border-top: 1px solid #242424;
+  .writeWrap {
+    border-top: 1px solid #242424;
+  }
+  .writeWrap .inputBox input[type="text"] {
+    width: 95%;
+  }
+  .writeWrap .inputBox textarea {
+    width: 95%;
+    height: 100px;
+    padding: 15px 10px;
+    resize: vertical;
+  }
   .guide {
     margin-bottom: 30px;
     color: #666;
@@ -23,20 +34,26 @@ const MyplanWrap = styled.div`
     font-size: 16px;
     font-weight: 500;
   }
-  .inputBox input[type="text"] {
-    width: 80%;
-  }
-  .inputBox textarea {
-    width: 80%;
-    height: 100px;
-    padding: 15px 10px;
-    resize: vertical;
-  }
+`;
+
+const ErrorMessage = styled.p`
+  margin-top: 5px;
+  color: #55ad9b;
+  font-size: 13px;
+`;
+
+const ButtonWrap = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 40px;
+  border-top: 1px solid #eee;
 `;
 
 //schema 먼저 생성
 const addSchema = yup.object({
   title: yup.string().required("제목을 입력해 주세요!"),
+  content: yup.string().required("간단 소개글을 입력해 주세요."),
   /*
   pic: yup
     .mixed()
@@ -72,7 +89,7 @@ function AddMandalart() {
       content: "",
       pic: "",
     },
-    mode: "onBlur",
+    mode: "all",
   });
 
   const handleSubmitForm = data => {
@@ -92,36 +109,45 @@ function AddMandalart() {
 
   return (
     <>
-      <h1 className="subTitle">나의 만다라트</h1>
       <MyplanWrap>
+        <h1 className="subTitle">나의 만다라트</h1>
         <form onSubmit={handleSubmit(handleSubmitForm)}>
-          <input type="hidden" value="test@test.com" {...register("mid")} />
-          <div className="inputBox">
-            <label htmlFor="title">
-              제목 <span>*</span>
-            </label>
-            <input type="text" id="title" {...register("title")} />
-            {errors.title?.message ? (
-              <p style={{ flexFlow: "row wrap" }}>{errors.title?.message}</p>
-            ) : (
-              ""
-            )}
-          </div>
-          <div className="inputBox">
-            <label htmlFor="content">간단 소개글</label>
-            <textarea
-              id="content"
-              placeholder="간단 소개글을 입력해 주세요."
-              {...register("content")}
-            />
-          </div>
-          <div className="inputBox">
-            <label htmlFor="content">섬네일 등록</label>
-            <input type="file" {...register("pic")} />
+          <div className="writeWrap">
+            <input type="hidden" value="test@test.com" {...register("mid")} />
+            <div className="inputBox">
+              <label htmlFor="title">
+                제목 <span>*</span>
+              </label>
+              <div style={{ width: "100%" }}>
+                <input type="text" id="title" {...register("title")} />
+                {errors.title?.message && (
+                  <ErrorMessage>({errors.title?.message})</ErrorMessage>
+                )}
+              </div>
+            </div>
+            <div className="inputBox">
+              <label htmlFor="content">
+                간단 소개글 <span>*</span>
+              </label>
+              <div style={{ width: "100%", fontSize: "0px" }}>
+                <textarea
+                  id="content"
+                  placeholder="간단 소개글을 입력해 주세요."
+                  {...register("content")}
+                />
+                {errors.content?.message && (
+                  <ErrorMessage>({errors.content?.message})</ErrorMessage>
+                )}
+              </div>
+            </div>
+            <div className="inputBox">
+              <label htmlFor="content">섬네일 등록</label>
+              <input type="file" {...register("pic")} />
 
-            <button type="submit" className="btnColor">
-              저장하기
-            </button>
+              <button type="submit" className="btnColor">
+                저장하기
+              </button>
+            </div>
           </div>
         </form>
 
@@ -177,6 +203,12 @@ function AddMandalart() {
             </div>
           </div>
         </div>
+
+        <ButtonWrap>
+          <Link to={"/myplan"} className="btnColor">
+            목록으로
+          </Link>
+        </ButtonWrap>
       </MyplanWrap>
 
       {isAddVisible && (
@@ -216,6 +248,7 @@ function AddMandalart() {
                 value="0"
                 id="value0"
                 {...register("success")}
+                checked
               />
               &nbsp;
               <label

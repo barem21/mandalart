@@ -39,14 +39,13 @@ const ShowMandalartList = styled.div`
   }
 `;
 
-const LoopContent = ({ datas }) => {
-  console.log(datas);
-
+const LoopContent = ({ location, datas }) => {
+  //console.log(datas);
   return (
     <ShowMandalartList>
       {datas.map(data => (
         <div className="loopContent" key={data.id}>
-          <Link to={`/share/view?id=${data.id}`}>
+          <Link to={`/${location}/view?id=${data.id}`}>
             <div className="profileImage">
               <img src={data.img} alt="" />
               <div className="voteCount">추천 {data.vote}</div>

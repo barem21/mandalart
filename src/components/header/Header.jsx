@@ -74,7 +74,7 @@ const Header = () => {
   //const { userInfo } = useContext(UserInfoContext);
   const location = useLocation(); //현재 페이지 확인
   const sessionData = getSession(LOGIN_SESSION_KEY);
-  //console.log(sessionData);
+  //const { nickName } = sessionData.resultData;
 
   return (
     <HeaderWrap>
