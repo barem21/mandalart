@@ -8,7 +8,7 @@ const AboutMandalartWrap = styled.div`
   max-width: 1280px;
   min-width: 1200px;
   margin: 0 auto;
-  padding: 0px 40px;
+  padding: 0px 50px;
   .textBox {
     margin-bottom: 60px;
   }

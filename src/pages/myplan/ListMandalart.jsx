@@ -5,7 +5,7 @@ import LoopContent from "../../components/mandalart/LoopContent";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { UserInfoContext } from "../../contexts/UserInfoContext";
+//import { UserInfoContext } from "../../contexts/UserInfoContext";
 import PopupLayout from "../../components/PopupLayout";
 import { getSession } from "../../apis/member";
 
@@ -46,13 +46,6 @@ const sampleData = [
   },
 ];
 
-const schema = yup.object({
-  title: yup
-    .string()
-    .required("제목은 필수입니다.")
-    .min(5, "제목은 최소 5글자 이상 입력해야 합니다."),
-});
-
 const BoardTop = styled.div`
   display: flex;
   justify-content: space-between;
@@ -64,6 +57,24 @@ const BoardTop = styled.div`
   }
   input {
     margin-right: 3px;
+  }
+  .sortType {
+    display: flex;
+    gap: 20px;
+  }
+  .sortType span {
+    margin-right: 10px;
+  }
+  .sortType input[type="radio"] {
+    display: none;
+  }
+  .sortType label {
+    color: #999;
+    cursor: pointer;
+  }
+  .sortType input[type="radio"]:checked + label {
+    border-bottom: 1px solid #242424;
+    color: #242424;
   }
   .boardSearch {
     display: flex;
@@ -86,55 +97,125 @@ const ErrorMessage = styled.p`
   font-size: 13px;
 `;
 
+const schema = yup.object({
+  title: yup
+    .string()
+    .required("제목을 입력해 주세요.")
+    .min(5, "최소 5글자 이상 제목을 입력해 주세요."),
+});
+
 function MyPlan() {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const { userInfo } = useContext(UserInfoContext);
+  //const { userInfo } = useContext(UserInfoContext);
   const navigate = useNavigate();
   const sessionData = getSession(LOGIN_SESSION_KEY);
 
-  const closeModal = () => {
-    setIsModalVisible(false);
-  };
-
   const {
-    handleSubmit,
-    register,
-    formState: { errors },
+    handleSubmit: handleSubmit,
+    register: register,
+    setValue: setValue,
+    formState: { errors: errors },
   } = useForm({
     defaultValues: {
+      user_id: "",
       title: "",
+      content: "",
     },
-    mode: "onBlur",
+    mode: "all",
     resolver: yupResolver(schema),
   });
 
-  const onSubmit = () => {
+  const {
+    handleSubmit: handleSubmitSearch,
+    register: registerSearch,
+    setValue: setValueSearch,
+  } = useForm({
+    defaultValues: {
+      user_id: "",
+      sort: "date",
+      type: "1",
+      search: "",
+    },
+    mode: "all",
+  });
+
+  const onSubmit = data => {
+    console.log(data);
     try {
+      //만다라트 생성 데이터 처리
+      //axios post
       navigate("/myplan/add");
     } catch (error) {
       console.log("만다라트 생성 실패:", error);
     }
   };
 
+  const onSubmitSearch = data => {
+    console.log(data);
+    try {
+      //검색결과 데이터 처리
+      //axios post
+    } catch (error) {
+      console.log("검색 실패:", error);
+    }
+  };
+
+  //모달닫기
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
+
+  //정렬순서 변경
+  const changeSort = value => {
+    setValueSearch("sort", value);
+    handleSubmitSearch(onSubmitSearch)();
+  };
+
   useEffect(() => {
-    //console.log(userInfo);
     if (!sessionData) {
       alert("회원 로그인이 필요합니다.");
       navigate("/login?url=/myplan");
       return;
     }
     return () => {};
-  }, []);
+  }, [sessionData, navigate]);
+
+  useEffect(() => {
+    setValue("user_id", sessionData && sessionData.resultData.userId);
+  }, [sessionData, setValue]);
+
+  useEffect(() => {
+    setValueSearch("user_id", sessionData && sessionData.resultData.userId);
+  }, [setValueSearch, sessionData]);
 
   return (
     <>
       <h1 className="subTitle">나의 만다라트</h1>
-      <BoardTop>
-        <p className="">등록된 만라다트 계획표 : {sampleData?.length}건</p>
+      <form onSubmit={handleSubmitSearch(onSubmitSearch)}>
+        <BoardTop>
+          <div className="sortType">
+            <span>[전체 : {sampleData?.length}건]</span>
+            <input
+              type="radio"
+              value="date"
+              id="date"
+              onClick={e => changeSort(e.target.value)}
+              {...registerSearch("sort")}
+            />
+            <label htmlFor="date">최신순</label>
 
-        <form>
+            <input
+              type="radio"
+              value="title"
+              id="vote"
+              onClick={e => changeSort(e.target.value)}
+              {...registerSearch("sort")}
+            />
+            <label htmlFor="vote">제목순</label>
+          </div>
+
           <div className="boardSearch">
-            <select name="type">
+            <select {...registerSearch("type")}>
               <option value="1">제목</option>
               <option value="2">내용</option>
               <option value="3">제목+내용</option>
@@ -142,16 +223,16 @@ function MyPlan() {
             </select>
             <input
               type="text"
-              name="search"
               maxLength="20"
               placeholder="검색어를 입력하세요."
+              {...registerSearch("search")}
             />
             <button type="submit" className="btnLine">
               검색
             </button>
           </div>
-        </form>
-      </BoardTop>
+        </BoardTop>
+      </form>
 
       <LoopContent location={"myplan"} datas={sampleData} />
 
@@ -168,6 +249,7 @@ function MyPlan() {
       {isModalVisible && (
         <PopupLayout isVisible={isModalVisible} onClose={closeModal} title={""}>
           <form onSubmit={handleSubmit(onSubmit)}>
+            <input type="hidden" {...register("user_id")} />
             <div className="inputBox">
               <label htmlFor="title">만다라트 제목 입력</label>
               <input
@@ -187,10 +269,10 @@ function MyPlan() {
             <div className="inputBox">
               <label htmlFor="content">만다라트 간단 설명</label>
               <textarea
-                name="content"
                 id="content"
                 className="popupTextarea"
                 placeholder="간단설명을 입력하세요."
+                {...register("content")}
               ></textarea>
             </div>
 

@@ -127,7 +127,7 @@ function LoginPage() {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="loginForm">
             <div className="inputBox">
-              <label htmlFor="email">아이디</label>
+              <label htmlFor="email">이메일 아이디</label>
               <input
                 type="text"
                 id="email"

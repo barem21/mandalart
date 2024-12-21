@@ -19,8 +19,10 @@ const ShowMandalartList = styled.div`
   }
   .profileImage img {
     transition: all 0.3s;
+    opacity: 0.95;
   }
   .profileImage img:hover {
+    opacity: 1;
     transform: scale(1.05);
   }
   .voteCount {
@@ -48,7 +50,9 @@ const LoopContent = ({ location, datas }) => {
           <Link to={`/${location}/view?id=${data.id}`}>
             <div className="profileImage">
               <img src={data.img} alt="" />
-              <div className="voteCount">추천 {data.vote}</div>
+              {location === "share" && (
+                <div className="voteCount">추천 {data.vote}</div>
+              )}
             </div>
             <p className="title">{data.title}</p>
           </Link>

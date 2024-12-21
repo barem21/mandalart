@@ -35,15 +35,21 @@ const HeaderLogo = styled.div`
 const HeaderNav = styled.div`
   display: flex;
   gap: 50px;
+  transition: all 0.3s;
   a {
     font-size: 20px;
     font-weight: 400;
+    transition: all 0.3s;
   }
   a:hover {
     color: #55ad9b;
   }
   .active {
     color: #55ad9b;
+  }
+  @media all and (max-width: 1200px) {
+    gap: 35px;
+    letter-spacing: -1px;
   }
 `;
 
@@ -54,6 +60,13 @@ const HeaderRight = styled.div`
   a {
     color: #666;
     font-size: 14px;
+    transition: all 0.3s;
+  }
+  a:hover {
+    color: #55ad9b;
+  }
+  .active {
+    color: #55ad9b;
   }
   .vLine {
     color: #ccc;
@@ -119,13 +132,28 @@ const Header = () => {
             </p>
             <Link to={"/logout"}>로그아웃</Link>
             <span className="vLine">|</span>
-            <Link to={"/modify"}>정보수정</Link>
+            <Link
+              to={"/modify"}
+              className={location.pathname === "/modify" ? "active" : ""}
+            >
+              정보수정
+            </Link>
           </>
         ) : (
           <>
-            <Link to={"/login"}>로그인</Link>
+            <Link
+              to={"/login"}
+              className={location.pathname === "/login" ? "active" : ""}
+            >
+              로그인
+            </Link>
             <span className="vLine">|</span>
-            <Link to={"/join"}>회원가입</Link>
+            <Link
+              to={"/join"}
+              className={location.pathname === "/join" ? "active" : ""}
+            >
+              회원가입
+            </Link>
           </>
         )}
       </HeaderRight>

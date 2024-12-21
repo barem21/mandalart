@@ -45,7 +45,7 @@ const ErrorMessage = styled.p`
 const ButtonWrap = styled.div`
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   padding-top: 40px;
   border-top: 1px solid #eee;
 `;

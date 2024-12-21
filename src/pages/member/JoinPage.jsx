@@ -11,8 +11,8 @@ const MemberJoinWrap = styled.div`
   padding: 0px 50px;
 
   .joinForm {
-    max-width: 75%;
-    min-width: 800px;
+    max-width: 1280px;
+    min-width: 1100px;
     margin: 0 auto;
     border-top: 1px solid #242424;
   }
