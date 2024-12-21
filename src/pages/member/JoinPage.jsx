@@ -5,6 +5,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { postMember } from "../../apis/member";
 import SubpageVisual from "../../components/subpageVisual/SubpageVisual";
+import { useState } from "react";
 
 const MemberJoinWrap = styled.div`
   padding: 0px 50px;
@@ -71,6 +72,7 @@ const Agreements = styled.div`
     margin-right: 5px;
   }
 `;
+
 const ButtonWrap = styled.div`
   display: flex;
   align-items: center;
@@ -82,24 +84,24 @@ const ButtonWrap = styled.div`
 //yup 관련 설정
 //1. schema를 먼저 설정한다.
 const schema = yup.object({
-  email: yup
+  user_id: yup
     .string()
     .required("이메일은 필수입니다.")
     .email("올바른 이메일 형식이 아닙니다."),
-  password: yup
+  upw: yup
     .string()
     .required("비밀번호는 필수입니다.")
     .min(8, "비밀번호는 최소 8자 이상입니다.")
     .max(16, "비밀번호는 최대 16자까지 가능합니다.")
     .matches(
       /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-      "비밀번호는 영어/숫자/특수문자 포함 8자리 이상으로 입력해주세요.",
+      "비밀번호는 영어/숫자/특수문자 포함 8자리 이상으로 입력해 주세요.",
     ),
-  password_confirm: yup
+  upw_confirm: yup
     .string()
     .required("비밀번호 확인은 필수입니다.")
-    .oneOf([yup.ref("password")], "비밀번호가 일치하지 않습니다."),
-  nickname: yup
+    .oneOf([yup.ref("upw")], "비밀번호가 일치하지 않습니다."),
+  nick_name: yup
     .string()
     .required("닉네임은 필수입니다.")
     .max(10, "닉네임은 최대 10자까지 가능합니다."),
@@ -107,30 +109,95 @@ const schema = yup.object({
 });
 
 function JoinPage() {
+  const [isUserIdChecking, setIsUserIdChecking] = useState(false);
+  const [isUserIdAvailable, setIsUserIdAvailable] = useState(null);
+  const [isChecking, setIsChecking] = useState(false);
+  const [isNicknameAvailable, setIsNicknameAvailable] = useState(null);
+
   const navigate = useNavigate();
 
   const {
     handleSubmit,
     register,
     reset,
+    watch,
     formState: { errors },
   } = useForm({
     defaultValues: {
-      email: "",
-      password: "",
-      password_confirm: "",
-      nickname: "",
+      user_id: "",
+      upw: "",
+      upw_confirm: "",
+      nick_name: "",
       policy: false,
     },
-    mode: "onBlur",
+    mode: "all",
     resolver: yupResolver(schema),
   });
+
+  //뒤로가기
+  const historyBack = () => {
+    navigate(-1);
+  };
+
+  //아이디(이메일) 중복확인
+  const userId = watch("user_id"); //닉네임 입력상태 추적
+  const checkUserIdAvailability = async () => {
+    if (userId.length === 0) {
+      setIsUserIdAvailable(null);
+      return;
+    }
+    setIsUserIdChecking(true); //중복 검사중
+
+    try {
+      const res = { resultData: 0 };
+      //const res = await axios.get("http://192.168.0.106:5000/member?nick_name=${userNickname}");
+      //console.log(res.data);
+
+      if (res.resultData === 1) {
+        setIsUserIdAvailable(true); //사용가능
+      } else {
+        setIsUserIdAvailable(false); //중복
+      }
+    } catch (error) {
+      console.error("Error user_id:", error);
+      setIsUserIdAvailable(null);
+    } finally {
+      setIsUserIdChecking(false); //종복 검사완료
+    }
+  };
+
+  //닉네임 중복확인
+  const userNick = watch("nick_name"); //닉네임 입력상태 추적
+  const checkNicknameAvailability = async () => {
+    if (userNick.length === 0) {
+      setIsNicknameAvailable(null);
+      return;
+    }
+    setIsChecking(true); //중복 검사중
+
+    try {
+      const res = { resultData: 1 };
+      //const res = await axios.get("http://192.168.0.106:5000/member?nick_name=${userNickname}");
+      //console.log(res.data);
+
+      if (res.resultData === 1) {
+        setIsNicknameAvailable(true); //사용가능
+      } else {
+        setIsNicknameAvailable(false); //중복
+      }
+    } catch (error) {
+      console.error("Error nick_name:", error);
+      setIsNicknameAvailable(null);
+    } finally {
+      setIsChecking(false); //종복 검사완료
+    }
+  };
 
   const onSubmit = async data => {
     try {
       const result = await postMember(data); //axios 전송하기(등록)
       if (result.data) {
-        alert("회원정보 수정이 완료되었습니다.");
+        alert("회원가입이 완료되었습니다.");
         navigate("/login");
       } else {
         //회원가입 실패
@@ -157,14 +224,29 @@ function JoinPage() {
                 type="text"
                 id="email"
                 maxLength={30}
-                {...register("email")}
+                {...register("user_id")}
               />
-              <button type="button" className="btnLine">
+              <button
+                type="button"
+                className="btnLine"
+                onClick={e => checkUserIdAvailability(e)}
+                disabled={isUserIdChecking}
+              >
                 중복체크
               </button>
               {/* 에러내용 출력 */}
-              {errors.email && (
-                <ErrorMessage>({errors.email?.message})</ErrorMessage>
+              {errors.user_id && (
+                <ErrorMessage>({errors.user_id?.message})</ErrorMessage>
+              )}
+
+              {isUserIdChecking && (
+                <ErrorMessage>(이메일 중복체크 중입니다.)</ErrorMessage>
+              )}
+              {isUserIdAvailable === true && (
+                <ErrorMessage>(사용 가능한 이메일입니다.)</ErrorMessage>
+              )}
+              {isUserIdAvailable === false && (
+                <ErrorMessage>(이미 사용 중인 이메일입니다.)</ErrorMessage>
               )}
             </div>
 
@@ -176,11 +258,11 @@ function JoinPage() {
                 type="password"
                 id="password"
                 maxLength={16}
-                {...register("password")}
+                {...register("upw")}
               />
               {/* 에러내용 출력 */}
-              {errors.password && (
-                <ErrorMessage>({errors.password?.message})</ErrorMessage>
+              {errors.upw && (
+                <ErrorMessage>({errors.upw?.message})</ErrorMessage>
               )}
             </div>
 
@@ -192,13 +274,11 @@ function JoinPage() {
                 type="password"
                 id="password_confirm"
                 maxLength={16}
-                {...register("password_confirm")}
+                {...register("upw_confirm")}
               />
               {/* 에러내용 출력 */}
-              {errors.password_confirm && (
-                <ErrorMessage>
-                  ({errors.password_confirm?.message})
-                </ErrorMessage>
+              {errors.upw_confirm && (
+                <ErrorMessage>({errors.upw_confirm?.message})</ErrorMessage>
               )}
             </div>
 
@@ -210,20 +290,39 @@ function JoinPage() {
                 type="text"
                 id="nickname"
                 maxLength={10}
-                {...register("nickname")}
+                onClick={e => checkNicknameAvailability(e)}
+                disabled={isChecking}
+                {...register("nick_name")}
               />
-              <button type="button" className="btnLine">
+              <button
+                type="button"
+                className="btnLine"
+                onClick={e => checkNicknameAvailability(e)}
+                disabled={isChecking}
+              >
                 중복체크
               </button>
               {/* 에러내용 출력 */}
-              {errors.nickname && (
-                <ErrorMessage>({errors.nickname?.message})</ErrorMessage>
+              {errors.nick_name && (
+                <ErrorMessage>({errors.nick_name?.message})</ErrorMessage>
+              )}
+
+              {isChecking && (
+                <ErrorMessage>(닉네임 중복체크 중입니다.)</ErrorMessage>
+              )}
+              {isNicknameAvailable === true && (
+                <ErrorMessage>(사용 가능한 닉네임입니다.)</ErrorMessage>
+              )}
+              {isNicknameAvailable === false && (
+                <ErrorMessage>(이미 사용 중인 닉네임입니다.)</ErrorMessage>
               )}
             </div>
 
             <div className="inputBox">
               <label htmlFor="profile">프로필 등록</label>
-              <input type="file" id="profile" {...register("profile")} />
+              <div style={{ padding: "10px 0px" }}>
+                <input type="file" id="profile" {...register("profile")} />
+              </div>
             </div>
 
             <Agreements>
@@ -263,7 +362,11 @@ function JoinPage() {
               <button type="button" className="btnLine" onClick={() => reset()}>
                 다시작성
               </button>
-              <button type="button" className="btnLine">
+              <button
+                type="button"
+                className="btnLine"
+                onClick={() => historyBack()}
+              >
                 취소하기
               </button>
               <button type="submit" className="btnColor">

@@ -6,7 +6,7 @@ import { getSession, loginMember, setSession } from "../../apis/member";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import SubpageVisual from "../../components/subpageVisual/SubpageVisual";
-import { UserInfoContext } from "../../contexts/UserInfoContext";
+//import { UserInfoContext } from "../../contexts/UserInfoContext";
 
 //세션 생성
 const LOGIN_SESSION_KEY = "login_session";
@@ -59,15 +59,15 @@ const ButtonWrap = styled.div`
 
 //yup 관련 설정
 const schema = yup.object({
-  email: yup
+  user_id: yup
     .string()
     .required("이메일을 입력해 주세요.")
     .email("올바른 이메일 형식이 아닙니다."),
-  password: yup.string().required("비밀번호를 입력해 주세요."),
+  upw: yup.string().required("비밀번호를 입력해 주세요."),
 });
 
 function LoginPage() {
-  const { setUserInfo } = useContext(UserInfoContext);
+  //const { setUserInfo } = useContext(UserInfoContext);
   const navigate = useNavigate();
   const sessionData = getSession(LOGIN_SESSION_KEY);
 
@@ -77,30 +77,31 @@ function LoginPage() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      email: "",
-      password: "",
+      user_id: "",
+      upw: "",
     },
     mode: "onBlur",
     resolver: yupResolver(schema),
   });
 
   const onSubmit = async data => {
+    console.log(data);
     try {
       const result = await loginMember(data); //axios 전송하기
-      //console.log(result);
 
+      //if (result.data) {
       if (result) {
-        //if (result.data) {
-        //session storage에 보관
-        setSession(LOGIN_SESSION_KEY, result);
+        setSession(LOGIN_SESSION_KEY, result); //session storage에 보관
         //setSession(result.data);
 
+        /*
         setUserInfo({
           userId: result.resultData.userId,
           userNickname: result.resultData.nickName,
           userPic: result.resultData.pic,
           userRole: "member",
         });
+        */
 
         navigate("/"); //로그인 페이지로 이동
       } else {
@@ -132,12 +133,12 @@ function LoginPage() {
                 id="email"
                 placeholder="이메일 아이디 입력"
                 maxLength={30}
-                {...register("email")}
+                {...register("user_id")}
               />
             </div>
             {/* 에러내용 출력 */}
-            {errors.email && (
-              <ErrorMessage>({errors.email?.message})</ErrorMessage>
+            {errors.user_id && (
+              <ErrorMessage>({errors.user_id?.message})</ErrorMessage>
             )}
 
             <div className="inputBox">
@@ -146,13 +147,11 @@ function LoginPage() {
                 type="password"
                 id="password"
                 placeholder="비밀번호 입력"
-                {...register("password")}
+                {...register("upw")}
               />
             </div>
 
-            {errors.password && (
-              <ErrorMessage>({errors.password?.message})</ErrorMessage>
-            )}
+            {errors.upw && <ErrorMessage>({errors.upw?.message})</ErrorMessage>}
 
             <ButtonWrap>
               <Link to={"/join"}>회원가입</Link>

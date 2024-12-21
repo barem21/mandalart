@@ -26,7 +26,7 @@ export const loginMember = async data => {
 
 //axios연동(회원가입)
 export const postMember = async data => {
-  //console.log(data);
+  console.log(data);
   try {
     const res = { data: "ok" };
     //const res = await axios.post("http://192.168.0.106:5000/member", data);
@@ -40,7 +40,7 @@ export const postMember = async data => {
 
 //axios연동(회원정보 수정)
 export const patchMember = async data => {
-  //console.log(data);
+  console.log(data);
   try {
     const res = { data: "ok" };
     //const res = await axios.patch("http://192.168.0.106:5000/member", data);
@@ -54,7 +54,7 @@ export const patchMember = async data => {
 
 //axios연동(회원탈퇴)
 export const deleteMember = async data => {
-  //console.log(data);
+  console.log(data);
   try {
     const res = { data: "ok" };
     //const res = await axios.delete("http://192.168.0.106:5000/member", data);
@@ -73,6 +73,6 @@ export const setSession = (sessionKey, sessionData) => {
 
 //세션 가져오기
 export const getSession = sessionKey => {
-  const sessionData = sessionStorage.getItem(sessionKey); // 세션 스토리지에서 데이터 읽기
-  return sessionData ? JSON.parse(sessionData) : null; // JSON으로 파싱
+  const sessionData = sessionStorage.getItem(sessionKey);
+  return sessionData ? JSON.parse(sessionData) : null;
 };

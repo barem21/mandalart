@@ -153,7 +153,7 @@ function MyPlan() {
         </form>
       </BoardTop>
 
-      <LoopContent datas={sampleData} />
+      <LoopContent location={"myplan"} datas={sampleData} />
 
       <ButtonWrap>
         <button
