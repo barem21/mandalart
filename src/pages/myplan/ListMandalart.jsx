@@ -1,12 +1,11 @@
 import styled from "@emotion/styled";
 import { IoSearch } from "react-icons/io5";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoopContent from "../../components/mandalart/LoopContent";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-//import { UserInfoContext } from "../../contexts/UserInfoContext";
 import PopupLayout from "../../components/PopupLayout";
 import { getSession } from "../../apis/member";
 
@@ -108,7 +107,6 @@ const schema = yup.object({
 
 function MyPlan() {
   const [isModalVisible, setIsModalVisible] = useState(false);
-  //const { userInfo } = useContext(UserInfoContext);
   const navigate = useNavigate();
   const sessionData = getSession(LOGIN_SESSION_KEY);
 

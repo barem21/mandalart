@@ -15,7 +15,7 @@ export const loginMember = async data => {
         ],
       },
     };
-    //const res = await axios.post("http://192.168.0.106:5000/member", data);
+    //const res = await axios.post("/api/member", data);
     //console.log("로그인 결과 : ", res);
     return res; //결과 리턴
   } catch (error) {
@@ -25,11 +25,12 @@ export const loginMember = async data => {
 };
 
 //axios연동(회원가입)
-export const postMember = async data => {
+export const joinMember = async data => {
   console.log(data);
   try {
     const res = { data: "ok" };
-    //const res = await axios.post("http://192.168.0.106:5000/member", data);
+    //const header = { headers: { "Content-Type": "multipart/form-data" } };
+    //const res = await axios.post("/api/member", data, header);
     //console.log("회원가입 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
@@ -39,11 +40,12 @@ export const postMember = async data => {
 };
 
 //axios연동(회원정보 수정)
-export const patchMember = async data => {
+export const editMember = async data => {
   console.log(data);
   try {
     const res = { data: "ok" };
-    //const res = await axios.patch("http://192.168.0.106:5000/member", data);
+    //const header = { headers: { "Content-Type": "multipart/form-data" } };
+    //const res = await axios.patch("/api/member", data, header);
     //console.log("회원정보 수정 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
@@ -57,7 +59,7 @@ export const deleteMember = async data => {
   console.log(data);
   try {
     const res = { data: "ok" };
-    //const res = await axios.delete("http://192.168.0.106:5000/member", data);
+    //const res = await axios.get("/api/member?user_id="{data.user_id});
     //console.log("회원탈퇴 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
@@ -66,13 +68,32 @@ export const deleteMember = async data => {
   }
 };
 
-//세션 스토리지 저장
+//axios연동(임시비밀번호 발급)
+export const changePassword = data => {
+  console.log(data);
+  try {
+    const res = { data: "ok" };
+    //const res = await axios.post("/api/member",data);
+    //console.log("임시비밀번호 발송 결과 : ", res.data);
+    return res; //결과 리턴
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+//세션 저장
 export const setSession = (sessionKey, sessionData) => {
   sessionStorage.setItem(sessionKey, JSON.stringify(sessionData));
 };
 
-//세션 가져오기
+//세션 호출
 export const getSession = sessionKey => {
   const sessionData = sessionStorage.getItem(sessionKey);
   return sessionData ? JSON.parse(sessionData) : null;
+};
+
+//세션 삭제
+export const clearSession = sessionKey => {
+  sessionStorage.removeItem(sessionKey);
 };

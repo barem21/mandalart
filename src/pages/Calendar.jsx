@@ -8,6 +8,11 @@ import dayGridPlugin from "@fullcalendar/daygrid";
 import timeGridPlugin from "@fullcalendar/timegrid";
 // 드래그 앤 드롭 기능을 위한 플러그인
 import interactionPlugin from "@fullcalendar/interaction";
+import { getSession } from "../apis/member";
+import { useNavigate } from "react-router-dom";
+
+//세션 생성
+const LOGIN_SESSION_KEY = "login_session";
 
 // 더미 데이터
 const dummySchedules = {
@@ -86,6 +91,9 @@ const dummyRangeSchedules = {
 };
 // FullSchedule 컴포넌트 정의
 const Calendar = () => {
+  const navigate = useNavigate();
+  const sessionData = getSession(LOGIN_SESSION_KEY);
+
   // 캘린더 이벤트 목록을 관리하는 상태
   const [events, setEvents] = useState([]);
   // 모달 표시 여부를 관리하는 상태
@@ -136,6 +144,15 @@ const Calendar = () => {
   useEffect(() => {
     fetchEvents();
   }, []);
+
+  useEffect(() => {
+    if (!sessionData) {
+      alert("회원 로그인이 필요합니다.");
+      navigate("/login?url=/calendar");
+      return;
+    }
+    return () => {};
+  }, [sessionData, navigate]);
 
   // 일정 데이터를 캘린더 이벤트 형식으로 변환하는 함수
   // 일정 데이터를 캘린더 이벤트 형식으로 변환하는 함수

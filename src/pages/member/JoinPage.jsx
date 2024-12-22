@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { postMember } from "../../apis/member";
+import { joinMember } from "../../apis/member";
 import SubpageVisual from "../../components/subpageVisual/SubpageVisual";
 import { useState } from "react";
 
@@ -195,7 +195,7 @@ function JoinPage() {
 
   const onSubmit = async data => {
     try {
-      const result = await postMember(data); //axios 전송하기(등록)
+      const result = await joinMember(data); //axios 전송하기(등록)
       if (result.data) {
         alert("회원가입이 완료되었습니다.");
         navigate("/login");

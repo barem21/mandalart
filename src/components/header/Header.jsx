@@ -1,7 +1,5 @@
 import styled from "@emotion/styled";
-import { useContext } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { UserInfoContext } from "../../contexts/UserInfoContext";
 import { getSession } from "../../apis/member";
 
 //세션 생성
@@ -84,12 +82,9 @@ const HeaderRight = styled.div`
 `;
 
 const Header = () => {
-  //const { userInfo } = useContext(UserInfoContext);
   const location = useLocation(); //현재 페이지 확인
   const sessionData = getSession(LOGIN_SESSION_KEY);
   //const { nickName } = sessionData.resultData;
-
-  console.log(location.pathname);
 
   let activeMyplan;
   let activeShare;

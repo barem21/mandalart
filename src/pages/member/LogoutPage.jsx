@@ -1,32 +1,25 @@
-import { useContext, useEffect } from "react";
-import { UserInfoContext } from "../../contexts/UserInfoContext";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { clearSession } from "../../apis/member";
 
 //세션 생성
 const LOGIN_SESSION_KEY = "login_session";
 
-// 세션을 삭제
-function clearSession() {
-  sessionStorage.removeItem(LOGIN_SESSION_KEY); // 세션 스토리지에서 삭제
-}
-
 function LogoutPage() {
-  const { setUserInfo } = useContext(UserInfoContext);
   const navigate = useNavigate();
-  clearSession();
+  clearSession(LOGIN_SESSION_KEY); //세션 삭제
 
   useEffect(() => {
-    setUserInfo({
-      userId: "",
-      userNickname: "",
-      userRole: "",
-    });
-    navigate("/"); //로그인 페이지로 이동
+    navigate("/"); //홈으로 이동
 
     return () => {};
-  }, []);
+  }, [navigate]);
 
-  return <div>로그아웃</div>;
+  return (
+    <div>
+      <h1 className="subTitle">로그아웃</h1>
+    </div>
+  );
 }
 
 export default LogoutPage;

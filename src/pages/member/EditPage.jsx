@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { deleteMember, getSession, patchMember } from "../../apis/member";
+import { deleteMember, getSession, editMember } from "../../apis/member";
 import PopupLayout from "../../components/PopupLayout";
 import SubpageVisual from "../../components/subpageVisual/SubpageVisual";
 
@@ -171,7 +171,7 @@ function EditPage() {
   const onSubmit = async data => {
     //console.log(data);
     try {
-      const result = await patchMember(data); //axios처리(수정)
+      const result = await editMember(data); //axios처리(수정)
       if (result.data) {
         alert("회원정보 수정이 완료되었습니다.");
         navigate("/");

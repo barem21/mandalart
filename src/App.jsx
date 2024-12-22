@@ -8,6 +8,7 @@ import NotFoundPage from "./pages/NotFoundPage";
 import Calendar from "./pages/Calendar";
 import LoginPage from "./pages/member/LoginPage";
 import LogoutPage from "./pages/member/LogoutPage";
+import ChangePwPage from "./pages/member/ChangePwPage";
 import JoinPage from "./pages/member/JoinPage";
 import ModifyPage from "./pages/member/EditPage";
 import ListMandalart from "./pages/share/ListMandalart";
@@ -56,6 +57,9 @@ function App() {
 
             {/* 로그아웃 */}
             <Route path="/logout" element={<LogoutPage />} />
+
+            {/* 임시 비밀번호 발급 */}
+            <Route path="/change" element={<ChangePwPage />} />
 
             {/* 회원가입 */}
             <Route path="/join" element={<JoinPage />} />
