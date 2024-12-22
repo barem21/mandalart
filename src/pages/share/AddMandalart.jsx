@@ -45,7 +45,7 @@ const ButtonWrap = styled.div`
 //schema 먼저 생성
 const addSchema = yup.object({
   title: yup.string().required("제목을 입력해 주세요."),
-  share: yup.string().required("공유 만다라트를 선택해 주세요."),
+  share: yup.string().required("공유할 만다라트 계획표를 선택해 주세요."),
   content: yup.string().required("간단 소개글을 입력해 주세요."),
   /*
   pic: yup
@@ -93,7 +93,7 @@ function WriteMandalart() {
   return (
     <>
       <ShareWriteWrap>
-        <h1 className="subTitle">만다라트 공유하기</h1>
+        <h1 className="subTitle">만다라트 공유</h1>
         <form onSubmit={handleSubmit(handleSubmitForm)}>
           <div className="writeWrap">
             <div className="inputBox">

@@ -9,7 +9,7 @@ const MandalartDetailView = styled.div`
   .detailWrap {
     max-width: 1200px;
     margin: 0 auto;
-    border-top: 4px solid #242424;
+    border-top: 1px solid #242424;
   }
   .detailWrap .borderNone {
     border-bottom: none !important;
@@ -282,7 +282,7 @@ function ViewMandalart() {
           <button className="btnLine" onClick={() => setIsDeleteVisible(true)}>
             삭제하기
           </button>
-          <Link to={"/myplan/detail?id=1"} className="btnLine">
+          <Link to={"/myplan/edit?id=1"} className="btnLine">
             수정하기
           </Link>
           <Link to={"/myplan"} className="btnColor">

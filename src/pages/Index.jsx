@@ -12,24 +12,28 @@ const sampleData = [
     img: "share_mandalart.png",
     title: "홍길동 님의 6개월 런닝 계획표",
     vote: 10,
+    date: "2024-12-01",
   },
   {
     id: 2,
     img: "share_mandalart2.png",
     title: "김수한무 님의 한달 독서 계획표",
     vote: 5,
+    date: "2024-12-01",
   },
   {
     id: 3,
     img: "share_mandalart.png",
     title: "야옹선생 님의 1년 헬스 계획표",
     vote: 1,
+    date: "2024-12-01",
   },
   {
     id: 4,
     img: "share_mandalart2.png",
     title: "마르고닮도록 님의 6개월 리액트 공부 계획표",
     vote: 1,
+    date: "2024-12-01",
   },
 ];
 

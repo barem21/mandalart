@@ -19,25 +19,35 @@ const ShowMandalartList = styled.div`
   }
   .profileImage img {
     transition: all 0.3s;
-    opacity: 0.95;
+    opacity: 0.9;
   }
-  .profileImage img:hover {
+  .loopContent:hover img {
     opacity: 1;
     transform: scale(1.05);
+  }
+  .loopContent:hover .title {
+    color: #000;
   }
   .voteCount {
     position: absolute;
     bottom: 12px;
-    right: 12px;
-    padding: 4px 10px;
-    background: rgba(0, 0, 0, 0.25);
-    border-radius: 50px;
+    right: 0px;
+    padding: 4px 15px;
+    background: rgba(0, 0, 0, 0.35);
+    border-radius: 50px 0px 0px 50px;
     color: #fff;
     font-size: 13px;
   }
   .title {
     padding: 0px 20px;
     text-align: left;
+    transition: all 0.3s;
+  }
+  .date {
+    padding: 0px 20px;
+    text-align: left;
+    color: #aaa;
+    font-size: 12px;
   }
 `;
 
@@ -55,6 +65,7 @@ const LoopContent = ({ location, datas }) => {
               )}
             </div>
             <p className="title">{data.title}</p>
+            <p className="date">{data.date}</p>
           </Link>
         </div>
       ))}
