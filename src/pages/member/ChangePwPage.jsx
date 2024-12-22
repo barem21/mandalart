@@ -1,37 +1,37 @@
 import styled from "@emotion/styled";
-import { useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { getSession, loginMember, setSession } from "../../apis/member";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { changePassword } from "../../apis/member";
 import SubpageVisual from "../../components/subpageVisual/SubpageVisual";
 
-//세션 생성
-const LOGIN_SESSION_KEY = "login_session";
-
-const LoginWrap = styled.div`
-  .loginForm {
+const FindPwWrap = styled.div`
+  .findPwForm {
     max-width: 600px;
     margin: 0px auto;
     padding: 0px 50px;
   }
-  .loginForm .inputBox {
+  .findPwForm .inputBox {
     display: block;
     margin-bottom: 5px;
     padding: 0px;
     border: none;
   }
-  .loginForm .inputBox label {
+  .findPwForm .inputBox label {
     display: inline-block;
     margin: 10px 0px;
   }
-  .loginForm .inputBox input {
+  .findPwForm .inputBox input {
     width: 100%;
   }
-  .loginForm button {
+  .findPwForm button {
     width: 100%;
     margin: 0px;
+  }
+  .guideText {
+    margin-bottom: 20px;
+    color: #666;
   }
 `;
 
@@ -65,9 +65,8 @@ const schema = yup.object({
   upw: yup.string().required("비밀번호를 입력해 주세요."),
 });
 
-function LoginPage() {
+function ChangePwPage() {
   const navigate = useNavigate();
-  const sessionData = getSession(LOGIN_SESSION_KEY);
 
   const {
     handleSubmit,
@@ -76,45 +75,42 @@ function LoginPage() {
   } = useForm({
     defaultValues: {
       user_id: "",
-      upw: "",
     },
-    mode: "onBlur",
+    mode: "all",
     resolver: yupResolver(schema),
   });
 
   const onSubmit = async data => {
     console.log(data);
     try {
-      const result = await loginMember(data); //axios 전송하기
+      const result = await changePassword(data); //axios 전송하기
 
       //if (result.data) {
       if (result) {
-        setSession(LOGIN_SESSION_KEY, result); //session storage에 보관
-        //setSession(LOGIN_SESSION_KEY, result.data);
-
-        navigate("/"); //로그인 페이지로 이동
+        alert("임시 비밀번호가 이메일로 발송되었습니다.");
+        navigate("/ligin"); //로그인 페이지로 이동
       } else {
         alert("회원정보가 잘못되었습니다.\n다시 확인해 주세요.");
       }
     } catch (error) {
-      console.log("로그인 실패:", error);
+      console.log("이메일 발송 실패:", error);
     }
   };
-
-  useEffect(() => {
-    if (sessionData) {
-      navigate("/");
-    }
-  }, []);
 
   return (
     <>
       <SubpageVisual></SubpageVisual>
 
-      <LoginWrap>
-        <h1 className="subTitle">회원 로그인</h1>
-        <form onSubmit={handleSubmit(onSubmit)}>
-          <div className="loginForm">
+      <FindPwWrap>
+        <h1 className="subTitle">비밀번호 찾기</h1>
+        <div className="findPwForm">
+          <p className="guideText">
+            이메일로 안내된 임시 비밀번호로 회원 로그인 후 [회원정보 수정]을
+            통해
+            <br />
+            비밀번호를 반드시 재설정해 주시기 바랍니다.
+          </p>
+          <form onSubmit={handleSubmit(onSubmit)}>
             <div className="inputBox">
               <label htmlFor="email">이메일 아이디</label>
               <input
@@ -130,33 +126,22 @@ function LoginPage() {
               <ErrorMessage>({errors.user_id?.message})</ErrorMessage>
             )}
 
-            <div className="inputBox">
-              <label htmlFor="password">비밀번호</label>
-              <input
-                type="password"
-                id="password"
-                placeholder="비밀번호 입력"
-                {...register("upw")}
-              />
-            </div>
-
-            {errors.upw && <ErrorMessage>({errors.upw?.message})</ErrorMessage>}
-
             <ButtonWrap>
-              <Link to={"/join"}>회원가입</Link>
+              <Link to={"/login"}>로그인</Link>
               <span>/</span>
-              <Link to={"/change"}>비밀번호 찾기</Link>
+              <Link to={"/join"}>회원가입</Link>
             </ButtonWrap>
 
             <div>
               <button type="submit" className="btnColor">
-                로그인
+                임시 비밀번호 이메일 발송
               </button>
             </div>
-          </div>
-        </form>
-      </LoginWrap>
+          </form>
+        </div>
+      </FindPwWrap>
     </>
   );
 }
-export default LoginPage;
+
+export default ChangePwPage;
