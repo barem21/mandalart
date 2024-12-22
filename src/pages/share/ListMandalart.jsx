@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { IoSearch } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import LoopContent from "../../components/mandalart/LoopContent";
 import { useForm } from "react-hook-form";
@@ -15,30 +16,35 @@ const sampleData = [
     img: "share_mandalart.png",
     title: "홍길동 님의 6개월 런닝 계획표",
     vote: 10,
+    date: "2024-12-01",
   },
   {
     id: 2,
     img: "share_mandalart2.png",
     title: "김수한무 님의 한달 독서 계획표",
     vote: 5,
+    date: "2024-12-01",
   },
   {
     id: 3,
     img: "share_mandalart.png",
     title: "야옹선생 님의 1년 헬스 계획표",
     vote: 1,
+    date: "2024-12-01",
   },
   {
     id: 4,
     img: "share_mandalart2.png",
     title: "마르고닮도록 님의 6개월 리액트 공부 계획표",
     vote: 13,
+    date: "2024-12-01",
   },
   {
     id: 5,
     img: "share_mandalart2.png",
     title: "마르고닮도록 님의 6개월 리액트 공부 계획표",
     vote: 7,
+    date: "2024-12-01",
   },
 ];
 
@@ -77,14 +83,9 @@ const BoardTop = styled.div`
     justify-content: space-between;
     align-items: center;
   }
-`;
-
-const ButtonWrap = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-top: 20px;
-  margin-right: 30px;
+  .boardSearch svg {
+    margin-top: 2px;
+  }
 `;
 
 function ListMandalart() {
@@ -163,19 +164,18 @@ function ListMandalart() {
               {...registerSearch("search")}
             />
             <button type="submit" className="btnLine">
-              검색
+              <IoSearch />
+              &nbsp;검색
             </button>
+
+            <Link to={"/share/add"} className="btnColor">
+              + 등록하기
+            </Link>
           </div>
         </BoardTop>
       </form>
 
       <LoopContent location={"share"} datas={sampleData} />
-
-      <ButtonWrap>
-        <Link to={"/share/add"} className="btnColor">
-          + 신규 등록하기
-        </Link>
-      </ButtonWrap>
     </>
   );
 }

@@ -52,7 +52,7 @@ const ButtonWrap = styled.div`
 
 //schema 먼저 생성
 const addSchema = yup.object({
-  title: yup.string().required("제목을 입력해 주세요!"),
+  title: yup.string().required("제목을 입력해 주세요."),
   content: yup.string().required("간단 소개글을 입력해 주세요."),
   /*
   pic: yup
@@ -110,7 +110,7 @@ function AddMandalart() {
   return (
     <>
       <MyplanWrap>
-        <h1 className="subTitle">나의 만다라트</h1>
+        <h1 className="subTitle">나의 만다라트 등록하기</h1>
         <form onSubmit={handleSubmit(handleSubmitForm)}>
           <div className="writeWrap">
             <input type="hidden" value="test@test.com" {...register("mid")} />
@@ -142,11 +142,20 @@ function AddMandalart() {
             </div>
             <div className="inputBox">
               <label htmlFor="content">섬네일 등록</label>
-              <input type="file" {...register("pic")} />
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "79.4%",
+                }}
+              >
+                <input type="file" {...register("pic")} />
 
-              <button type="submit" className="btnColor">
-                저장하기
-              </button>
+                <button type="submit" className="btnColor">
+                  저장하기
+                </button>
+              </div>
             </div>
           </div>
         </form>

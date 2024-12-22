@@ -89,6 +89,26 @@ const Header = () => {
   const sessionData = getSession(LOGIN_SESSION_KEY);
   //const { nickName } = sessionData.resultData;
 
+  console.log(location.pathname);
+
+  let activeMyplan;
+  let activeShare;
+  switch (location.pathname) {
+    case "/myplan":
+    case "/myplan/view":
+    case "/myplan/add":
+    case "/myplan/edit":
+      activeMyplan = "active";
+      break;
+    case "/share":
+    case "/share/view":
+    case "/share/add":
+    case "/share/edit":
+      activeShare = "active";
+      break;
+    default:
+  }
+
   return (
     <HeaderWrap>
       <HeaderLeft>
@@ -103,16 +123,10 @@ const Header = () => {
           >
             만다라트란?
           </Link>
-          <Link
-            to={"/myplan"}
-            className={location.pathname === "/myplan" ? "active" : ""}
-          >
+          <Link to={"/myplan"} className={activeMyplan}>
             나의 만다라트
           </Link>
-          <Link
-            to={"/share"}
-            className={location.pathname === "/share" ? "active" : ""}
-          >
+          <Link to={"/share"} className={activeShare}>
             만다라트 공유
           </Link>
           <Link

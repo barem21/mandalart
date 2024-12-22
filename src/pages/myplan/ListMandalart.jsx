@@ -1,4 +1,5 @@
 import styled from "@emotion/styled";
+import { IoSearch } from "react-icons/io5";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import LoopContent from "../../components/mandalart/LoopContent";
@@ -19,30 +20,35 @@ const sampleData = [
     img: "share_mandalart.png",
     title: "홍길동 님의 6개월 런닝 계획표",
     vote: 10,
+    date: "2024-12-01",
   },
   {
     id: 2,
     img: "share_mandalart2.png",
     title: "김수한무 님의 한달 독서 계획표",
     vote: 5,
+    date: "2024-12-01",
   },
   {
     id: 3,
     img: "share_mandalart.png",
     title: "야옹선생 님의 1년 헬스 계획표",
     vote: 1,
+    date: "2024-12-01",
   },
   {
     id: 4,
     img: "share_mandalart2.png",
     title: "배워서남주자 님의 6개월 리액트 공부 계획표",
     vote: 13,
+    date: "2024-12-01",
   },
   {
     id: 5,
     img: "share_mandalart2.png",
     title: "마르고닮도록 님의 3개월 다이어트 계획표",
     vote: 7,
+    date: "2024-12-01",
   },
 ];
 
@@ -50,6 +56,7 @@ const BoardTop = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-width: 1200px;
   margin-bottom: 15px;
   padding: 0px 30px 0px 50px;
   select {
@@ -81,19 +88,14 @@ const BoardTop = styled.div`
     justify-content: space-between;
     align-items: center;
   }
-`;
-
-const ButtonWrap = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-top: 20px;
-  margin-right: 30px;
+  .boardSearch svg {
+    margin-top: 2px;
+  }
 `;
 
 const ErrorMessage = styled.p`
   margin-top: 5px;
-  color: #ff3300;
+  color: #55ad9b;
   font-size: 13px;
 `;
 
@@ -162,6 +164,8 @@ function MyPlan() {
 
   //모달닫기
   const closeModal = () => {
+    setValue("title", "");
+    setValue("content", "");
     setIsModalVisible(false);
   };
 
@@ -228,23 +232,22 @@ function MyPlan() {
               {...registerSearch("search")}
             />
             <button type="submit" className="btnLine">
-              검색
+              <IoSearch />
+              &nbsp;검색
+            </button>
+
+            <button
+              type="button"
+              className="btnColor"
+              onClick={() => setIsModalVisible(true)}
+            >
+              + 등록하기
             </button>
           </div>
         </BoardTop>
       </form>
 
       <LoopContent location={"myplan"} datas={sampleData} />
-
-      <ButtonWrap>
-        <button
-          type="button"
-          className="btnColor"
-          onClick={() => setIsModalVisible(true)}
-        >
-          + 신규 등록하기
-        </button>
-      </ButtonWrap>
 
       {isModalVisible && (
         <PopupLayout isVisible={isModalVisible} onClose={closeModal} title={""}>
@@ -280,9 +283,9 @@ function MyPlan() {
               <button
                 type="button"
                 className="btnPopLine"
-                onClick={() => setIsModalVisible(false)}
+                onClick={e => closeModal(e)}
               >
-                창닫기
+                취소하기
               </button>
               <button type="submit" className="btnPupColor">
                 등록하기

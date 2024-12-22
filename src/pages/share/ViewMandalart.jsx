@@ -5,35 +5,35 @@ import PopupLayout from "../../components/PopupLayout";
 import { deleteShare, postCopy } from "../../apis/share";
 
 //임시 데이터
-const SampleData = [
+const sampleData = [
   {
     id: 1,
-    title: "홍길동 님의 6개월 런닝 계획표",
-    writer: "홍길동",
+    content: "계획표 .. 엄청 꼼꼼하게 작성 잘 하셨네요. 추천합니다!",
+    writer: "고길동",
     date: "2024-12-10",
   },
   {
     id: 2,
-    title: "김수한무 님의 한달 독서 계획표",
+    content: "이건 뭐 .. 추천~ㅎㅎ",
     writer: "김수한무",
     date: "2024-12-10",
   },
   {
     id: 3,
-    title: "야옹선생 님의 1년 헬스 계획표",
+    content: "추천은 한번 밖에 안되나요? 세표 정도 주고 싶은데 .. OTL",
     writer: "야옹선생",
     date: "2024-12-10",
   },
   {
     id: 4,
-    title: "마르고닮도록 님의 6개월 리액트 공부 계획표",
+    content: "복사해 갑니다~",
     writer: "마르고닮도록",
     date: "2024-12-10",
   },
   {
     id: 5,
-    title: "마르고닮도록 님의 6개월 리액트 공부 계획표",
-    writer: "마르고닮도록",
+    content: "나도 복사!!",
+    writer: "둘리",
     date: "2024-12-10",
   },
 ];
@@ -61,11 +61,13 @@ const MandalartDetailView = styled.div`
     display: inline-block;
     min-width: 200px;
   }
-  .detailWrap .writeComment {
-    gap: 5px;
-  }
   .detailWrap .viewType {
     display: flex;
+  }
+  .detailWrap .writeComment {
+    gap: 0px;
+    padding-top: 30px;
+    padding-bottom: 0px;
   }
   .detailWrap .writeComment input {
     width: 100%;
@@ -75,7 +77,25 @@ const MandalartDetailView = styled.div`
   }
   .detailWrap .commentList {
     color: #666;
-    font-size: 14px;
+  }
+  .detailWrap .commentList li {
+    padding: 10px 10px;
+    border-bottom: 1px solid #eee;
+  }
+  .detailWrap .commentList li:last-child {
+    border-bottom: none;
+  }
+  .detailWrap .commentList .date {
+    margin-bottom: 5px;
+    color: #aaa;
+    font-size: 13px;
+  }
+  .detailWrap .commentList .date button {
+    padding: 0px 5px;
+    border: none;
+    background: none;
+    color: #aaa;
+    cursor: pointer;
   }
 `;
 
@@ -129,9 +149,17 @@ function ViewMandalart() {
     }
   };
 
+  const editComment = () => {
+    alert("댓글 수정하기 팝업 처리");
+  };
+
+  const deletComment = () => {
+    alert("댓글 삭제하기 팝업 처리");
+  };
+
   return (
     <MandalartDetailView>
-      <h1 className="subTitle">공유 만다라트 상세보기</h1>
+      <h1 className="subTitle">만다라트 공유 상세보기</h1>
       <div className="detailWrap">
         <div className="inputBox">
           <label>제목</label>
@@ -146,7 +174,7 @@ function ViewMandalart() {
           className="inputBox borderNone"
           style={{ alignItems: "flex-start" }}
         >
-          <label>계획표 보기</label>
+          <label style={{ marginTop: "15px" }}>계획표 보기</label>
           <div>
             <div
               style={{
@@ -235,22 +263,46 @@ function ViewMandalart() {
 
         <div className="inputBox borderNone">
           <label></label>
-          <table className="commentList" style={{ width: "100%" }}>
-            <colgroup>
-              <col width=""></col>
-              <col width="120"></col>
-            </colgroup>
-            <tbody>
-              {SampleData.map(item => (
-                <tr key={item.id}>
-                  <td>{item.title}</td>
-                  <td align="center">
-                    {item.writer} / {item.date}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <ul className="commentList" style={{ width: "100%" }}>
+            {sampleData.length === 0 && <li>등록된 댓글이 없습니다.</li>}
+
+            {sampleData.map(item => (
+              <li key={item.id}>
+                <div
+                  style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                  <div className="date">
+                    {item.writer === "야옹선생" ? (
+                      <span style={{ color: "#55ad9b", fontWeight: "600" }}>
+                        {item.writer}
+                      </span>
+                    ) : (
+                      item.writer
+                    )}{" "}
+                    / {item.date}
+                  </div>
+                  {item.writer === "야옹선생" && (
+                    <div className="date">
+                      <button
+                        type="button"
+                        onClick={() => editComment(item.id)}
+                      >
+                        수정
+                      </button>{" "}
+                      /{" "}
+                      <button
+                        type="button"
+                        onClick={() => deletComment(item.id)}
+                      >
+                        삭제
+                      </button>
+                    </div>
+                  )}
+                </div>
+                <p>{item.content}</p>
+              </li>
+            ))}
+          </ul>
         </div>
 
         <ButtonWrap>
