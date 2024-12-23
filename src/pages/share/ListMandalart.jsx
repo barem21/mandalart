@@ -167,10 +167,11 @@ function ListMandalart() {
               <IoSearch />
               &nbsp;검색
             </button>
-
-            <Link to={"/share/add"} className="btnColor">
-              + 등록하기
-            </Link>
+            {sessionData && (
+              <Link to={"/share/add"} className="btnColor">
+                + 등록하기
+              </Link>
+            )}
           </div>
         </BoardTop>
       </form>

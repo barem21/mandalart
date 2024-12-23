@@ -10,7 +10,7 @@ const ModalPopup = styled.div`
   align-items: center;
   justify-content: center;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 1;
+  z-index: 10;
 
   .modalWrap {
     position: relative;
