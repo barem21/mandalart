@@ -83,7 +83,6 @@ function LoginPage() {
   });
 
   const onSubmit = async data => {
-    console.log(data);
     try {
       const result = await loginMember(data); //axios 전송하기
 
