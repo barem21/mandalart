@@ -16,7 +16,7 @@ export const loginMember = async data => {
         ],
       },
     };
-    //const res = await axios.post("/api/user/signIn", data);
+    //const res = await axios.post("api/user/signIn", data);
     //console.log("로그인 결과 : ", res);
     return res; //결과 리턴
   } catch (error) {
@@ -31,7 +31,7 @@ export const joinMember = async data => {
   try {
     const res = { data: "ok" };
     //const header = { headers: { "Content-Type": "multipart/form-data" } };
-    //const res = await axios.post("/api/user/signup", data, header);
+    //const res = await axios.post("api/user/signup", data, header);
     //console.log("회원가입 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
@@ -46,7 +46,7 @@ export const editMember = async data => {
   try {
     const res = { data: "ok" };
     //const header = { headers: { "Content-Type": "multipart/form-data" } };
-    //const res = await axios.patch("/api/user/put", data, header);
+    //const res = await axios.patch("api/user/put", data, header);
     //console.log("회원정보 수정 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
@@ -60,7 +60,7 @@ export const deleteMember = async data => {
   console.log(data);
   try {
     const res = { data: "ok" };
-    //const res = await axios.get("/api//api/user/delete?user_id="{data.user_id}&upw={data,upw});
+    //const res = await axios.post(`api/user/delete?user_id=${user_id}&upw=${upw}`);
     //console.log("회원탈퇴 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
@@ -74,7 +74,7 @@ export const changePassword = data => {
   console.log(data);
   try {
     const res = { data: "ok" };
-    //const res = await axios.post("/api/user/password",data);
+    //const res = await axios.post("api/user/password",data);
     //console.log("임시비밀번호 발송 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
