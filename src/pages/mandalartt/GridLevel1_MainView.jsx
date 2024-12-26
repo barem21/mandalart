@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import "./gridLevel1_1.css";
 
-function GridLevel1_MainView({ nomalDataIndex, nomalData, setNomalData }) {
+function GridLevel1_MainView({ normalDataIndex, normalData, setNormalData }) {
   const [showData, setShowData] = useState(null);
 
   useEffect(() => {
-    setShowData(nomalData[nomalDataIndex]);
-  }, [nomalData]);
+    setShowData(normalData[normalDataIndex]);
+  }, [normalData]);
   // 모달 열기
 
   return (

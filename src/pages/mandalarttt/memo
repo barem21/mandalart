@@ -58,3 +58,14 @@
         ]
     }
 }
+
+
+const [mandalart, setMandalart] = useState([getGridData]);
+const getGridData = [{id:0},{id:1},{id:2},{id:3}]
+
+{ 
+    Datavalue: dumyData[2]
+    
+    id: ""
+    
+}
