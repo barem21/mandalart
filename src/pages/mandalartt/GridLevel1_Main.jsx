@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./gridLevel1_1.css";
 
-function GridLevel1_Main({ nomalDataIndex, nomalData, setNomalData }) {
+function GridLevel1_Main({ normalDataIndex, normalData, setNormalData }) {
   // 현재 선택된 객체의 정보 한개를 보관
   const [isModalOpen, setIsModalOpen] = useState(false);
   // 팝업창에 보여줄 변경 되고 있는 데이터
@@ -17,12 +17,12 @@ function GridLevel1_Main({ nomalDataIndex, nomalData, setNomalData }) {
     setSubClear(subSelect);
   };
   useEffect(() => {
-    setShowData(nomalData[nomalDataIndex]);
-  }, [nomalData]);
+    setShowData(normalData[normalDataIndex]);
+  }, [normalData]);
   // 모달 열기
   const openModal = id => {
     // 선택된 객체 정보 한개를 보관
-    setSelectData(showData.find(item => item.mandalart_id === id));
+    setSelectData(showData.find(item => item.cellId === id));
     // 완료미완료 선택창 제외 셀 case
     switch (id) {
       case "cell-0-0-1-1":
@@ -60,7 +60,7 @@ function GridLevel1_Main({ nomalDataIndex, nomalData, setNomalData }) {
   const saveModalData = () => {
     // 9개의 보여지고 있는 데이터를 변경 된 데이터로 변경
     const newShowData = showData.map(item => {
-      if (item.mandalart_id === selectData.mandalart_id) {
+      if (item.cellId === selectData.cellId) {
         return { ...item, ...selectData };
       }
       return item;
@@ -69,16 +69,16 @@ function GridLevel1_Main({ nomalDataIndex, nomalData, setNomalData }) {
     // setShowData(newShowData);
 
     // 원본 데이터 참조
-    const originalData = [...nomalData];
+    const originalData = [...normalData];
     // isbindKey 로 연결된 것을 찾아서 변경
     const sortArr = originalData.map(itemOrign => {
       newShowData.map(item => {
         if (item.isbindKey) {
           itemOrign.map(itemNow => {
-            if (item.isbindKey === itemNow.mandalart_id) {
+            if (item.isbindKey === itemNow.cellId) {
               itemNow.title = item.title;
             }
-            if (item.mandalart_id === itemNow.mandalart_id) {
+            if (item.cellId === itemNow.cellId) {
               itemNow.title = item.title;
             }
           });
@@ -89,15 +89,15 @@ function GridLevel1_Main({ nomalDataIndex, nomalData, setNomalData }) {
     });
 
     // 원본 데이터도 변경을 해야 한다.
-    setNomalData([...sortArr]);
-    const updatedNomalData = [...nomalData];
-    updatedNomalData[nomalDataIndex] = newShowData;
+    setNormalData([...sortArr]);
+    const updatednormalData = [...normalData];
+    updatednormalData[normalDataIndex] = newShowData;
 
     // 원본 데이터와 showData 동기화
-    setNomalData(updatedNomalData);
+    setNormalData(updatednormalData);
     setShowData(newShowData);
     // 데이터 색
-    // console.log(selectData.mandalart_id);
+    // console.log(selectData.cellId);
 
     setIsModalOpen(false);
   };
@@ -109,8 +109,8 @@ function GridLevel1_Main({ nomalDataIndex, nomalData, setNomalData }) {
         {showData?.map((item, index) => (
           <div
             key={index}
-            id={item.mandalart_id}
-            onClick={() => openModal(item.mandalart_id)}
+            id={item.cellId}
+            onClick={() => openModal(item.cellId)}
             className="sub-item"
             style={{
               backgroundColor: item.bgcolor,

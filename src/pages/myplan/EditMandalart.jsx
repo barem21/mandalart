@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { UserInfoContext } from "../../contexts/UserInfoContext";
 import PopupLayout from "../../components/PopupLayout";
+import GridLevel0 from "../mandalarttt/GridLevel0";
 
 const MyplanWrap = styled.div`
   max-width: 1200px;
@@ -168,38 +169,8 @@ function EditMandalart() {
               4. 계획표 관리 : 계획표를 정기적으로 검토하고 수정하며 실행합니다.
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                width: "1003px",
-                border: "2px solid #666",
-              }}
-            >
-              {/* 만다라트 계획표 출력 */}
-              {[...Array(divBox)].map((item, index) => {
-                return index < divBox ? (
-                  <div
-                    key={index}
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "111px",
-                      height: "111px",
-                      borderRight: "1px solid #eee",
-                      borderBottom: "1px solid #eee",
-                      backgroundColor: `${index === 40 ? "#D8EFD3" : ""}`,
-                    }}
-                    onClick={() => setIsAddVisible(true)}
-                  >
-                    {index + 1}
-                  </div>
-                ) : (
-                  ""
-                );
-              })}
+            <div>
+              <GridLevel0 />
             </div>
           </div>
         </div>
