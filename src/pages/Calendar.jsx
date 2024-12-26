@@ -3,7 +3,9 @@ import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import PopupLayout from "../components/PopupLayout";
 import { useNavigate } from "react-router-dom";
-import moment from "moment/moment";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { getSession } from "../apis/member";
 import styled from "@emotion/styled";
 
@@ -39,6 +41,22 @@ const CalendarWrap = styled.div`
   padding: 0px 50px;
 `;
 
+//schema 먼저 생성
+const addSchema = yup.object({
+  title: yup.string().required("제목을 입력해 주세요."),
+  content: yup.string().required("간단 소개글을 입력해 주세요."),
+  /*
+  pic: yup
+    .mixed()
+    .test("fileType", "이미지(jpg, png) 파일만 첨부가능합니다.", value => {
+      return value && ["image/jpeg", "image/png"].includes(value[0]?.type);
+    })
+    .test("filesize", "파일 크기는 500KB 이하만 가능합니다.", value => {
+      return value && value[0]?.size <= 0.5 * 1024 * 1024; // 500KB 이하
+    }),
+  */
+});
+
 const Calendar = () => {
   const navigate = useNavigate();
   const sessionData = getSession(LOGIN_SESSION_KEY);
@@ -55,6 +73,27 @@ const Calendar = () => {
 
   const closeModal = () => {
     setIsModalVisible(false);
+  };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: yupResolver(addSchema),
+    defaultValues: {
+      mid: "",
+      title: "",
+      content: "",
+      pic: "",
+    },
+    mode: "all",
+  });
+
+  const handleSubmitForm = data => {
+    alert("ok");
+    //모아둔 전송할 데이터(axios.post전송)
+    console.log(data);
   };
 
   /*
@@ -93,12 +132,6 @@ const Calendar = () => {
       ...selectedEvent,
       [name]: value,
     });
-  };
-
-  // 수정된 일정 저장
-  const handleSubmit = () => {
-    //일정 수정폼 전송
-    setIsModalVisible(false); // 모달 닫기
   };
 
   useEffect(() => {
@@ -140,42 +173,75 @@ const Calendar = () => {
         onClose={closeModal}
         title={selectedEvent.id ? "" : "등록하기"}
       >
-        <form>
+        <form onSubmit={handleSubmit(handleSubmitForm)}>
+          <input type="hidden" value="1" {...register("idx")} />
+          <input type="hidden" value="test@test.com" {...register("mid")} />
           <div className="inputBox">
-            <label htmlFor="title">일정 제목</label>
+            <label htmlFor="titlePop">
+              실천목표 입력<span>*</span>
+            </label>
             <input
               type="text"
-              id="title"
+              id="titlePop"
               value={selectedEvent.title}
-              onChange={handleInputChange}
+              {...register("title")}
             />
           </div>
           <div className="inputBox">
-            <label htmlFor="start">시작일</label>
+            <label htmlFor="startDate">시작일</label>
             <input
               type="date"
-              id="start"
               value={selectedEvent.start}
-              onChange={handleInputChange}
+              id="startDate"
+              {...register("startDate")}
             />
           </div>
           <div className="inputBox">
-            <label htmlFor="end">종료일</label>
+            <label htmlFor="endDate">종료일</label>
             <input
               type="date"
-              id="end"
               value={selectedEvent.end}
-              onChange={handleInputChange}
+              id="endDate"
+              {...register("endDate")}
             />
           </div>
           <div className="inputBox">
-            <label htmlFor="description">간단 설명</label>
+            <label htmlFor="contentPop">세부내용 작성</label>
             <textarea
-              id="description"
+              id="contentPop"
               value={selectedEvent.description}
-              onChange={handleInputChange}
-            />
+              placeholder="내용을 입력하세요."
+              {...register("content")}
+            ></textarea>
           </div>
+          <div className="inputBox" style={{ display: "flex" }}>
+            <label style={{ minWidth: "auto", margin: "0px 20px 0px 0px" }}>
+              달성 여부
+            </label>
+            <input
+              type="radio"
+              value="0"
+              id="value0"
+              {...register("success")}
+              checked
+            />
+            &nbsp;
+            <label htmlFor="value0" style={{ minWidth: "auto", margin: "0px" }}>
+              진행중
+            </label>
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input
+              type="radio"
+              value="1"
+              id="value1"
+              {...register("success")}
+            />
+            &nbsp;
+            <label htmlFor="value1" style={{ minWidth: "auto", margin: "0px" }}>
+              달성 완료
+            </label>
+          </div>
+
           <div className="inputBox">
             <label>색상 선택</label>
             <div

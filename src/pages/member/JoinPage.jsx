@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { joinMember } from "../../apis/member";
 import SubpageVisual from "../../components/subpageVisual/SubpageVisual";
 import { useState } from "react";
+import axios from "axios";
 
 const MemberJoinWrap = styled.div`
   padding: 0px 50px;
@@ -87,7 +88,11 @@ const schema = yup.object({
   user_id: yup
     .string()
     .required("이메일은 필수입니다.")
-    .email("올바른 이메일 형식이 아닙니다."),
+    .email("올바른 이메일 형식이 아닙니다.")
+    .matches(
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i,
+      "올바른 이메일 형식이 아닙니다.",
+    ),
   upw: yup
     .string()
     .required("비밀번호는 필수입니다.")
@@ -149,9 +154,9 @@ function JoinPage() {
     setIsUserIdChecking(true); //중복 검사중
 
     try {
-      const res = { resultData: 0 };
-      //const res = await axios.get("http://192.168.0.106:5000/member?nick_name=${userNickname}");
-      //console.log(res.data);
+      //const res = { resultData: 0 };
+      const res = await axios.get(`api/user/email?userId=${userId}`);
+      console.log(res.data);
 
       if (res.resultData === 1) {
         setIsUserIdAvailable(true); //사용가능
@@ -176,9 +181,9 @@ function JoinPage() {
     setIsChecking(true); //중복 검사중
 
     try {
-      const res = { resultData: 1 };
-      //const res = await axios.get("http://192.168.0.106:5000/member?nick_name=${userNickname}");
-      //console.log(res.data);
+      //const res = { resultData: 1 };
+      const res = await axios.get("/api/user/nickname?nick_name=${userNick}");
+      console.log(res.data);
 
       if (res.resultData === 1) {
         setIsNicknameAvailable(true); //사용가능
