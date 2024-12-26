@@ -1,0 +1,60 @@
+{
+    "statusCode": 200,
+    "resultMsg": "만다라트 조회완료",
+    "resultData": {
+        "project_id": "1",
+        "title": "공유한 만다라트 제목",
+        "nickName": "주머니",
+        "created_at": "2024-12-14",
+        "content": "공유 만다라트 내용 블라블라",
+        "likeCnt": 5,
+        "likeFg": 1,
+        "mandalart": [
+            {
+                "mandalart_id": 0,
+                "parent_id" : null,
+                "title": "만다라트 명칭",
+                "contetnts": "만다라트 내용",
+                "completed_fg": 0,
+                "depth": 0,
+                "start_date": null,
+                "finish_date": null,
+                "order_id": 0
+            },
+            {
+                "mandalart_id": 1,
+                "parent_id" : 0,
+                "title": "만다라트 명칭",
+                "contetnts": "만다라트 내용",
+                "completed_fg": 0,
+                "depth": 1,
+                "start_date": null,
+                "finish_date": null,
+                "order_id": 0
+            },
+            {
+                "mandalart_id": 2,
+                "parent_id" : 0,
+                "title": "만다라트 명칭",
+                "contetnts": "만다라트 내용",
+                "completed_fg": 0,
+                "depth": 1,
+                "start_date": null,
+                "finish_date": null,
+                "order_id": 1
+            },
+            {
+                "mandalart_id": 3,
+                "parent_id" : 0,
+                "title": "만다라트 명칭",
+                "contetnts": "만다라트 내용",
+                "completed_fg": 0,
+                "depth": 1,
+                "start_date": null,
+                "finish_date": null,
+                "order_id": 2
+            }
+        ...
+        ]
+    }
+}

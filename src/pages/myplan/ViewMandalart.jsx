@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import PopupLayout from "../../components/PopupLayout";
 import { deleteMyplan } from "../../apis/myplan";
+import GridLevel0View from "../mandalarttt/GridLevel0View";
 
 const MandalartDetailView = styled.div`
   .detailWrap {
@@ -148,41 +149,15 @@ function ViewMandalart() {
         </div>
         <div className="inputBox">
           <label></label>
-          <div>
+          <div
+            style={{
+              gap: "20px",
+            }}
+          >
             {/* 만다라트 계획표 출력 */}
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                width: "994px",
-                margin: "20px 0px 20px 0px",
-                border: "2px solid #666",
-              }}
-            >
-              {/* 만다라트 계획표 출력 */}
-              {[...Array(divBox)].map((item, index) => {
-                return index < divBox ? (
-                  <div
-                    key={index}
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "110px",
-                      height: "110px",
-                      borderRight: "1px solid #eee",
-                      borderBottom: "1px solid #eee",
-                      backgroundColor: `${index === 40 ? "#D8EFD3" : ""}`,
-                    }}
-                  >
-                    {index + 1}
-                  </div>
-                ) : (
-                  ""
-                );
-              })}
+            <div>
+              <GridLevel0View />
             </div>
 
             <div>
@@ -290,7 +265,7 @@ function ViewMandalart() {
           </Link>
         </ButtonWrap>
       </div>
-
+      {/* 하단 버튼들 */}
       {isDeleteVisible && (
         <PopupLayout
           isVisible={isDeleteVisible}

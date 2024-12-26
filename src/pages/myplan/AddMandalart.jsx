@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { UserInfoContext } from "../../contexts/UserInfoContext";
 import PopupLayout from "../../components/PopupLayout";
+import GridLevel0 from "../mandalarttt/GridLevel0";
 
 const MyplanWrap = styled.div`
   max-width: 1200px;
@@ -177,39 +178,7 @@ function AddMandalart() {
               4. 계획표 관리 : 계획표를 정기적으로 검토하고 수정하며 실행합니다.
             </div>
 
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                width: "1003px",
-                border: "2px solid #666",
-              }}
-            >
-              {/* 만다라트 계획표 출력 */}
-              {[...Array(divBox)].map((item, index) => {
-                return index < divBox ? (
-                  <div
-                    key={index}
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "111px",
-                      height: "111px",
-                      borderRight: "1px solid #eee",
-                      borderBottom: "1px solid #eee",
-                      backgroundColor: `${index === 40 ? "#D8EFD3" : ""}`,
-                    }}
-                    onClick={() => setIsAddVisible(true)}
-                  >
-                    {index + 1}
-                  </div>
-                ) : (
-                  ""
-                );
-              })}
-            </div>
+            <GridLevel0 />
           </div>
         </div>
 
@@ -219,85 +188,6 @@ function AddMandalart() {
           </Link>
         </ButtonWrap>
       </MyplanWrap>
-
-      {isAddVisible && (
-        <PopupLayout isVisible={isAddVisible} onClose={closeModal} title={""}>
-          <form>
-            <input type="hidden" value="1" {...register("idx")} />
-            <input type="hidden" value="test@test.com" {...register("mid")} />
-            <div className="inputBox">
-              <label htmlFor="titlePop">
-                실천목표 입력<span>*</span>
-              </label>
-              <input type="text" id="titlePop" {...register("titlePop")} />
-            </div>
-            <div className="inputBox">
-              <label htmlFor="startDate">시작일</label>
-              <input type="date" id="startDate" {...register("startDate")} />
-            </div>
-            <div className="inputBox">
-              <label htmlFor="endDate">종료일</label>
-              <input type="date" id="endDate" {...register("endDate")} />
-            </div>
-            <div className="inputBox">
-              <label htmlFor="contentPop">세부내용 작성</label>
-              <textarea
-                id="contentPop"
-                placeholder="내용을 입력하세요."
-                {...register("contentPop")}
-              ></textarea>
-            </div>
-
-            <div className="inputBox" style={{ display: "flex" }}>
-              <label style={{ minWidth: "auto", margin: "0px 20px 0px 0px" }}>
-                달성 여부
-              </label>
-              <input
-                type="radio"
-                value="0"
-                id="value0"
-                {...register("success")}
-                checked
-              />
-              &nbsp;
-              <label
-                htmlFor="value0"
-                style={{ minWidth: "auto", margin: "0px" }}
-              >
-                진행중
-              </label>{" "}
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <input
-                type="radio"
-                value="1"
-                name="success"
-                id="value1"
-                {...register("success")}
-              />
-              &nbsp;
-              <label
-                htmlFor="value1"
-                style={{ minWidth: "auto", margin: "0px" }}
-              >
-                달성 완료
-              </label>
-            </div>
-
-            <div className="buttonWrap">
-              <button
-                type="button"
-                className="btnPopLine"
-                onClick={() => setIsAddVisible(false)}
-              >
-                취소하기
-              </button>
-              <button type="submit" className="btnPupColor">
-                저장하기
-              </button>
-            </div>
-          </form>
-        </PopupLayout>
-      )}
     </>
   );
 }
