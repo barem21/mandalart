@@ -8,6 +8,7 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import PopupLayout from "../../components/PopupLayout";
 import { getSession } from "../../apis/member";
+import { getMyplan, postMyplan } from "../../apis/myplan";
 
 //세션 생성
 const LOGIN_SESSION_KEY = "login_session";
@@ -117,7 +118,7 @@ function MyPlan() {
     formState: { errors: errors },
   } = useForm({
     defaultValues: {
-      user_id: "",
+      userId: "",
       title: "",
       content: "",
     },
@@ -139,12 +140,25 @@ function MyPlan() {
     mode: "all",
   });
 
-  const onSubmit = data => {
-    console.log(data);
+  //내 만다라트 가져오기
+  const getMandalart = async data => {
     try {
-      //만다라트 생성 데이터 처리
+      const result = await getMyplan(data); //axios
+      console.log(result.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const onSubmit = async data => {
+    try {
       //axios post
-      navigate("/myplan/add");
+      const result = await postMyplan(data); //axios
+      console.log(result.data);
+
+      if (result.data.resultData.projectId) {
+        navigate(`/myplan/add?projectId=${result.data.resultData.projectId}`);
+      }
     } catch (error) {
       console.log("만다라트 생성 실패:", error);
     }
@@ -183,11 +197,11 @@ function MyPlan() {
   }, [sessionData, navigate]);
 
   useEffect(() => {
-    setValue("user_id", sessionData && sessionData.resultData.userId);
+    setValue("userId", sessionData && sessionData.userId);
   }, [sessionData, setValue]);
 
   useEffect(() => {
-    setValueSearch("user_id", sessionData && sessionData.resultData.userId);
+    setValueSearch("user_id", sessionData && sessionData.userId);
   }, [setValueSearch, sessionData]);
 
   return (
@@ -250,7 +264,7 @@ function MyPlan() {
       {isModalVisible && (
         <PopupLayout isVisible={isModalVisible} onClose={closeModal} title={""}>
           <form onSubmit={handleSubmit(onSubmit)}>
-            <input type="hidden" {...register("user_id")} />
+            <input type="hidden" {...register("userId")} />
             <div className="inputBox">
               <label htmlFor="title">만다라트 제목 입력</label>
               <input
