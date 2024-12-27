@@ -2,24 +2,9 @@ import axios from "axios";
 
 //axios연동(로그인)
 export const loginMember = async data => {
-  //console.log(data);
   try {
-    /*
-    const res = {
-      resultMsg: "로그인 성공",
-      resultData: {
-        nickName: "슈퍼스타",
-        userId: "test@gmail.com",
-        pic: "aaa.jpg",
-        imProjects: [
-          { projectId: 0, title: "6개월 러닝 계획", cnt: 3 },
-          { projectId: 1, title: "2개월 독서 계획", cnt: 1 },
-        ],
-      },
-    };
-    */
     const res = await axios.post("api/user/signIn", data);
-    console.log("로그인 결과 : ", res);
+    console.log("로그인 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
     console.log(error);
@@ -30,8 +15,6 @@ export const loginMember = async data => {
 //axios연동(회원가입)
 export const joinMember = async data => {
   try {
-    console.log(data);
-
     //파일은 string가 아니라 binary
     const formData = new FormData();
 
@@ -81,11 +64,38 @@ export const joinMember = async data => {
 export const editMember = async data => {
   console.log(data);
   try {
-    const res = { data: "ok" };
-    //const header = { headers: { "Content-Type": "multipart/form-data" } };
-    //const res = await axios.patch("api/user/put", data, header);
-    //console.log("회원정보 수정 결과 : ", res.data);
-    return res; //결과 리턴
+    //파일은 string가 아니라 binary
+    const formData = new FormData();
+
+    if (data.pic) {
+      formData.append("pic", data.pic); // 파일일 경우
+    } else {
+      formData.append("pic", null); // 파일이 없을 경우
+    }
+
+    //JSON 형태로 데이터를 만들어 formData에 추가
+    formData.append(
+      new Blob(
+        "p",
+        [
+          JSON.stringify({
+            userId: data.userId,
+            upw: data.upw,
+            nickName: data.nickName,
+          }),
+        ],
+        { type: "application/json" },
+      ),
+    );
+
+    const header = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    const res = await axios.put("api/user", formData, header);
+    console.log("회원정보 수정 결과 : ", res.data);
+    return res.data; //결과 리턴
   } catch (error) {
     console.log(error);
     return error;
@@ -107,13 +117,11 @@ export const deleteMember = async data => {
 };
 
 //axios연동(임시비밀번호 발급)
-export const changePassword = data => {
-  console.log(data);
+export const changePassword = async data => {
   try {
-    const res = { data: "ok" };
-    //const res = await axios.post("api/user/password",data);
+    const res = await axios.post("api/user/password", data);
     //console.log("임시비밀번호 발송 결과 : ", res.data);
-    return res; //결과 리턴
+    return res.data; //결과 리턴
   } catch (error) {
     console.log(error);
     return error;

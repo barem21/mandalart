@@ -48,6 +48,11 @@ const ErrorMessage = styled.p`
   color: #55ad9b;
   font-size: 13px;
 `;
+const ErrorMessageRed = styled.p`
+  margin-left: 10px;
+  color: #ff3300;
+  font-size: 13px;
+`;
 
 const ButtonWrap = styled.div`
   display: flex;
@@ -85,7 +90,7 @@ const schema = yup.object({
   new_upw_confirm: yup
     .string()
     .oneOf([yup.ref("new_upw")], "비밀번호가 일치하지 않습니다."),
-  nick_name: yup
+  nickName: yup
     .string()
     .required("닉네임은 필수입니다.")
     .min(2, "닉네임은 최소 2자 이상 입력해주세요.")
@@ -116,11 +121,11 @@ function EditPage() {
     formState: { errors: formError1 },
   } = useForm({
     defaultValues: {
-      user_id: "",
+      userId: "",
       upw: "",
-      new_upw: "",
-      new_upw_confirm: "",
-      nick_name: "",
+      newUpw: "",
+      checkUpw: "",
+      nickName: "",
     },
     mode: "all",
     resolver: yupResolver(schema),
@@ -132,7 +137,7 @@ function EditPage() {
     setValue: setValueForm2,
   } = useForm({
     defaultValues: {
-      user_id: "",
+      userId: "",
     },
   });
 
@@ -151,16 +156,16 @@ function EditPage() {
     setIsChecking(true); //중복 검사중
 
     try {
-      const res = await axios.get("api/member?nick_name=${userNick}");
+      const res = await axios.get(`api/user/nickName?nickName=${userNick}`);
       console.log(res.data);
 
-      if (res.resultData === 1) {
+      if (res.data.resultData === 1) {
         setIsNicknameAvailable(true); //사용가능
       } else {
         setIsNicknameAvailable(false); //중복
       }
     } catch (error) {
-      console.error("Error nick_name:", error);
+      console.error("Error nickName:", error);
       setIsNicknameAvailable(null);
     } finally {
       setIsChecking(false); //종복 검사완료
@@ -169,7 +174,13 @@ function EditPage() {
 
   //회원정보 수정
   const onSubmit = async data => {
-    //console.log(data);
+    if (isNicknameAvailable === false) {
+      alert(
+        "이미 사용중인 닉네임입니다.\n닉네임 중복체크를 다시 진행해 주세요.",
+      );
+      return;
+    }
+
     try {
       const result = await editMember(data); //axios처리(수정)
       if (result.data) {
@@ -186,7 +197,6 @@ function EditPage() {
 
   //회원탈퇴
   const onSubmit2 = async data => {
-    //console.log(data);
     try {
       const result = await deleteMember(data); //axios처리(삭제)
       if (result.data) {
@@ -209,9 +219,9 @@ function EditPage() {
   }, []);
 
   useEffect(() => {
-    setValueForm1("user_id", userId);
-    setValueForm1("nick_name", nickName);
-    setValueForm2("user_id", userId);
+    setValueForm1("userId", userId);
+    setValueForm1("nickName", nickName);
+    setValueForm2("userId", userId);
     return () => {};
   }, []);
 
@@ -228,7 +238,7 @@ function EditPage() {
                 이메일 <span>*</span>
               </label>
               <p style={{ padding: "10px 0px", color: "#999" }}>{userId}</p>
-              <input type="hidden" {...registerForm1("user_id")} />
+              <input type="hidden" {...registerForm1("userId")} />
             </div>
 
             <div className="inputBox">
@@ -253,11 +263,11 @@ function EditPage() {
                 type="password"
                 id="new_password"
                 maxLength={16}
-                {...registerForm1("new_upw")}
+                {...registerForm1("newUpw")}
               />
               {/* 에러내용 출력 */}
-              {formError1.new_upw && (
-                <ErrorMessage>({formError1.new_upw?.message})</ErrorMessage>
+              {formError1.newUpw && (
+                <ErrorMessage>({formError1.newUpw?.message})</ErrorMessage>
               )}
             </div>
 
@@ -267,13 +277,11 @@ function EditPage() {
                 type="password"
                 id="new_password_confirm"
                 maxLength={16}
-                {...registerForm1("new_password_confirm")}
+                {...registerForm1("checkUpw")}
               />
               {/* 에러내용 출력 */}
-              {formError1.new_password_confirm && (
-                <ErrorMessage>
-                  ({formError1.new_password_confirm?.message})
-                </ErrorMessage>
+              {formError1.checkUpw && (
+                <ErrorMessage>({formError1.checkUpw?.message})</ErrorMessage>
               )}
             </div>
 
@@ -285,7 +293,7 @@ function EditPage() {
                 type="text"
                 id="nickname"
                 maxLength={10}
-                {...registerForm1("nick_name")}
+                {...registerForm1("nickName")}
               />
               <button
                 type="button"
@@ -296,18 +304,23 @@ function EditPage() {
                 중복체크
               </button>
               {/* 에러내용 출력 */}
-              {formError1.nick_name && (
-                <ErrorMessage>({formError1.nick_name.message})</ErrorMessage>
+              {formError1.nickName && (
+                <ErrorMessage>({formError1.nickName.message})</ErrorMessage>
               )}
 
+              {/*
               {isChecking && (
                 <ErrorMessage>(닉네임 중복체크 중입니다.)</ErrorMessage>
               )}
+              */}
+
               {isNicknameAvailable === true && (
                 <ErrorMessage>(사용 가능한 닉네임입니다.)</ErrorMessage>
               )}
               {isNicknameAvailable === false && (
-                <ErrorMessage>(이미 사용 중인 닉네임입니다.)</ErrorMessage>
+                <ErrorMessageRed>
+                  (이미 사용 중인 닉네임입니다.)
+                </ErrorMessageRed>
               )}
             </div>
 
@@ -355,7 +368,7 @@ function EditPage() {
               <div className="buttonWrap">
                 <input
                   type="hidden"
-                  {...registerForm2("user_id")}
+                  {...registerForm2("userId")}
                   value={userId}
                 />
                 <button

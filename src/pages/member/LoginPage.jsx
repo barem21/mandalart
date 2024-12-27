@@ -85,6 +85,7 @@ function LoginPage() {
   const onSubmit = async data => {
     try {
       const result = await loginMember(data); //axios 전송하기
+      //console.log(result.data);
 
       if (result.data.resultData.userId) {
         setSession(LOGIN_SESSION_KEY, result.data.resultData); //session

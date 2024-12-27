@@ -1,17 +1,16 @@
 import axios from "axios";
 
 //axios연동(나의 만다라트 가져오기)
-export const getMyplan = async data => {
+export const getMyplan = async () => {
   //console.log(data);
-  //const data={user}
+  //const data = { user };
   try {
     //const res = { data: "ok" };
     const res = await axios.get(
-      `api/project?user_id={userId}&searchText={search_text}&searchFilter={search_filter}&page=1&size=30`,
-      data,
+      `api/project?searchFilter=1&userId=test@gmail.com&page=1&size=30`,
     );
-    //console.log("등록하기 결과 : ", res.data);
-    return res; //결과 리턴
+    //console.log("목록보기 결과 : ", res.data);
+    return res.data; //결과 리턴
   } catch (error) {
     console.log(error);
     return error;
