@@ -3,9 +3,16 @@ import "./gridlevel0.css";
 
 import GridLevel1_Main from "../mandalartt/GridLevel1_Main";
 import { getGridData } from "../../apis/grid";
+import { useSearchParams } from "react-router-dom";
 
 function GridLevel0() {
-  const [mandalart] = useState(getGridData);
+  useEffect(() => {
+    getGridData();
+    return () => {};
+  }, []);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const pId = searchParams.get("projectId");
+  const mandalart = useState(getGridData);
 
   const [normalData, setNormalData] = useState([
     // ...resultData.mandalart
