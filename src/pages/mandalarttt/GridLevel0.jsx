@@ -3,6 +3,7 @@ import "./gridlevel0.css";
 
 import GridLevel1_Main from "../mandalartt/GridLevel1_Main";
 import { getGridData } from "../../apis/grid";
+
 function GridLevel0() {
   const [mandalart] = useState(getGridData);
 
@@ -528,7 +529,7 @@ function GridLevel0() {
   ]);
 
   useEffect(() => {
-    console.log("normalData : ", normalData);
+    // console.log("normalData : ", normalData);
     getGridData;
   }, [normalData]);
 
