@@ -108,6 +108,7 @@ const schema = yup.object({
 
 function MyPlan() {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [myList, setMyList] = useState([]);
   const navigate = useNavigate();
   const sessionData = getSession(LOGIN_SESSION_KEY);
 
@@ -144,7 +145,7 @@ function MyPlan() {
   const getMandalart = async data => {
     try {
       const result = await getMyplan(data); //axios
-      console.log(result.data);
+      setMyList(result.resultData);
     } catch (error) {
       console.log(error);
     }
@@ -154,7 +155,6 @@ function MyPlan() {
     try {
       //axios post
       const result = await postMyplan(data); //axios
-      console.log(result.data);
 
       if (result.data.resultData.projectId) {
         navigate(`/myplan/add?projectId=${result.data.resultData.projectId}`);
@@ -203,6 +203,10 @@ function MyPlan() {
   useEffect(() => {
     setValueSearch("user_id", sessionData && sessionData.userId);
   }, [setValueSearch, sessionData]);
+
+  useEffect(() => {
+    getMandalart();
+  }, []);
 
   return (
     <>
@@ -259,7 +263,7 @@ function MyPlan() {
         </BoardTop>
       </form>
 
-      <LoopContent location={"myplan"} datas={sampleData} />
+      <LoopContent location={"myplan"} datas={myList} />
 
       {isModalVisible && (
         <PopupLayout isVisible={isModalVisible} onClose={closeModal} title={""}>

@@ -58,11 +58,15 @@ const ButtonWrap = styled.div`
 
 //yup 관련 설정
 const schema = yup.object({
-  user_id: yup
+  userId: yup
     .string()
     .required("이메일을 입력해 주세요.")
-    .email("올바른 이메일 형식이 아닙니다."),
-  upw: yup.string().required("비밀번호를 입력해 주세요."),
+    .email("올바른 이메일 형식이 아닙니다.")
+    .matches(
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i,
+      "올바른 이메일 형식이 아닙니다.",
+    ),
+  //upw: yup.string().required("비밀번호를 입력해 주세요."),
 });
 
 function ChangePwPage() {
@@ -74,21 +78,20 @@ function ChangePwPage() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      user_id: "",
+      userId: "",
     },
     mode: "all",
     resolver: yupResolver(schema),
   });
 
   const onSubmit = async data => {
-    console.log(data);
     try {
       const result = await changePassword(data); //axios 전송하기
+      console.log(result.resultData);
 
-      //if (result.data) {
-      if (result) {
+      if (result.resultData === 1) {
         alert("임시 비밀번호가 이메일로 발송되었습니다.");
-        navigate("/ligin"); //로그인 페이지로 이동
+        //navigate("/login"); //로그인 페이지로 이동
       } else {
         alert("회원정보가 잘못되었습니다.\n다시 확인해 주세요.");
       }
@@ -118,12 +121,12 @@ function ChangePwPage() {
                 id="email"
                 placeholder="이메일 아이디 입력"
                 maxLength={30}
-                {...register("user_id")}
+                {...register("userId")}
               />
             </div>
             {/* 에러내용 출력 */}
-            {errors.user_id && (
-              <ErrorMessage>({errors.user_id?.message})</ErrorMessage>
+            {errors.userId && (
+              <ErrorMessage>({errors.userId?.message})</ErrorMessage>
             )}
 
             <ButtonWrap>

@@ -52,20 +52,20 @@ const ShowMandalartList = styled.div`
 `;
 
 const LoopContent = ({ location, datas }) => {
-  //console.log(datas);
+  console.log(datas);
   return (
     <ShowMandalartList>
-      {datas.map(data => (
-        <div className="loopContent" key={data.id}>
-          <Link to={`/${location}/view?id=${data.id}`}>
+      {datas.map((item, index) => (
+        <div className="loopContent" key={index}>
+          <Link to={`/${location}/view?id=${item.projectId}`}>
             <div className="profileImage">
-              <img src={data.img} alt="" />
+              <img src={item.pic ? item.pic : "share_mandalart2.png"} alt="" />
               {location === "share" && (
-                <div className="voteCount">추천 {data.vote}</div>
+                <div className="voteCount">추천 {item.sharedFg}</div>
               )}
             </div>
-            <p className="title">{data.title}</p>
-            <p className="date">{data.date}</p>
+            <p className="title">{item.title}</p>
+            <p className="date">{item.createDate}</p>
           </Link>
         </div>
       ))}

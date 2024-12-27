@@ -41,6 +41,11 @@ const ErrorMessage = styled.p`
   color: #55ad9b;
   font-size: 13px;
 `;
+const ErrorMessageRed = styled.p`
+  margin-left: 10px;
+  color: #ff3300;
+  font-size: 13px;
+`;
 
 const Agreements = styled.div`
   margin: 40px 0px;
@@ -181,11 +186,10 @@ function JoinPage() {
     setIsChecking(true); //중복 검사중
 
     try {
-      //const res = { resultData: 1 };
-      const res = await axios.get("api/user/nickname?nick_name=${userNick}");
+      const res = await axios.get(`api/user/nickName?nickName=${userNick}`);
       console.log(res.data);
 
-      if (res.resultData === 1) {
+      if (res.data.resultData === 1) {
         setIsNicknameAvailable(true); //사용가능
       } else {
         setIsNicknameAvailable(false); //중복
@@ -199,6 +203,19 @@ function JoinPage() {
   };
 
   const onSubmit = async data => {
+    if (isUserIdAvailable === false) {
+      alert(
+        "이미 사용중인 아이디입니다.\n아이디 중복체크를 다시 진행해 주세요.",
+      );
+      return;
+    }
+    if (isNicknameAvailable === false) {
+      alert(
+        "이미 사용중인 닉네임입니다.\n닉네임 중복체크를 다시 진행해 주세요.",
+      );
+      return;
+    }
+
     try {
       const result = await joinMember(data); //axios 전송하기(등록)
       if (result.data) {
@@ -254,7 +271,9 @@ function JoinPage() {
                 <ErrorMessage>(사용 가능한 이메일입니다.)</ErrorMessage>
               )}
               {isUserIdAvailable === false && (
-                <ErrorMessage>(이미 사용 중인 이메일입니다.)</ErrorMessage>
+                <ErrorMessageRed>
+                  (이미 사용 중인 이메일입니다.)
+                </ErrorMessageRed>
               )}
             </div>
 
@@ -318,13 +337,15 @@ function JoinPage() {
               {isChecking && (
                 <ErrorMessage>(닉네임 중복체크 중입니다.)</ErrorMessage>
               )}
-                */}
+              */}
 
               {isNicknameAvailable === true && (
                 <ErrorMessage>(사용 가능한 닉네임입니다.)</ErrorMessage>
               )}
               {isNicknameAvailable === false && (
-                <ErrorMessage>(이미 사용 중인 닉네임입니다.)</ErrorMessage>
+                <ErrorMessageRed>
+                  (이미 사용 중인 닉네임입니다.)
+                </ErrorMessageRed>
               )}
             </div>
 
