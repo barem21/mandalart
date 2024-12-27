@@ -85,7 +85,7 @@ const ButtonWrap = styled.div`
 //yup 관련 설정
 //1. schema를 먼저 설정한다.
 const schema = yup.object({
-  user_id: yup
+  userId: yup
     .string()
     .required("이메일은 필수입니다.")
     .email("올바른 이메일 형식이 아닙니다.")
@@ -106,7 +106,7 @@ const schema = yup.object({
     .string()
     .required("비밀번호 확인은 필수입니다.")
     .oneOf([yup.ref("upw")], "비밀번호가 일치하지 않습니다."),
-  nick_name: yup
+  nickName: yup
     .string()
     .required("닉네임은 필수입니다.")
     .max(10, "닉네임은 최대 10자까지 가능합니다."),
@@ -129,10 +129,10 @@ function JoinPage() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      user_id: "",
+      userId: "",
       upw: "",
       upw_confirm: "",
-      nick_name: "",
+      nickName: "",
       policy: false,
     },
     mode: "all",
@@ -145,7 +145,7 @@ function JoinPage() {
   };
 
   //아이디(이메일) 중복확인
-  const userId = watch("user_id"); //닉네임 입력상태 추적
+  const userId = watch("userId"); //이메일 입력상태 추적
   const checkUserIdAvailability = async () => {
     if (userId.length === 0) {
       setIsUserIdAvailable(null);
@@ -156,9 +156,9 @@ function JoinPage() {
     try {
       //const res = { resultData: 0 };
       const res = await axios.get(`api/user/email?userId=${userId}`);
-      console.log(res.data);
+      console.log(res.data.resultData);
 
-      if (res.resultData === 1) {
+      if (res.data.resultData === 1) {
         setIsUserIdAvailable(true); //사용가능
       } else {
         setIsUserIdAvailable(false); //중복
@@ -172,7 +172,7 @@ function JoinPage() {
   };
 
   //닉네임 중복확인
-  const userNick = watch("nick_name"); //닉네임 입력상태 추적
+  const userNick = watch("nickName"); //닉네임 입력상태 추적
   const checkNicknameAvailability = async () => {
     if (userNick.length === 0) {
       setIsNicknameAvailable(null);
@@ -182,7 +182,7 @@ function JoinPage() {
 
     try {
       //const res = { resultData: 1 };
-      const res = await axios.get("/api/user/nickname?nick_name=${userNick}");
+      const res = await axios.get("api/user/nickname?nick_name=${userNick}");
       console.log(res.data);
 
       if (res.resultData === 1) {
@@ -191,7 +191,7 @@ function JoinPage() {
         setIsNicknameAvailable(false); //중복
       }
     } catch (error) {
-      console.error("Error nick_name:", error);
+      console.error("Error nickName:", error);
       setIsNicknameAvailable(null);
     } finally {
       setIsChecking(false); //종복 검사완료
@@ -229,7 +229,7 @@ function JoinPage() {
                 type="text"
                 id="email"
                 maxLength={30}
-                {...register("user_id")}
+                {...register("userId")}
               />
               <button
                 type="button"
@@ -240,13 +240,16 @@ function JoinPage() {
                 중복체크
               </button>
               {/* 에러내용 출력 */}
-              {errors.user_id && (
-                <ErrorMessage>({errors.user_id?.message})</ErrorMessage>
+              {errors.userId && (
+                <ErrorMessage>({errors.userId?.message})</ErrorMessage>
               )}
 
+              {/*
               {isUserIdChecking && (
                 <ErrorMessage>(이메일 중복체크 중입니다.)</ErrorMessage>
               )}
+              */}
+
               {isUserIdAvailable === true && (
                 <ErrorMessage>(사용 가능한 이메일입니다.)</ErrorMessage>
               )}
@@ -295,9 +298,8 @@ function JoinPage() {
                 type="text"
                 id="nickname"
                 maxLength={10}
-                onClick={e => checkNicknameAvailability(e)}
                 disabled={isChecking}
-                {...register("nick_name")}
+                {...register("nickName")}
               />
               <button
                 type="button"
@@ -308,13 +310,16 @@ function JoinPage() {
                 중복체크
               </button>
               {/* 에러내용 출력 */}
-              {errors.nick_name && (
-                <ErrorMessage>({errors.nick_name?.message})</ErrorMessage>
+              {errors.nickName && (
+                <ErrorMessage>({errors.nickName?.message})</ErrorMessage>
               )}
 
+              {/*
               {isChecking && (
                 <ErrorMessage>(닉네임 중복체크 중입니다.)</ErrorMessage>
               )}
+                */}
+
               {isNicknameAvailable === true && (
                 <ErrorMessage>(사용 가능한 닉네임입니다.)</ErrorMessage>
               )}
@@ -326,7 +331,7 @@ function JoinPage() {
             <div className="inputBox">
               <label htmlFor="profile">프로필 등록</label>
               <div style={{ padding: "10px 0px" }}>
-                <input type="file" id="profile" {...register("profile")} />
+                <input type="file" id="profile" {...register("pic")} />
               </div>
             </div>
 

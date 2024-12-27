@@ -121,7 +121,7 @@ function ListMandalart() {
   };
 
   useEffect(() => {
-    setValueSearch("user_id", sessionData && sessionData.resultData.userId);
+    setValueSearch("user_id", sessionData && sessionData.userId);
   }, [setValueSearch, sessionData]);
 
   return (

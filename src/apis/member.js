@@ -2,8 +2,9 @@ import axios from "axios";
 
 //axios연동(로그인)
 export const loginMember = async data => {
-  console.log(data);
+  //console.log(data);
   try {
+    /*
     const res = {
       resultMsg: "로그인 성공",
       resultData: {
@@ -16,8 +17,9 @@ export const loginMember = async data => {
         ],
       },
     };
-    //const res = await axios.post("api/user/signIn", data);
-    //console.log("로그인 결과 : ", res);
+    */
+    const res = await axios.post("api/user/signIn", data);
+    console.log("로그인 결과 : ", res);
     return res; //결과 리턴
   } catch (error) {
     console.log(error);
@@ -27,12 +29,47 @@ export const loginMember = async data => {
 
 //axios연동(회원가입)
 export const joinMember = async data => {
-  console.log(data);
   try {
-    const res = { data: "ok" };
-    //const header = { headers: { "Content-Type": "multipart/form-data" } };
-    //const res = await axios.post("api/user/signup", data, header);
-    //console.log("회원가입 결과 : ", res.data);
+    console.log(data);
+
+    //파일은 string가 아니라 binary
+    const formData = new FormData();
+
+    /*
+    formData.append("userId", data.userId);
+    formData.append("upw", data.upw);
+    formData.append("nickName", data.nickName);
+    */
+
+    if (data.pic) {
+      formData.append("pic", data.pic); // 파일일 경우
+    } else {
+      formData.append("pic", null); // 파일이 없을 경우
+    }
+
+    //JSON 형태로 데이터를 만들어 formData에 추가
+    formData.append(
+      "p",
+      new Blob(
+        [
+          JSON.stringify({
+            userId: data.userId,
+            upw: data.upw,
+            nickName: data.nickName,
+          }),
+        ],
+        { type: "application/json" },
+      ),
+    );
+
+    const header = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+
+    const res = await axios.post("api/user/signUp", formData, header);
+    console.log("회원가입 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
     console.log(error);

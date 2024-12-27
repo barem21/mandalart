@@ -137,7 +137,7 @@ const Header = () => {
         {sessionData ? (
           <>
             <p className="userInfo">
-              <span>{sessionData.resultData.nickName}</span>님, 환영합니다.
+              <span>{sessionData.nickName}</span>님, 환영합니다.
             </p>
             <Link to={"/logout"}>로그아웃</Link>
             <span className="vLine">|</span>

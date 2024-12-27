@@ -7,6 +7,7 @@ import * as yup from "yup";
 import { deleteMember, getSession, editMember } from "../../apis/member";
 import PopupLayout from "../../components/PopupLayout";
 import SubpageVisual from "../../components/subpageVisual/SubpageVisual";
+import axios from "axios";
 
 //세션 생성
 const LOGIN_SESSION_KEY = "login_session";
@@ -101,7 +102,7 @@ function EditPage() {
   const navigate = useNavigate();
 
   const sessionData = getSession(LOGIN_SESSION_KEY);
-  const { userId, nickName, userPic } = sessionData.resultData;
+  const { userId, nickName, userPic } = sessionData;
 
   const closeModal = () => {
     setIsModalVisible(false);
@@ -141,7 +142,7 @@ function EditPage() {
   };
 
   //닉네임 중복확인
-  const userNick = watch("nick_name"); //닉네임 입력상태 추적
+  const userNick = watch("nickName"); //닉네임 입력상태 추적
   const checkNicknameAvailability = async () => {
     if (userNick.length === 0) {
       setIsNicknameAvailable(null);
@@ -150,9 +151,8 @@ function EditPage() {
     setIsChecking(true); //중복 검사중
 
     try {
-      const res = { resultData: 1 };
-      //const res = await axios.get("http://192.168.0.106:5000/member?nick_name=${userNickname}");
-      //console.log(res.data);
+      const res = await axios.get("api/member?nick_name=${userNick}");
+      console.log(res.data);
 
       if (res.resultData === 1) {
         setIsNicknameAvailable(true); //사용가능

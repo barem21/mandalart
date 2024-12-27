@@ -3,9 +3,13 @@ import axios from "axios";
 //axios연동(나의 만다라트 가져오기)
 export const getMyplan = async data => {
   //console.log(data);
+  //const data={user}
   try {
-    const res = { data: "ok" };
-    //const res = await axios.get(`api/project?user_id={user_id}&search_text={search_text}&search_filter={search_filter}&page={page}&size={size}`, data);
+    //const res = { data: "ok" };
+    const res = await axios.get(
+      `api/project?user_id={userId}&searchText={search_text}&searchFilter={search_filter}&page=1&size=30`,
+      data,
+    );
     //console.log("등록하기 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
@@ -16,10 +20,23 @@ export const getMyplan = async data => {
 
 //axios연동(나의 만다라트 등록하기)
 export const postMyplan = async data => {
+  console.log(data);
+  try {
+    const res = await axios.post("api/project", data);
+    //console.log("등록하기 결과 : ", res.data);
+    return res; //결과 리턴
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+//axios연동(나의 만다라트 수정하기)
+export const editMyplan = async data => {
   //console.log(data);
   try {
     const res = { data: "ok" };
-    //const res = await axios.post("api/project", data);
+    //const res = await axios.patch("api/project", data);
     //console.log("등록하기 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
@@ -33,7 +50,7 @@ export const deleteMyplan = async data => {
   //console.log(data);
   try {
     const res = { data: "ok" };
-    //const res = await axios.delete("http://192.168.0.106:5000/share", data);
+    //const res = await axios.delete("api/project", data);
     //console.log("회원탈퇴 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {

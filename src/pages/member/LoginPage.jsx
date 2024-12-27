@@ -58,7 +58,7 @@ const ButtonWrap = styled.div`
 
 //yup 관련 설정
 const schema = yup.object({
-  user_id: yup
+  userId: yup
     .string()
     .required("이메일을 입력해 주세요.")
     .email("올바른 이메일 형식이 아닙니다."),
@@ -75,7 +75,7 @@ function LoginPage() {
     formState: { errors },
   } = useForm({
     defaultValues: {
-      user_id: "",
+      userId: "",
       upw: "",
     },
     mode: "onBlur",
@@ -86,14 +86,13 @@ function LoginPage() {
     try {
       const result = await loginMember(data); //axios 전송하기
 
-      //if (result.data) {
-      if (result) {
-        setSession(LOGIN_SESSION_KEY, result); //session storage에 보관
-        //setSession(LOGIN_SESSION_KEY, result.data);
-
-        navigate("/"); //로그인 페이지로 이동
+      if (result.data.resultData.userId) {
+        setSession(LOGIN_SESSION_KEY, result.data.resultData); //session
+        navigate("/"); //홈으로 이동
       } else {
-        alert("회원정보가 잘못되었습니다.\n다시 확인해 주세요.");
+        alert(
+          "회원 정보가 잘못되었습니다.\n아이디, 또는 비밀번호를 확인해 주세요.",
+        );
       }
     } catch (error) {
       console.log("로그인 실패:", error);
@@ -121,12 +120,12 @@ function LoginPage() {
                 id="email"
                 placeholder="이메일 아이디 입력"
                 maxLength={30}
-                {...register("user_id")}
+                {...register("userId")}
               />
             </div>
             {/* 에러내용 출력 */}
-            {errors.user_id && (
-              <ErrorMessage>({errors.user_id?.message})</ErrorMessage>
+            {errors.userId && (
+              <ErrorMessage>({errors.userId?.message})</ErrorMessage>
             )}
 
             <div className="inputBox">
