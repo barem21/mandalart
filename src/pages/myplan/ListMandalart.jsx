@@ -186,6 +186,7 @@ function MyPlan() {
     setValueSearch("sort", value);
     handleSubmitSearch(onSubmitSearch)();
   };
+  // 등록하기 클릭시 데이터 전송
 
   useEffect(() => {
     if (!sessionData) {

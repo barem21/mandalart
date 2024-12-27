@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./gridLevel1_1.css";
-import { postGridData } from "../../apis/grid";
+import { patchGridData } from "../../apis/grid";
 
 function GridLevel1_Main({ normalDataIndex, normalData, setNormalData }) {
   // 현재 선택된 객체의 정보 한개를 보관
@@ -65,7 +65,7 @@ function GridLevel1_Main({ normalDataIndex, normalData, setNormalData }) {
   const handleSubmit = e => {
     // 웹브라우저 새로고침 방지
     e.preventDefault();
-    postGridData({ ...normalData });
+    patchGridData({ ...normalData });
   };
   useEffect(() => {
     setShowData(normalData[normalDataIndex]);
@@ -76,6 +76,7 @@ function GridLevel1_Main({ normalDataIndex, normalData, setNormalData }) {
     setSelectData(showData.find(item => item.cellId === id));
     // 완료미완료 선택창 제외 셀 case
     exceptionCell(id);
+    console.log(showData);
     setIsModalOpen(true);
   };
   // 모달 입력값 변경 처리
@@ -112,7 +113,7 @@ function GridLevel1_Main({ normalDataIndex, normalData, setNormalData }) {
           });
         }
       });
-      postGridData();
+
       return itemOrign;
     });
 
@@ -124,6 +125,7 @@ function GridLevel1_Main({ normalDataIndex, normalData, setNormalData }) {
     // 원본 데이터와 showData 동기화
     setNormalData(updatednormalData);
     setShowData(newShowData);
+    patchGridData(showData);
     // 데이터 색
     // console.log(selectData.cellId);
     console.log(selectData.title);
