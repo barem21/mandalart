@@ -8,49 +8,9 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import PopupLayout from "../../components/PopupLayout";
 import { getSession } from "../../apis/member";
-import { getMyplan, postMyplan } from "../../apis/myplan";
+import { getMyplan, postMyplan, searchMyplan } from "../../apis/myplan";
 
-//세션 생성
 const LOGIN_SESSION_KEY = "login_session";
-
-//임시 데이터
-const sampleData = [
-  {
-    id: 1,
-    img: "share_mandalart.png",
-    title: "홍길동 님의 6개월 런닝 계획표",
-    vote: 10,
-    date: "2024-12-01",
-  },
-  {
-    id: 2,
-    img: "share_mandalart2.png",
-    title: "김수한무 님의 한달 독서 계획표",
-    vote: 5,
-    date: "2024-12-01",
-  },
-  {
-    id: 3,
-    img: "share_mandalart.png",
-    title: "야옹선생 님의 1년 헬스 계획표",
-    vote: 1,
-    date: "2024-12-01",
-  },
-  {
-    id: 4,
-    img: "share_mandalart2.png",
-    title: "배워서남주자 님의 6개월 리액트 공부 계획표",
-    vote: 13,
-    date: "2024-12-01",
-  },
-  {
-    id: 5,
-    img: "share_mandalart2.png",
-    title: "마르고닮도록 님의 3개월 다이어트 계획표",
-    vote: 7,
-    date: "2024-12-01",
-  },
-];
 
 const BoardTop = styled.div`
   display: flex;
@@ -133,42 +93,58 @@ function MyPlan() {
     setValue: setValueSearch,
   } = useForm({
     defaultValues: {
-      user_id: "",
+      userId: "",
       sort: "date",
       type: "1",
-      search: "",
+      searchText: "",
     },
     mode: "all",
   });
 
   //내 만다라트 가져오기
-  const getMandalart = async data => {
+  const getMandalart = async () => {
     try {
-      const result = await getMyplan(data); //axios
+      const result = await getMyplan({
+        userId: sessionData.userId,
+        subLocation: "",
+      }); //axios
       setMyList(result.resultData);
     } catch (error) {
       console.log(error);
     }
   };
 
+  //내 만다라트 등록하기
   const onSubmit = async data => {
     try {
-      //axios post
-      const result = await postMyplan(data); //axios
+      const result = await postMyplan(data); //axios post
+      //console.log(result.resultData);
 
-      if (result.data.resultData.projectId) {
-        navigate(`/myplan/add?projectId=${result.data.resultData.projectId}`);
+      if (result.resultData.projectId) {
+        navigate(`/myplan/edit?projectId=${result.resultData.projectId}`);
       }
     } catch (error) {
       console.log("만다라트 생성 실패:", error);
     }
   };
 
-  const onSubmitSearch = data => {
-    console.log(data);
+  //내 만다라트 검색
+  const onSubmitSearch = async data => {
     try {
-      //검색결과 데이터 처리
-      //axios post
+      const result = await searchMyplan(data); //axios get
+
+      //리턴값 첫번째 자리 확인(첫자리가 4라면 우리를 의심하자(오타 등))
+      const resultStatus = result.status.toString().charAt(0);
+      console.log(result.response.data.resultData);
+
+      //정상호출
+      if (resultStatus === "2") {
+        setMyList(result.resultData);
+      }
+      //호출실패
+      if (resultStatus === "4") {
+        setMyList([]);
+      }
     } catch (error) {
       console.log("검색 실패:", error);
     }
@@ -189,7 +165,7 @@ function MyPlan() {
   // 등록하기 클릭시 데이터 전송
 
   useEffect(() => {
-    if (!sessionData) {
+    if (!sessionData.userId) {
       alert("회원 로그인이 필요합니다.");
       navigate("/login?url=/myplan");
       return;
@@ -198,11 +174,11 @@ function MyPlan() {
   }, [sessionData, navigate]);
 
   useEffect(() => {
-    setValue("userId", sessionData && sessionData.userId);
+    setValue("userId", sessionData.userId && sessionData.userId);
   }, [sessionData, setValue]);
 
   useEffect(() => {
-    setValueSearch("user_id", sessionData && sessionData.userId);
+    setValueSearch("userId", sessionData.userId && sessionData.userId);
   }, [setValueSearch, sessionData]);
 
   useEffect(() => {
@@ -213,9 +189,10 @@ function MyPlan() {
     <>
       <h1 className="subTitle">나의 만다라트</h1>
       <form onSubmit={handleSubmitSearch(onSubmitSearch)}>
+        <input type="hidden" {...registerSearch("userId")} />
         <BoardTop>
           <div className="sortType">
-            <span>[전체 : {sampleData?.length}건]</span>
+            <span>[전체 : {myList?.length}건]</span>
             <input
               type="radio"
               value="date"
@@ -246,7 +223,7 @@ function MyPlan() {
               type="text"
               maxLength="20"
               placeholder="검색어를 입력하세요."
-              {...registerSearch("search")}
+              {...registerSearch("searchText")}
             />
             <button type="submit" className="btnLine">
               <IoSearch />

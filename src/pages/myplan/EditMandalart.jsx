@@ -1,13 +1,16 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import styled from "@emotion/styled";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { UserInfoContext } from "../../contexts/UserInfoContext";
 import PopupLayout from "../../components/PopupLayout";
 import GridLevel0 from "../mandalarttt/GridLevel0";
+import { getSession } from "../../apis/member";
+import { getMyplanView } from "../../apis/myplan";
+
+const LOGIN_SESSION_KEY = "login_session";
 
 const MyplanWrap = styled.div`
   max-width: 1200px;
@@ -68,19 +71,36 @@ const addSchema = yup.object({
 });
 
 function EditMandalart() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [myPlanView, setMyPlanView] = useState([]);
+  const navigate = useNavigate();
+  const projectId = searchParams.get("projectId"); //개별 데이터로 뜯기
+  const sessionData = getSession(LOGIN_SESSION_KEY);
+  /*
   const divBox = 81; //총 div
+  */
   const [isAddVisible, setIsAddVisible] = useState(false); //복사하기 팝업
 
   const closeModal = () => {
     setIsAddVisible(false);
   };
 
-  const { userInfo } = useContext(UserInfoContext);
-  //const navigate = useNavigate();
+  const getMyplan = async ({ projectId }) => {
+    try {
+      const result = await getMyplanView({
+        projectId: projectId,
+        subLocation: "/",
+      }); //axios
+      setMyPlanView(result.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const {
     register,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(addSchema),
@@ -100,19 +120,29 @@ function EditMandalart() {
   };
 
   useEffect(() => {
-    //console.log(userInfo);
-    if (!userInfo.userId) {
-      //alert("회원 로그인이 필요합니다.");
-      //navigate("/login");
+    if (!sessionData.userId) {
+      alert("회원 로그인이 필요합니다.");
+      navigate("/login");
     }
     return () => {};
+  }, [sessionData, navigate]);
+
+  useEffect(() => {
+    //getMyplan(projectId);
   }, []);
+
+  useEffect(() => {
+    setValue("projectId", projectId);
+    setValue("userId", sessionData.userId && sessionData.userId);
+  }, [sessionData, setValue]);
 
   return (
     <>
       <MyplanWrap>
         <h1 className="subTitle">나의 만다라트 수정하기</h1>
         <form onSubmit={handleSubmit(handleSubmitForm)}>
+          <input type="hidden" {...register("projectId")} />
+          <input type="hidden" {...register("userId")} />
           <div className="writeWrap">
             <input type="hidden" value="test@test.com" {...register("mid")} />
             <div className="inputBox">

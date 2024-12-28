@@ -1,10 +1,13 @@
 import styled from "@emotion/styled";
 import { ResponsivePie } from "@nivo/pie";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import PopupLayout from "../../components/PopupLayout";
-import { deleteMyplan } from "../../apis/myplan";
+import { deleteMyplan, getMyplanView } from "../../apis/myplan";
 import GridLevel0View from "../mandalarttt/GridLevel0View";
+import { getSession } from "../../apis/member";
+
+const LOGIN_SESSION_KEY = "login_session";
 
 const MandalartDetailView = styled.div`
   .detailWrap {
@@ -96,20 +99,41 @@ const chartData = [
 ];
 
 function ViewMandalart() {
-  const divBox = 81; //총 div
-  const [isDeleteVisible, setIsDeleteVisible] = useState(false); //삭제하기 팝업
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [myPlanView, setMyPlanView] = useState([]);
   const navigate = useNavigate();
+  const projectId = searchParams.get("projectId"); //개별 데이터로 뜯기
+  const sessionData = getSession(LOGIN_SESSION_KEY);
+
+  //const divBox = 81; //총 div
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false); //삭제하기 팝업
 
   const closeModal = () => {
     setIsDeleteVisible(false);
   };
 
-  const handleDeleteSubmit = async data => {
-    data.preventDefault(); //submit 동작 방지
+  const getMyplan = async () => {
+    try {
+      const result = await getMyplanView({
+        projectId: projectId,
+        subLocation: "/",
+      }); //axios
+      setMyPlanView(result.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleDeleteSubmit = async e => {
+    e.preventDefault(); //submit 동작 방지
 
     try {
-      const result = await deleteMyplan(data); //axios 전송하기(삭제요청)
-      if (result.data) {
+      const result = await deleteMyplan({
+        projectId: projectId,
+        userId: sessionData.userId,
+      }); //axios(삭제요청)
+
+      if (result.resultData === 1) {
         alert("나의 만다라트 계획표를 삭제하였습니다.");
         navigate("/myplan");
       } else {
@@ -122,6 +146,10 @@ function ViewMandalart() {
     }
   };
 
+  useEffect(() => {
+    //getMyplan();
+  }, []);
+
   return (
     <MandalartDetailView>
       <h1 className="subTitle">나의 만다라트 상세보기</h1>
@@ -129,7 +157,7 @@ function ViewMandalart() {
         <div className="inputBox">
           <label>제목</label>
           <span>
-            마르고닮도록 님의 6개월 런닝 계획표
+            마르고닮도록 님의 6개월 런닝 계획표{/*{myPlanView.title}*/}
             <span className="share">[공유중]</span>
           </span>
         </div>
@@ -257,7 +285,7 @@ function ViewMandalart() {
           <button className="btnLine" onClick={() => setIsDeleteVisible(true)}>
             삭제하기
           </button>
-          <Link to={"/myplan/edit?id=1"} className="btnLine">
+          <Link to={`/myplan/edit?projectId=${projectId}`} className="btnLine">
             수정하기
           </Link>
           <Link to={"/myplan"} className="btnColor">
@@ -272,11 +300,9 @@ function ViewMandalart() {
           onClose={closeModal}
           title={"만다라트 삭제하기"}
         >
-          <form onSubmit={e => handleDeleteSubmit(e)}>
-            <input type="hidden" name="idx" value="1" />
-            <input type="hidden" name="mid" value="test@test.com" />
+          <form onSubmit={handleDeleteSubmit}>
             <div className="guideText inputBox">
-              만다라트 공유글을 삭제하시겠습니까?
+              나의 만다라트 계획표를 삭제하시겠습니까?
             </div>
             <div className="buttonWrap">
               <button
