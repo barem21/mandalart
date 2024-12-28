@@ -3,6 +3,11 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getMyplan } from "../../apis/myplan";
+import { getSession } from "../../apis/member";
+
+const LOGIN_SESSION_KEY = "login_session";
 
 const ShareWriteWrap = styled.div`
   max-width: 1200px;
@@ -60,7 +65,9 @@ const addSchema = yup.object({
 });
 
 function WriteMandalart() {
+  const [myList, setMyList] = useState([]);
   const navigate = useNavigate();
+  const sessionData = getSession(LOGIN_SESSION_KEY);
 
   const {
     register,
@@ -79,6 +86,19 @@ function WriteMandalart() {
     mode: "all",
   });
 
+  //내 만다라트 가져오기
+  const getMandalart = async () => {
+    try {
+      const result = await getMyplan({
+        userId: sessionData.userId,
+        subLocation: "/",
+      }); //axios
+      setMyList(result.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //뒤로가기
   const historyBack = () => {
     navigate(-1);
@@ -89,6 +109,10 @@ function WriteMandalart() {
     //모아둔 전송할 데이터(axios.post전송)
     console.log(data);
   };
+
+  useEffect(() => {
+    getMandalart();
+  }, []);
 
   return (
     <>
@@ -114,8 +138,13 @@ function WriteMandalart() {
               <div style={{ width: "100%" }}>
                 <select id="share" {...register("share")}>
                   <option value="">선택해주세요.</option>
-                  <option value="1">홍길동 님의 6개월 런닝 계획표</option>
-                  <option value="2">홍길동 님의 3개월 다이어트 플랜</option>
+                  {myList.map((item, index) => {
+                    return (
+                      <option key={index} value={item.projectId}>
+                        {item.title}
+                      </option>
+                    );
+                  })}
                 </select>
                 {errors.share?.message && (
                   <ErrorMessage>({errors.share?.message})</ErrorMessage>

@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import axios from "axios";
 
 const ShareWriteWrap = styled.div`
   max-width: 1200px;
@@ -79,6 +81,20 @@ function EditMandalart() {
     mode: "all",
   });
 
+  //내 만다라트 가져오기
+  const getMandalart = async () => {
+    try {
+      const res = await axios.get(
+        `api/project?searchFilter=1&userId=test@40gmail.com&page=1&size=30`,
+      );
+      console.log("목록보기 결과 : ", res.data);
+      //return res.data; //결과 리턴
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
   //뒤로가기
   const historyBack = () => {
     navigate(-1);
@@ -89,6 +105,10 @@ function EditMandalart() {
     //모아둔 전송할 데이터(axios.post전송)
     console.log(data);
   };
+
+  useEffect(() => {
+    getMandalart();
+  }, []);
 
   return (
     <>

@@ -7,6 +7,13 @@ const ShowMandalartList = styled.div`
   flex-direction: row;
   flex-wrap: wrap;
   gap: 1px;
+  .noData {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-top: 40px;
+  }
   .loopContent {
     width: calc(25% - 1px);
     margin-bottom: 30px;
@@ -52,12 +59,15 @@ const ShowMandalartList = styled.div`
 `;
 
 const LoopContent = ({ location, datas }) => {
-  console.log(datas);
+  //console.log(datas);
   return (
     <ShowMandalartList>
+      {datas.length === 0 && (
+        <div className="noData">등록된 만다라트가 없습니다.</div>
+      )}
       {datas.map((item, index) => (
         <div className="loopContent" key={index}>
-          <Link to={`/${location}/view?id=${item.projectId}`}>
+          <Link to={`/${location}/view?projectId=${item.projectId}`}>
             <div className="profileImage">
               <img src={item.pic ? item.pic : "share_mandalart2.png"} alt="" />
               {location === "share" && (
