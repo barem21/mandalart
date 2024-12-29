@@ -71,7 +71,7 @@ const LoopContent = ({ location, datas }) => {
             <div className="profileImage">
               <img src={item.pic ? item.pic : "share_mandalart2.png"} alt="" />
               {location === "share" && (
-                <div className="voteCount">추천 {item.sharedFg}</div>
+                <div className="voteCount">좋아요 {item.likeCnt}</div>
               )}
             </div>
             <p className="title">{item.title}</p>
