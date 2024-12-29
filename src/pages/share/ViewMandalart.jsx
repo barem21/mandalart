@@ -1,8 +1,11 @@
 import styled from "@emotion/styled";
 import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import PopupLayout from "../../components/PopupLayout";
 import { deleteShare, postCopy } from "../../apis/share";
+import { getSession } from "../../apis/member";
+
+const LOGIN_SESSION_KEY = "login_session";
 
 //임시 데이터
 const sampleData = [
@@ -108,10 +111,15 @@ const ButtonWrap = styled.div`
 `;
 
 function ViewMandalart() {
-  const divBox = 81; //총 div
+  const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
+  const projectId = searchParams.get("projectId"); //개별 데이터로 뜯기
+  const sessionData = getSession(LOGIN_SESSION_KEY);
+
   const [isCopyVisible, setIsCopyVisible] = useState(false); //복사하기 팝업
   const [isDeleteVisible, setIsDeleteVisible] = useState(false); //삭제하기 팝업
-  const navigate = useNavigate();
+
+  const divBox = 81; //총 div
 
   const closeModal = () => {
     setIsCopyVisible(false);
@@ -133,19 +141,22 @@ function ViewMandalart() {
     }
   };
 
-  const handleDeleteSubmit = async data => {
-    data.preventDefault(); //submit 동작 방지
+  const handleDeleteSubmit = async e => {
+    e.preventDefault(); //submit 동작 방지
 
     try {
-      const result = await deleteShare(data); //axios 전송하기(복사요청)
-      if (result.data) {
-        alert("만다라트 공유글을 삭제하였습니다.");
+      const result = await deleteShare({
+        projectId: projectId,
+        userId: sessionData.userId,
+      }); //axios(삭제)
+      if (result.resultData === 1) {
+        alert("공유 만다라트를 삭제하였습니다.");
         navigate("/share");
       } else {
-        alert("만다라트 공유글 삭제가 실패되었습니다.\n다시 시도해 주세요.");
+        alert("공유 만다라트 삭제가 실패되었습니다.\n다시 시도해 주세요.");
       }
     } catch (error) {
-      console.log("만다라트 공유글 삭제 실패:", error);
+      console.log("공유 만다라트 삭제 실패:", error);
     }
   };
 
@@ -356,8 +367,6 @@ function ViewMandalart() {
           title={"만다라트 삭제하기"}
         >
           <form onSubmit={e => handleDeleteSubmit(e)}>
-            <input type="hidden" name="idx" value="1" />
-            <input type="hidden" name="mid" value="test@test.com" />
             <div className="guideText inputBox">
               만다라트 공유글을 삭제하시겠습니까?
             </div>

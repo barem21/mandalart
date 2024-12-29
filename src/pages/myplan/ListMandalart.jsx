@@ -165,7 +165,7 @@ function MyPlan() {
   // 등록하기 클릭시 데이터 전송
 
   useEffect(() => {
-    if (!sessionData.userId) {
+    if (!sessionData?.userId) {
       alert("회원 로그인이 필요합니다.");
       navigate("/login?url=/myplan");
       return;
@@ -174,11 +174,11 @@ function MyPlan() {
   }, [sessionData, navigate]);
 
   useEffect(() => {
-    setValue("userId", sessionData.userId && sessionData.userId);
+    setValue("userId", sessionData?.userId && sessionData.userId);
   }, [sessionData, setValue]);
 
   useEffect(() => {
-    setValueSearch("userId", sessionData.userId && sessionData.userId);
+    setValueSearch("userId", sessionData?.userId && sessionData.userId);
   }, [setValueSearch, sessionData]);
 
   useEffect(() => {

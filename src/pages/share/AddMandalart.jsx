@@ -1,11 +1,12 @@
 import styled from "@emotion/styled";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getMyplan } from "../../apis/myplan";
 import { getSession } from "../../apis/member";
+import { getMyplan } from "../../apis/myplan";
+import { postShare } from "../../apis/share";
 
 const LOGIN_SESSION_KEY = "login_session";
 
@@ -50,7 +51,7 @@ const ButtonWrap = styled.div`
 //schema 먼저 생성
 const addSchema = yup.object({
   title: yup.string().required("제목을 입력해 주세요."),
-  share: yup.string().required("공유할 만다라트 계획표를 선택해 주세요."),
+  projectId: yup.string().required("공유할 만다라트 계획표를 선택해 주세요."),
   content: yup.string().required("간단 소개글을 입력해 주세요."),
   /*
   pic: yup
@@ -73,13 +74,14 @@ function WriteMandalart() {
     register,
     reset,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: yupResolver(addSchema),
     defaultValues: {
-      mid: "",
+      userId: "",
       title: "",
-      share: "",
+      projectId: "",
       content: "",
       pic: "",
     },
@@ -104,21 +106,34 @@ function WriteMandalart() {
     navigate(-1);
   };
 
-  const handleSubmitForm = data => {
-    alert("ok");
-    //모아둔 전송할 데이터(axios.post전송)
-    console.log(data);
+  const handleSubmitForm = async data => {
+    try {
+      const result = await postShare(data);
+      if (result.resultData === 1) {
+        alert("공유 만다라트 등록이 완료되었습니다.");
+        navigate("/share");
+      } else {
+        alert("공유 만다라트 등록이 실패되었습니다.\n다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
     getMandalart();
   }, []);
 
+  useEffect(() => {
+    setValue("userId", sessionData.userId && sessionData.userId);
+  }, [sessionData, setValue]);
+
   return (
     <>
       <ShareWriteWrap>
         <h1 className="subTitle">만다라트 공유</h1>
         <form onSubmit={handleSubmit(handleSubmitForm)}>
+          <input type="hidden" {...register("userId")} />
           <div className="writeWrap">
             <div className="inputBox">
               <label>
@@ -136,7 +151,7 @@ function WriteMandalart() {
                 공유 만다라트 선택 <span>*</span>
               </label>
               <div style={{ width: "100%" }}>
-                <select id="share" {...register("share")}>
+                <select id="share" {...register("projectId")}>
                   <option value="">선택해주세요.</option>
                   {myList.map((item, index) => {
                     return (
@@ -167,12 +182,14 @@ function WriteMandalart() {
               </div>
             </div>
 
+            {/*
             <div className="inputBox borderNone">
               <label htmlFor="profile">섬네일 등록</label>
               <div style={{ padding: "10px 0px" }}>
                 <input type="file" id="profile" {...register("profile")} />
               </div>
             </div>
+            */}
           </div>
 
           <ButtonWrap>
