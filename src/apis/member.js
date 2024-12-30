@@ -5,7 +5,7 @@ export const loginMember = async data => {
   try {
     const res = await axios.post("api/user/signIn", data);
     console.log("로그인 결과 : ", res.data);
-    return res; //결과 리턴
+    return res.data; //결과 리턴
   } catch (error) {
     console.log(error);
     return error;
@@ -62,7 +62,6 @@ export const joinMember = async data => {
 
 //axios연동(회원정보 수정)
 export const editMember = async data => {
-  console.log(data);
   try {
     //파일은 string가 아니라 binary
     const formData = new FormData();
@@ -81,6 +80,8 @@ export const editMember = async data => {
           JSON.stringify({
             userId: data.userId,
             upw: data.upw,
+            newUpw: data.newUpw,
+            checkUpw: data.checkUpw,
             nickName: data.nickName,
           }),
         ],

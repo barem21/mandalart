@@ -96,3 +96,56 @@ export const deleteShare = async ({ projectId, userId }) => {
     return error;
   }
 };
+
+//axios연동(공유 만다라트 댓글가져오기)
+export const getComment = async ({ projectId }) => {
+  try {
+    const res = await axios.get(
+      `/api/shared_project/comments?projectId=${projectId}`,
+    );
+    //console.log("댓글 등록하기 결과 : ", res.data);
+    return res.data; //결과 리턴
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+//axios연동(공유 만다라트 댓글작성)
+export const postComment = async data => {
+  try {
+    const res = await axios.post("/api/shared_project/comments", data);
+    //console.log("댓글 등록하기 결과 : ", res.data);
+    return res.data; //결과 리턴
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+//axios연동(공유 만다라트 댓글수정)
+export const editComment = async data => {
+  //console.log(data);
+  try {
+    const res = await axios.patch("/api/shared_project/comments", data);
+    console.log("댓글 수정하기 결과 : ", res.data);
+    return res.data; //결과 리턴
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+//axios연동(공유 만다라트 댓글삭제)
+export const deleteComment = async ({ commentId, userId }) => {
+  try {
+    const res = await axios.delete(
+      `/api/shared_project/comments?commentId=${commentId}&userId=${userId}`,
+    );
+    //console.log("댓글 삭제하기 결과 : ", res.data);
+    return res.data; //결과 리턴
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
