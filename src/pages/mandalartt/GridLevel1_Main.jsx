@@ -67,18 +67,21 @@ function GridLevel1_Main({ normalDataIndex, normalData, setNormalData }) {
     e.preventDefault();
     patchGridData({ ...normalData });
   };
+
   useEffect(() => {
     setShowData(normalData[normalDataIndex]);
   }, [normalData]);
+
   // 모달 열기
   const openModal = id => {
     // 선택된 객체 정보 한개를 보관
     setSelectData(showData.find(item => item.cellId === id));
     // 완료미완료 선택창 제외 셀 case
     exceptionCell(id);
-    console.log(showData);
+    //console.log(showData);
     setIsModalOpen(true);
   };
+
   // 모달 입력값 변경 처리
   const handleModalChange = e => {
     const { name, value } = e.target;

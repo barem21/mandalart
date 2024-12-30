@@ -66,7 +66,10 @@ const schema = yup.object({
       /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i,
       "올바른 이메일 형식이 아닙니다.",
     ),
-  upw: yup.string().required("비밀번호를 입력해 주세요."),
+  upw: yup
+    .string()
+    .required("비밀번호를 입력해 주세요.")
+    .min("8", "비밀번호는 최소 8자리 이상 입력하셔야 합니다."),
 });
 
 function LoginPage() {
@@ -91,8 +94,8 @@ function LoginPage() {
       const result = await loginMember(data); //axios 전송하기
       //console.log(result.data);
 
-      if (result.data.resultData.userId) {
-        setSession(LOGIN_SESSION_KEY, result.data.resultData); //session
+      if (result.resultData.userId) {
+        setSession(LOGIN_SESSION_KEY, result.resultData); //session
         navigate("/"); //홈으로 이동
       } else {
         alert(

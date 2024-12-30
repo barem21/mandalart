@@ -134,8 +134,8 @@ function MyPlan() {
       const result = await searchMyplan(data); //axios get
 
       //리턴값 첫번째 자리 확인(첫자리가 4라면 우리를 의심하자(오타 등))
-      const resultStatus = result.status.toString().charAt(0);
-      console.log(result.response.data.resultData);
+      const resultStatus = result.statusCode.toString().charAt(0);
+      //console.log(result.resultData);
 
       //정상호출
       if (resultStatus === "2") {
@@ -217,7 +217,6 @@ function MyPlan() {
               <option value="1">제목</option>
               <option value="2">내용</option>
               <option value="3">제목+내용</option>
-              <option value="4">작성자</option>
             </select>
             <input
               type="text"

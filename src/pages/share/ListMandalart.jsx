@@ -70,7 +70,7 @@ function ListMandalart() {
   const getSharedMandalart = async () => {
     try {
       const result = await getShare({
-        userId: sessionData.userId,
+        userId: sessionData?.userId,
         subLocation: "/",
       }); //axios
       setIsShare(result.resultData);
