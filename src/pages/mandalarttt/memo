@@ -69,3 +69,53 @@ const getGridData = [{id:0},{id:1},{id:2},{id:3}]
     id: ""
     
 }
+
+
+
+
+
+ const saveModalData = () => {
+    // 9개의 보여지고 있는 데이터를 변경 된 데이터로 변경
+    const newShowData = showData.map(item => {
+      if (item.cellId === selectData.cellId) {
+        return { ...item, ...selectData };
+      }
+      return item;
+    });
+    // console.log("newShowData ? ", newShowData);
+    // setShowData(newShowData);
+
+    // 원본 데이터 참조
+    const originalData = [...normalData];
+    // isbindKey 로 연결된 것을 찾아서 변경
+    const sortArr = originalData.map(itemOrign => {
+      newShowData.map(item => {
+        if (item.isbindKey) {
+          itemOrign.map(itemNow => {
+            if (item.isbindKey === itemNow.cellId) {
+              itemNow.title = item.title;
+            }
+            if (item.cellId === itemNow.cellId) {
+              itemNow.title = item.title;
+            }
+          });
+        }
+      });
+
+      return itemOrign;
+    });
+
+    // 원본 데이터도 변경을 해야 한다.
+    setNormalData([...sortArr]);
+    const updatednormalData = [...normalData];
+    updatednormalData[normalDataIndex] = newShowData;
+
+    // 원본 데이터와 showData 동기화
+    setNormalData(updatednormalData);
+    setShowData(newShowData);
+    patchGridData(showData);
+    // 데이터 색
+    // console.log(selectData.cellId);
+    //console.log(selectDat/a.title);
+    setIsModalOpen(false);
+  };

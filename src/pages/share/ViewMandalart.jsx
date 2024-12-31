@@ -22,6 +22,9 @@ import {
 } from "../../apis/share";
 import PopupLayout from "../../components/PopupLayout";
 
+import { deleteShare, postCopy } from "../../apis/share";
+import GridLevel0View from "../mandalarttt/GridLevel0View";
+
 const LOGIN_SESSION_KEY = "login_session";
 
 const MandalartDetailView = styled.div`
@@ -519,38 +522,9 @@ function ViewMandalart() {
         >
           <label style={{ marginTop: "15px" }}>계획표 보기</label>
           <div>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                flexWrap: "wrap",
-                width: "994px",
-                margin: "20px 0px 20px 0px",
-                border: "2px solid #666",
-              }}
-            >
+            <div>
               {/* 만다라트 계획표 출력 */}
-              {[...Array(divBox)].map((item, index) => {
-                return index < divBox ? (
-                  <div
-                    key={index}
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      width: "110px",
-                      height: "110px",
-                      borderRight: "1px solid #eee",
-                      borderBottom: "1px solid #eee",
-                      backgroundColor: `${index === 40 ? "#D8EFD3" : ""}`,
-                    }}
-                  >
-                    {index + 1}
-                  </div>
-                ) : (
-                  ""
-                );
-              })}
+              <GridLevel0View />
             </div>
 
             <div>{infoMandalart.content}</div>

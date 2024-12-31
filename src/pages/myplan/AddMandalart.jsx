@@ -192,7 +192,7 @@ function AddMandalart() {
               4. 계획표 관리 : 계획표를 정기적으로 검토하고 수정하며 실행합니다.
             </div>
 
-            <GridLevel0 />
+            <GridLevel0 projectId={projectId} />
           </div>
         </div>
 
