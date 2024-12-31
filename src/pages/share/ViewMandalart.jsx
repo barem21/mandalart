@@ -1,43 +1,31 @@
 import styled from "@emotion/styled";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { FaFacebookF, FaRegShareFromSquare, FaXTwitter } from "react-icons/fa6";
+import { SiNaver } from "react-icons/si";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useForm } from "react-hook-form";
+import * as yup from "yup";
+
+import { getGridData } from "../../apis/grid";
+import { getSession } from "../../apis/member";
+import {
+  addLikeIt,
+  deleteComment,
+  deleteLikeIt,
+  deleteShare,
+  editComment,
+  getComment,
+  postComment,
+  postCopy,
+} from "../../apis/share";
 import PopupLayout from "../../components/PopupLayout";
+
 import { deleteShare, postCopy } from "../../apis/share";
 import GridLevel0View from "../mandalarttt/GridLevel0View";
 
-//임시 데이터
-const sampleData = [
-  {
-    id: 1,
-    content: "계획표 .. 엄청 꼼꼼하게 작성 잘 하셨네요. 추천합니다!",
-    writer: "고길동",
-    date: "2024-12-10",
-  },
-  {
-    id: 2,
-    content: "이건 뭐 .. 추천~ㅎㅎ",
-    writer: "김수한무",
-    date: "2024-12-10",
-  },
-  {
-    id: 3,
-    content: "추천은 한번 밖에 안되나요? 세표 정도 주고 싶은데 .. OTL",
-    writer: "야옹선생",
-    date: "2024-12-10",
-  },
-  {
-    id: 4,
-    content: "복사해 갑니다~",
-    writer: "마르고닮도록",
-    date: "2024-12-10",
-  },
-  {
-    id: 5,
-    content: "나도 복사!!",
-    writer: "둘리",
-    date: "2024-12-10",
-  },
-];
+const LOGIN_SESSION_KEY = "login_session";
 
 const MandalartDetailView = styled.div`
   .detailWrap {
@@ -98,6 +86,69 @@ const MandalartDetailView = styled.div`
     color: #aaa;
     cursor: pointer;
   }
+  .snsShareWrap {
+    position: relative;
+    right: 0px;
+    button {
+      margin-right: 10px;
+      border: none;
+      background: none;
+      font-size: 20px;
+      cursor: pointer;
+    }
+    .shareBox {
+      position: absolute;
+      top: -17px;
+      right: 42px;
+      width: 240px;
+      padding: 15px;
+      border: 1px solid #666;
+      border-radius: 10px;
+      background: #fff;
+    }
+    .shareBox h4 {
+      margin-bottom: 10px;
+      padding: 5px 0px;
+      background-color: #f0f0f0;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 400;
+      text-align: center;
+    }
+    .shareBox div {
+      display: flex;
+      justify-content: space-between;
+      gap: 0px;
+    }
+    .shareBox button {
+      width: 80px;
+      margin: 0px;
+      padding: 10px 5px;
+      border-radius: 10px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .shareBox button:hover {
+      background: #f5f5f5;
+    }
+    .shareBox button span {
+      display: flex;
+      font-size: 10px;
+      justify-content: center;
+      align-items: center;
+      color: #666;
+    }
+  }
+
+  .noMember {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    padding-left: 10px;
+    background: #f0f0f0;
+    color: #999;
+  }
 `;
 
 const ButtonWrap = styled.div`
@@ -108,14 +159,205 @@ const ButtonWrap = styled.div`
   border-top: 1px solid #eee;
 `;
 
+//yup 관련 설정
+//1. schema를 먼저 설정한다.
+const schema = yup.object({
+  content: yup.string().required("한줄 댓글 내용은 필수입니다."),
+});
+
+const schemaEdit = yup.object({
+  content: yup.string().required("한줄 댓글 내용은 필수입니다."),
+});
+
 function ViewMandalart() {
-  const divBox = 81; //총 div
-  const [isCopyVisible, setIsCopyVisible] = useState(false); //복사하기 팝업
-  const [isDeleteVisible, setIsDeleteVisible] = useState(false); //삭제하기 팝업
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [toggleSns, setToggleSns] = useState(false);
+  const [commentList, setCommentList] = useState([]);
   const navigate = useNavigate();
+  const projectId = searchParams.get("projectId"); //개별 데이터로 뜯기
+  const sessionData = getSession(LOGIN_SESSION_KEY);
+
+  const [infoMandalart, setInfoMandalart] = useState([]); //만다라트 정보
+  const [isCopyVisible, setIsCopyVisible] = useState(false); //게시물 복사하기 팝업
+  const [isDeleteVisible, setIsDeleteVisible] = useState(false); //게시물 삭제하기 팝업
+  const [isDeleteCommentVisible, setIsDeleteCommentVisible] = useState(""); //댓글 삭제하기 팝업
+  const [isEditCommentVisible, setIsEditCommentVisible] = useState(false); //댓글 수정하기 내용
+
+  const divBox = 81; //총 div
 
   const closeModal = () => {
     setIsCopyVisible(false);
+  };
+
+  /* 날짜 표시 변환 */
+  const dateString = infoMandalart.createdAt;
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 1을 더해야 함
+  const day = String(date.getDate()).padStart(2, "0");
+  const formattedDate = `${year}-${month}-${day}`;
+  //console.log(formattedDate);
+  /* 날짜 표시 변환 */
+
+  //만다라트 정보 호출
+  const getMandalartInfo = async () => {
+    try {
+      const result = await getGridData(projectId); //axios
+      console.log(result.resultData);
+      setInfoMandalart(result.resultData); //불러온 만다라트 정보 담기
+
+      //console.log(result.resultData);
+    } catch (error) {
+      console.log("검색 실패:", error);
+    }
+  };
+
+  //댓글 작성
+  const {
+    register: registerComment,
+    handleSubmit: handleSubmitComment,
+    setValue: setValueComment,
+    formState: { errors: errorsComment },
+  } = useForm({
+    defaultValues: {
+      userId: "",
+      content: "",
+    },
+    mode: "all",
+    resolver: yupResolver(schema),
+  });
+
+  //댓글 수정
+  const {
+    register: registerEdit,
+    handleSubmit: handleEditCommentSubmit,
+    setValue: setValueEdit,
+    formState: { errors: errorsEdit },
+  } = useForm({
+    defaultValues: {
+      commentId: "",
+      userId: "",
+      content: "",
+    },
+    mode: "all",
+    resolver: yupResolver(schemaEdit),
+  });
+
+  //댓글가져오기
+  const getSharedComment = async () => {
+    try {
+      const result = await getComment({
+        projectId: projectId,
+      }); //axios
+      //console.log(result.resultData);
+      setCommentList(result.resultData.contentList);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //댓글 작성
+  const onSubmitComment = async data => {
+    try {
+      const result = await postComment(data); //axios(등록)
+      if (result.resultData === 1) {
+        alert("한줄 댓글 등록이 완료되었습니다.");
+        getSharedComment(); //댓글 가져오기
+        setValueComment("content", "");
+      } else {
+        //회원정보 수정 실패
+        alert("한줄 댓글 작성이 실패되었습니다.\n다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.log("한줄 댓글 작성 실패:", error);
+    }
+  };
+
+  //댓글 수정
+  const onEditComment = async data => {
+    try {
+      const result = await editComment(data); //axios(등록)
+      if (result.resultData === 1) {
+        alert("한줄 댓글 수정이 완료되었습니다.");
+        getSharedComment(); //댓글 가져오기
+        setIsEditCommentVisible(false);
+      } else {
+        //회원정보 수정 실패
+        alert("한줄 댓글 수정이 실패되었습니다.\n다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.log("한줄 댓글 수정 실패:", error);
+    }
+  };
+
+  const snsSendProc = type => {
+    let shareTitle = "공유 테스트";
+    let shareURL = `http://localhost:5173/share/view?projectId=${projectId}`;
+    let imagesrc = "gshqg0060020010010000011.jpg";
+    let a;
+    let href;
+
+    switch (type) {
+      case "FB":
+        href =
+          "http://www.facebook.com/sharer/sharer.php?u=" +
+          encodeURIComponent(shareURL) +
+          "&t=" +
+          encodeURIComponent(shareTitle);
+        a = window.open(href, "Facebook", "");
+        if (a) {
+          a.focus();
+        }
+        break;
+
+      case "TW":
+        href =
+          "http://twitter.com/share?text=" +
+          encodeURIComponent(shareTitle) +
+          " " +
+          encodeURIComponent(shareURL);
+        a = window.open(href, "Twitter", "");
+        if (a) {
+          a.focus();
+        }
+        break;
+
+      case "PI":
+        href =
+          "http://www.pinterest.com/pin/create/button/?url=" +
+          encodeURIComponent(shareURL) +
+          "&media=" +
+          encodeURIComponent(imagesrc) +
+          "&description=" +
+          encodeURIComponent(shareTitle);
+        a = window.open(href, "Pinterest", "");
+        if (a) {
+          a.focus();
+        }
+        break;
+
+      case "GO":
+        href =
+          "https://plus.google.com/share?url=" + encodeURIComponent(shareURL);
+        a = window.open(href, "GooglePlus", "");
+        if (a) {
+          a.focus();
+        }
+        break;
+
+      case "NB":
+        href =
+          "https://share.naver.com/web/shareView.nhn?url=" +
+          encodeURIComponent(shareURL) +
+          "&title=" +
+          encodeURIComponent(shareTitle);
+        a = window.open(href, "NaverBlog", "");
+
+        if (a) {
+          a.focus();
+        }
+        break;
+    }
   };
 
   const handleCopySubmit = async data => {
@@ -134,41 +376,144 @@ function ViewMandalart() {
     }
   };
 
-  const handleDeleteSubmit = async data => {
-    data.preventDefault(); //submit 동작 방지
+  const handleDeleteSubmit = async e => {
+    e.preventDefault(); //submit 동작 방지
 
     try {
-      const result = await deleteShare(data); //axios 전송하기(복사요청)
-      if (result.data) {
-        alert("만다라트 공유글을 삭제하였습니다.");
+      const result = await deleteShare({
+        projectId: projectId,
+        userId: sessionData?.userId,
+      }); //axios(삭제)
+      if (result.resultData === 1) {
+        alert("공유 만다라트를 삭제하였습니다.");
         navigate("/share");
       } else {
-        alert("만다라트 공유글 삭제가 실패되었습니다.\n다시 시도해 주세요.");
+        alert("공유 만다라트 삭제가 실패되었습니다.\n다시 시도해 주세요.");
       }
     } catch (error) {
-      console.log("만다라트 공유글 삭제 실패:", error);
+      console.log("공유 만다라트 삭제 실패:", error);
     }
   };
 
-  const editComment = () => {
-    alert("댓글 수정하기 팝업 처리");
+  //한줄 댓글 기존정보 수정폼으로 전달
+  const selectCommentInfo = (id, content) => {
+    setIsEditCommentVisible(true);
+    setValueEdit("commentId", id);
+    setValueEdit("userId", sessionData.userId);
+    setValueEdit("content", content);
   };
 
-  const deletComment = () => {
-    alert("댓글 삭제하기 팝업 처리");
+  //한줄 댓글 삭제
+  const handleDeleteCommentSubmit = async data => {
+    data.preventDefault(); //submit 동작 방지
+
+    try {
+      const result = await deleteComment({
+        commentId: isDeleteCommentVisible,
+        userId: sessionData.userId,
+      }); //axios(삭제)
+      if (result.resultData === 1) {
+        alert("공유 만다라트 댓글을 삭제하였습니다.");
+        getSharedComment(); //댓글 가져오기
+        setIsDeleteCommentVisible(); //팝업창 닫기
+      } else {
+        alert("공유 만다라트 댓글 삭제가 실패되었습니다.\n다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.log("공유 만다라트 댓글 삭제 실패:", error);
+    }
   };
+
+  //좋아요
+  const likeIt = async () => {
+    try {
+      const result = await addLikeIt({
+        projectId: projectId,
+        userId: sessionData?.userId,
+      }); //axios(수정/삭제)
+      if (result.resultData === 1) {
+        alert("좋아요 등록하였습니다.");
+        navigate("/share");
+      } else {
+        alert("좋아요 등록이 실패되었습니다.\n다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.log("좋아요 등록 실패:", error);
+    }
+  };
+
+  //좋아요 해제
+  const likeItDelete = async () => {
+    try {
+      const result = await deleteLikeIt({
+        projectId: projectId,
+        userId: sessionData?.userId,
+      }); //axios(수정/삭제)
+      if (result.resultData === 1) {
+        alert("좋아요 삭제하였습니다.");
+        navigate("/share");
+      } else {
+        alert("좋아요 삭제가 실패되었습니다.\n다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.log("좋아요 삭제 실패:", error);
+    }
+  };
+
+  useEffect(() => {
+    getMandalartInfo(); //만다라트 가져오기
+    getSharedComment(); //댓글 가져오기
+  }, []);
+
+  useEffect(() => {
+    setValueComment("userId", sessionData?.userId);
+    setValueComment("projectId", projectId);
+    return () => {};
+  });
 
   return (
     <MandalartDetailView>
       <h1 className="subTitle">만다라트 공유 상세보기</h1>
       <div className="detailWrap">
-        <div className="inputBox">
-          <label>제목</label>
-          <span>마르고닮도록 님의 6개월 런닝 계획표</span>
+        <div className="inputBox" style={{ justifyContent: "space-between" }}>
+          <div>
+            <label>제목</label>
+            <span>{infoMandalart.title}</span>
+          </div>
+
+          <div className="snsShareWrap">
+            <button
+              onClick={() => setToggleSns(toggleSns === true ? false : true)}
+            >
+              <FaRegShareFromSquare />
+            </button>
+            {toggleSns === true ? (
+              <div className="shareBox">
+                <h4>공유하기</h4>
+                <div>
+                  <button onClick={() => snsSendProc("FB")}>
+                    <FaFacebookF /> <span>페이스북</span>
+                  </button>
+                  <button onClick={() => snsSendProc("TW")}>
+                    <FaXTwitter /> <span>X (트위터)</span>
+                  </button>
+                  <button onClick={() => snsSendProc("NB")}>
+                    <SiNaver />
+                    <span>네이버 블로그</span>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
         </div>
+
         <div className="inputBox">
           <label>작성자/작성일</label>
-          <span>마르고닮도록 / 2024-12-01</span>
+          <span>
+            {infoMandalart.nickName} / {infoMandalart.createdAt}
+          </span>
         </div>
 
         <div
@@ -182,89 +527,96 @@ function ViewMandalart() {
               <GridLevel0View />
             </div>
 
-            <div>
-              교감과 공감을 표현한 ‘스타 화가’ 1840년 영국 런던에서 태어난
-              ‘브리튼 리비에르’는 옥스퍼드대학에서 미술 전공 교수로 활동한
-              아버지를 이어
-              <br />
-              4대째 정통 미술교육을 받은 화가 집안의 사람이었어요. 12살 때부터
-              전시회를 열만큼 뛰어난 재능을 자랑했던 그는 아버지가 재직 중인
-              옥스퍼드
-              <br />
-              대학에서 미술을 공부하며 화가로 성장합니다.
-              <br />
-              <br />
-              리비에르가 활동했던 빅토리아 시대에는 주로 종교나 역사, 문학을
-              소재로 한 그림이 유행했었어요. 하지만 이런 소재들은 그에게 특별한
-              감흥을
-              <br />
-              주지 못했죠. 그러던 중, 그가 25세가 되던 해에 ‘사람과 교감하는
-              반려동물’의 모습에서 영감을 얻어 관련 그림을 그리기 시작합니다.
-              리비에르가
-              <br />
-              표현하는 동물의 모습은 여느 화가들의 묘사와는 매우 달랐어요.
-              인형이나 소품처럼 사람 옆에 우두커니 서 있는 동물이 아닌, 사람과의
-              교감과
-              <br />
-              공감을 그림 안에 녹여냈거든요.
-              <br />
-              <br />
-              그의 작품들은 대중들의 마음을 사로잡았고, 그에 힘입어 리비에르는
-              스타 화가의 반열*에 오릅니다.
-            </div>
+            <div>{infoMandalart.content}</div>
           </div>
         </div>
 
-        <div
-          className="inputBox"
-          style={{ paddingBottom: "50px", justifyContent: "center" }}
-        >
-          <label></label>
-          <button className="btnColor">추천 10</button>
-        </div>
+        {sessionData?.userId ? (
+          <div
+            className="inputBox"
+            style={{ paddingBottom: "50px", justifyContent: "center" }}
+          >
+            <label></label>
+            <button className="btnColor" onClick={() => likeIt()}>
+              좋아요
+            </button>
+            <button className="btnLine" onClick={() => likeItDelete()}>
+              좋아요
+            </button>
+          </div>
+        ) : (
+          <div className="inputBox"></div>
+        )}
 
-        <div className="inputBox writeComment borderNone">
-          <label>한줄 댓글 작성하기</label>
-          <input
-            type="text"
-            name="comment"
-            placeholder="한줄 댓글 내용을 입력하세요."
-          />
-          <button className="btnLine">등록하기</button>
-        </div>
+        <form onSubmit={handleSubmitComment(onSubmitComment)}>
+          <input type="hidden" {...registerComment("userId")} />
+          <input type="hidden" {...registerComment("projectId")} />
+          <div className="inputBox writeComment borderNone">
+            <label>한줄 댓글 작성하기</label>
+            {sessionData?.userId ? (
+              <>
+                <input
+                  type="text"
+                  placeholder={
+                    errorsComment.content
+                      ? errorsComment.content.message
+                      : "한줄 댓글 내용을 입력하세요."
+                  }
+                  {...registerComment("content")}
+                />
+                <button type="submit" className="btnLine">
+                  등록하기
+                </button>
+              </>
+            ) : (
+              <>
+                <div className="noMember">
+                  한줄 댓글은 회원만 작성하실 수 있습니다.
+                </div>
+                <button type="button" className="btnLine">
+                  등록하기
+                </button>
+              </>
+            )}
+          </div>
+        </form>
 
         <div className="inputBox borderNone">
           <label></label>
           <ul className="commentList" style={{ width: "100%" }}>
-            {sampleData.length === 0 && <li>등록된 댓글이 없습니다.</li>}
+            {commentList?.length === 0 && <li>등록된 댓글이 없습니다.</li>}
 
-            {sampleData.map(item => (
-              <li key={item.id}>
+            {commentList?.map(item => (
+              <li key={item.commentId}>
                 <div
                   style={{ display: "flex", justifyContent: "space-between" }}
                 >
                   <div className="date">
-                    {item.writer === "야옹선생" ? (
+                    {item.nickName === sessionData?.nickName ? (
                       <span style={{ color: "#55ad9b", fontWeight: "600" }}>
-                        {item.writer}
+                        {item.nickName}
                       </span>
                     ) : (
-                      item.writer
+                      item.nickName
                     )}{" "}
-                    / {item.date}
+                    / {item.createdAt}
                   </div>
-                  {item.writer === "야옹선생" && (
+                  {item.nickName === sessionData?.nickName && (
                     <div className="date">
                       <button
                         type="button"
-                        onClick={() => editComment(item.id)}
+                        onClick={() =>
+                          selectCommentInfo(item.commentId, item.content)
+                        }
                       >
                         수정
                       </button>{" "}
                       /{" "}
                       <button
                         type="button"
-                        onClick={() => deletComment(item.id)}
+                        onClick={() =>
+                          setIsDeleteCommentVisible(item.commentId)
+                        }
                       >
                         삭제
                       </button>
@@ -278,15 +630,32 @@ function ViewMandalart() {
         </div>
 
         <ButtonWrap>
-          <button className="btnLine" onClick={() => setIsCopyVisible(true)}>
-            복사하기
-          </button>
-          <button className="btnLine" onClick={() => setIsDeleteVisible(true)}>
-            삭제하기
-          </button>
-          <Link to={"/share/edit?id=1"} className="btnLine">
-            수정하기
-          </Link>
+          {sessionData?.userId && (
+            <>
+              <button
+                className="btnLine"
+                onClick={() => setIsCopyVisible(true)}
+              >
+                복사하기
+              </button>
+              {infoMandalart.nickName === sessionData?.nickName && (
+                <>
+                  <button
+                    className="btnLine"
+                    onClick={() => setIsDeleteVisible(true)}
+                  >
+                    삭제하기
+                  </button>
+                  <Link
+                    to={`/share/edit?projectId=${projectId}`}
+                    className="btnLine"
+                  >
+                    수정하기
+                  </Link>
+                </>
+              )}
+            </>
+          )}
           <Link to={"/share"} className="btnColor">
             목록으로
           </Link>
@@ -328,8 +697,6 @@ function ViewMandalart() {
           title={"만다라트 삭제하기"}
         >
           <form onSubmit={e => handleDeleteSubmit(e)}>
-            <input type="hidden" name="idx" value="1" />
-            <input type="hidden" name="mid" value="test@test.com" />
             <div className="guideText inputBox">
               만다라트 공유글을 삭제하시겠습니까?
             </div>
@@ -343,6 +710,69 @@ function ViewMandalart() {
               </button>
               <button type="submit" className="btnPupColor">
                 삭제하기
+              </button>
+            </div>
+          </form>
+        </PopupLayout>
+      )}
+
+      {isDeleteCommentVisible !== "" && (
+        <PopupLayout
+          isVisible={isDeleteCommentVisible}
+          onClose={closeModal}
+          title={"한줄 댓글 삭제하기"}
+        >
+          <form onSubmit={e => handleDeleteCommentSubmit(e)}>
+            <div className="guideText inputBox">
+              삭제하신 댓글은 복구가 불가능합니다.
+              <br />
+              작성하신 한줄 댓글을 삭제하시겠습니까?
+            </div>
+            <div className="buttonWrap">
+              <button
+                type="button"
+                className="btnPopLine"
+                onClick={() => setIsDeleteCommentVisible()}
+              >
+                취소하기
+              </button>
+              <button type="submit" className="btnPupColor">
+                삭제하기
+              </button>
+            </div>
+          </form>
+        </PopupLayout>
+      )}
+
+      {isEditCommentVisible && (
+        <PopupLayout
+          isVisible={isEditCommentVisible}
+          onClose={closeModal}
+          title={"한줄 댓글 수정하기"}
+        >
+          <form onSubmit={handleEditCommentSubmit(onEditComment)}>
+            <input type="hidden" {...registerEdit("commentId")} />
+            <input type="hidden" {...registerEdit("userId")} />
+            <div className="guideText inputBox">
+              <textarea
+                placeholder={
+                  errorsEdit.content
+                    ? errorsEdit.content.message
+                    : "한줄 댓글을 작성"
+                }
+                {...registerEdit("content")}
+              ></textarea>
+            </div>
+            <div className="buttonWrap">
+              <button
+                type="button"
+                className="btnPopLine"
+                onClick={() => setIsEditCommentVisible(false)}
+              >
+                취소하기
+              </button>
+              <button type="submit" className="btnPupColor">
+                수정하기
               </button>
             </div>
           </form>

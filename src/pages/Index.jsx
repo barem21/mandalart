@@ -4,38 +4,11 @@ import { Autoplay } from "swiper/modules";
 import { Link } from "react-router-dom";
 import LoopContent from "../components/mandalart/LoopContent";
 import "swiper/css";
+import { useEffect, useState } from "react";
+import { getSession } from "../apis/member";
+import { getShare } from "../apis/share";
 
-//임시 데이터
-const sampleData = [
-  {
-    id: 1,
-    img: "share_mandalart.png",
-    title: "홍길동 님의 6개월 런닝 계획표",
-    vote: 10,
-    date: "2024-12-01",
-  },
-  {
-    id: 2,
-    img: "share_mandalart2.png",
-    title: "김수한무 님의 한달 독서 계획표",
-    vote: 5,
-    date: "2024-12-01",
-  },
-  {
-    id: 3,
-    img: "share_mandalart.png",
-    title: "야옹선생 님의 1년 헬스 계획표",
-    vote: 1,
-    date: "2024-12-01",
-  },
-  {
-    id: 4,
-    img: "share_mandalart2.png",
-    title: "마르고닮도록 님의 6개월 리액트 공부 계획표",
-    vote: 1,
-    date: "2024-12-01",
-  },
-];
+const LOGIN_SESSION_KEY = "login_session";
 
 const MainLayout = styled.div`
   min-width: 1200px;
@@ -102,6 +75,26 @@ const MainLayout = styled.div`
 `;
 
 function Index() {
+  const [isShare, setIsShare] = useState([]);
+  const sessionData = getSession(LOGIN_SESSION_KEY);
+
+  //공유 만다라트 가져오기
+  const getSharedMandalart = async () => {
+    try {
+      const result = await getShare({
+        userId: sessionData?.userId,
+        subLocation: "/",
+      }); //axios
+      setIsShare(result.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getSharedMandalart();
+  }, []);
+
   return (
     <MainLayout>
       <div className="mainSlide">
@@ -164,7 +157,7 @@ function Index() {
           </Link>
         </div>
 
-        <LoopContent location={"share"} datas={sampleData} />
+        <LoopContent location={"share"} datas={isShare} viewCnt={4} />
       </div>
     </MainLayout>
   );

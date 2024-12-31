@@ -183,6 +183,7 @@ function EditPage() {
 
     try {
       const result = await editMember(data); //axios처리(수정)
+      console.log(result.data);
       if (result.data) {
         alert("회원정보 수정이 완료되었습니다.");
         navigate("/");
@@ -327,7 +328,7 @@ function EditPage() {
             <div className="inputBox borderNone">
               <label htmlFor="profile">프로필 등록</label>
               <div style={{ padding: "10px 0px" }}>
-                <input type="file" id="profile" {...registerForm1("profile")} />
+                <input type="file" id="profile" {...registerForm1("pic")} />
               </div>
               {userPic}
             </div>

@@ -86,6 +86,7 @@ function GridLevel1_Main({
   useEffect(() => {
     setShowData(normalData[normalDataIndex]);
   }, [normalData, normalDataIndex]);
+  
   // 모달 열기
   const openModal = id => {
     // 선택된 객체 정보 한개를 보관
@@ -100,7 +101,6 @@ function GridLevel1_Main({
     // console.log("nowSelectItem ==== ", nowSelectItem);
     setSelectData(nowSelectItem);
     // 완료미완료 선택창 제외 셀 case
-
     setIsModalOpen(true);
   };
 

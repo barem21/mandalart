@@ -50,35 +50,55 @@ const ShowMandalartList = styled.div`
     text-align: left;
     transition: all 0.3s;
   }
+  .title .shared {
+    margin-left: 5px;
+    font-weight: 500;
+    color: #55ad9b;
+  }
   .date {
     padding: 0px 20px;
     text-align: left;
     color: #aaa;
-    font-size: 12px;
+    font-size: 14px;
   }
 `;
 
-const LoopContent = ({ location, datas }) => {
+const LoopContent = ({ location, datas, viewCnt = 30 }) => {
   //console.log(datas);
   return (
     <ShowMandalartList>
       {datas.length === 0 && (
         <div className="noData">등록된 만다라트가 없습니다.</div>
       )}
-      {datas.map((item, index) => (
-        <div className="loopContent" key={index}>
-          <Link to={`/${location}/view?projectId=${item.projectId}`}>
-            <div className="profileImage">
-              <img src={item.pic ? item.pic : "share_mandalart2.png"} alt="" />
-              {location === "share" && (
-                <div className="voteCount">추천 {item.sharedFg}</div>
-              )}
+      {datas.map(
+        (item, index) =>
+          index < viewCnt && (
+            <div className="loopContent" key={index}>
+              <Link to={`/${location}/view?projectId=${item.projectId}`}>
+                <div className="profileImage">
+                  <img
+                    src={
+                      item.pic
+                        ? `http://112.222.157.156:5211/pic/project/${item.projectId}/${item.pic}`
+                        : "share_mandalart2.png"
+                    }
+                    alt=""
+                  />
+                  {location === "share" && (
+                    <div className="voteCount">좋아요 {item.likeCnt}</div>
+                  )}
+                </div>
+                <p className="title">
+                  {item.title}
+                  {item.sharedFg === 1 && (
+                    <span className="shared">[공유중]</span>
+                  )}
+                </p>
+                <p className="date">{item.createDate}</p>
+              </Link>
             </div>
-            <p className="title">{item.title}</p>
-            <p className="date">{item.createDate}</p>
-          </Link>
-        </div>
-      ))}
+          ),
+      )}
     </ShowMandalartList>
   );
 };

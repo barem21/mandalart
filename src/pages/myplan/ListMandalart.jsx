@@ -108,6 +108,7 @@ function MyPlan() {
         userId: sessionData.userId,
         subLocation: "",
       }); //axios
+      console.log(result.resultData);
       setMyList(result.resultData);
     } catch (error) {
       console.log(error);
@@ -134,8 +135,8 @@ function MyPlan() {
       const result = await searchMyplan(data); //axios get
 
       //리턴값 첫번째 자리 확인(첫자리가 4라면 우리를 의심하자(오타 등))
-      const resultStatus = result.status.toString().charAt(0);
-      console.log(result.response.data.resultData);
+      const resultStatus = result.statusCode.toString().charAt(0);
+      //console.log(result.resultData);
 
       //정상호출
       if (resultStatus === "2") {
@@ -165,7 +166,7 @@ function MyPlan() {
   // 등록하기 클릭시 데이터 전송
 
   useEffect(() => {
-    if (!sessionData.userId) {
+    if (!sessionData?.userId) {
       alert("회원 로그인이 필요합니다.");
       navigate("/login?url=/myplan");
       return;
@@ -174,11 +175,11 @@ function MyPlan() {
   }, [sessionData, navigate]);
 
   useEffect(() => {
-    setValue("userId", sessionData.userId && sessionData.userId);
+    setValue("userId", sessionData?.userId && sessionData.userId);
   }, [sessionData, setValue]);
 
   useEffect(() => {
-    setValueSearch("userId", sessionData.userId && sessionData.userId);
+    setValueSearch("userId", sessionData?.userId && sessionData.userId);
   }, [setValueSearch, sessionData]);
 
   useEffect(() => {
@@ -193,6 +194,7 @@ function MyPlan() {
         <BoardTop>
           <div className="sortType">
             <span>[전체 : {myList?.length}건]</span>
+            {/*
             <input
               type="radio"
               value="date"
@@ -210,6 +212,7 @@ function MyPlan() {
               {...registerSearch("sort")}
             />
             <label htmlFor="vote">제목순</label>
+            */}
           </div>
 
           <div className="boardSearch">
@@ -217,7 +220,6 @@ function MyPlan() {
               <option value="1">제목</option>
               <option value="2">내용</option>
               <option value="3">제목+내용</option>
-              <option value="4">작성자</option>
             </select>
             <input
               type="text"

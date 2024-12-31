@@ -3,50 +3,11 @@ import { IoSearch } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import LoopContent from "../../components/mandalart/LoopContent";
 import { useForm } from "react-hook-form";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getSession } from "../../apis/member";
+import { getShare, searchShare } from "../../apis/share";
 
-//세션 생성
 const LOGIN_SESSION_KEY = "login_session";
-
-//임시 데이터
-const sampleData = [
-  {
-    id: 1,
-    img: "share_mandalart.png",
-    title: "홍길동 님의 6개월 런닝 계획표",
-    vote: 10,
-    date: "2024-12-01",
-  },
-  {
-    id: 2,
-    img: "share_mandalart2.png",
-    title: "김수한무 님의 한달 독서 계획표",
-    vote: 5,
-    date: "2024-12-01",
-  },
-  {
-    id: 3,
-    img: "share_mandalart.png",
-    title: "야옹선생 님의 1년 헬스 계획표",
-    vote: 1,
-    date: "2024-12-01",
-  },
-  {
-    id: 4,
-    img: "share_mandalart2.png",
-    title: "마르고닮도록 님의 6개월 리액트 공부 계획표",
-    vote: 13,
-    date: "2024-12-01",
-  },
-  {
-    id: 5,
-    img: "share_mandalart2.png",
-    title: "마르고닮도록 님의 6개월 리액트 공부 계획표",
-    vote: 7,
-    date: "2024-12-01",
-  },
-];
 
 const BoardTop = styled.div`
   display: flex;
@@ -89,6 +50,7 @@ const BoardTop = styled.div`
 `;
 
 function ListMandalart() {
+  const [isShare, setIsShare] = useState([]);
   const sessionData = getSession(LOGIN_SESSION_KEY);
   const {
     handleSubmit: handleSubmitSearch,
@@ -96,19 +58,33 @@ function ListMandalart() {
     setValue: setValueSearch,
   } = useForm({
     defaultValues: {
-      user_id: "",
-      sort: "date",
-      type: "1",
-      search: "",
+      userId: "",
+      orderFilter: "",
+      searchFilter: "",
+      searchText: "",
     },
     mode: "all",
   });
 
-  const onSubmitSearch = data => {
-    console.log(data);
+  //공유 만다라트 가져오기
+  const getSharedMandalart = async () => {
     try {
-      //검색결과 데이터 처리
-      //axios post
+      const result = await getShare({
+        userId: sessionData?.userId,
+        subLocation: "/",
+      }); //axios
+      setIsShare(result.resultData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  //공유 만다라트 검색하기
+  const onSubmitSearch = async data => {
+    try {
+      const result = await searchShare(data); //axios
+      console.log(result);
+      setIsShare(result.resultData);
     } catch (error) {
       console.log("검색 실패:", error);
     }
@@ -116,52 +92,68 @@ function ListMandalart() {
 
   //정렬순서 변경
   const changeSort = value => {
-    setValueSearch("sort", value);
+    setValueSearch("orderFilter", value);
     handleSubmitSearch(onSubmitSearch)();
   };
 
   useEffect(() => {
-    setValueSearch("user_id", sessionData && sessionData.userId);
-  }, [setValueSearch, sessionData]);
+    getSharedMandalart();
+  }, []);
+
+  useEffect(() => {
+    setValueSearch("userId", sessionData && sessionData.userId);
+    setValueSearch("orderFilter", "0"); //최신순 기본
+    setValueSearch("searchFilter", "1"); //제목 기본
+  }, []);
 
   return (
     <>
       <h1 className="subTitle">만다라트 공유</h1>
       <form onSubmit={handleSubmitSearch(onSubmitSearch)}>
+        <input type="hidden" {...registerSearch("userId")} />
         <BoardTop>
           <div className="sortType">
-            <span>[전체 : {sampleData?.length}건]</span>
+            <span>[전체 : {isShare?.length}건]</span>
             <input
               type="radio"
-              value="date"
+              value="0"
               id="date"
               onClick={e => changeSort(e.target.value)}
-              {...registerSearch("sort")}
+              {...registerSearch("orderFilter")}
             />
             <label htmlFor="date">최신순</label>
 
             <input
               type="radio"
-              value="vote"
+              value="1"
               id="vote"
               onClick={e => changeSort(e.target.value)}
-              {...registerSearch("sort")}
+              {...registerSearch("orderFilter")}
             />
-            <label htmlFor="vote">추천순</label>
+            <label htmlFor="vote">좋아요 순</label>
+
+            <input
+              type="radio"
+              value="2"
+              id="comment"
+              onClick={e => changeSort(e.target.value)}
+              {...registerSearch("orderFilter")}
+            />
+            <label htmlFor="comment">댓글순</label>
           </div>
 
           <div className="boardSearch">
-            <select {...registerSearch("type")}>
+            <select {...registerSearch("searchFilter")}>
               <option value="1">제목</option>
               <option value="2">내용</option>
               <option value="3">제목+내용</option>
-              <option value="4">작성자</option>
+              <option value="4">닉네임</option>
             </select>
             <input
               type="text"
               maxLength="20"
               placeholder="검색어를 입력하세요."
-              {...registerSearch("search")}
+              {...registerSearch("searchText")}
             />
             <button type="submit" className="btnLine">
               <IoSearch />
@@ -176,7 +168,7 @@ function ListMandalart() {
         </BoardTop>
       </form>
 
-      <LoopContent location={"share"} datas={sampleData} />
+      <LoopContent location={"share"} datas={isShare} />
     </>
   );
 }

@@ -61,8 +61,15 @@ const schema = yup.object({
   userId: yup
     .string()
     .required("이메일을 입력해 주세요.")
-    .email("올바른 이메일 형식이 아닙니다."),
-  upw: yup.string().required("비밀번호를 입력해 주세요."),
+    .email("올바른 이메일 형식이 아닙니다.")
+    .matches(
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i,
+      "올바른 이메일 형식이 아닙니다.",
+    ),
+  upw: yup
+    .string()
+    .required("비밀번호를 입력해 주세요.")
+    .min("8", "비밀번호는 최소 8자리 이상 입력하셔야 합니다."),
 });
 
 function LoginPage() {
@@ -87,13 +94,11 @@ function LoginPage() {
       const result = await loginMember(data); //axios 전송하기
       //console.log(result.data);
 
-      if (result.data.resultData.userId) {
-        setSession(LOGIN_SESSION_KEY, result.data.resultData); //session
+      if (result.resultData.userId) {
+        setSession(LOGIN_SESSION_KEY, result.resultData); //session
         navigate("/"); //홈으로 이동
       } else {
-        alert(
-          "회원정보가 잘못되었습니다.\n아이디, 또는 비밀번호를 확인해 주세요.",
-        );
+        alert(result.resultMsg);
       }
     } catch (error) {
       console.log("로그인 실패:", error);
