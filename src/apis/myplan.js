@@ -57,11 +57,41 @@ export const postMyplan = async data => {
 
 //axios연동(나의 만다라트 수정하기)
 export const editMyplan = async data => {
-  //console.log(data);
+  console.log(data);
   try {
-    const res = { data: "ok" };
+    //파일은 string가 아니라 binary
+    const formData = new FormData();
+
+    if (data.pic[0]) {
+      formData.append("pic", data.pic[0]); // 파일일 경우
+    } else {
+      formData.append("pic", null); // 파일이 없을 경우
+    }
+
+    //JSON 형태로 데이터를 만들어 formData에 추가
+    formData.append(
+      "p",
+      new Blob(
+        [
+          JSON.stringify({
+            projectId: data.projectId,
+            userId: data.userId,
+            title: data.title,
+            content: data.content,
+          }),
+        ],
+        { type: "application/json" },
+      ),
+    );
+
+    const header = {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    };
+    const res = await axios.patch("/api/project", formData, header);
     //const res = await axios.patch("api/project", data);
-    //console.log("등록하기 결과 : ", res.data);
+    console.log("등록하기 결과 : ", res.data);
     return res.data; //결과 리턴
   } catch (error) {
     console.log(error);

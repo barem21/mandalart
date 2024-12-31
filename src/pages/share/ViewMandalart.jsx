@@ -1,23 +1,26 @@
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { FaRegShareFromSquare, FaFacebookF, FaXTwitter } from "react-icons/fa6";
+import { FaFacebookF, FaRegShareFromSquare, FaXTwitter } from "react-icons/fa6";
 import { SiNaver } from "react-icons/si";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
+import { getGridData } from "../../apis/grid";
 import { getSession } from "../../apis/member";
-import PopupLayout from "../../components/PopupLayout";
 import {
+  addLikeIt,
   deleteComment,
+  deleteLikeIt,
   deleteShare,
+  editComment,
   getComment,
   postComment,
-  editComment,
   postCopy,
 } from "../../apis/share";
+import PopupLayout from "../../components/PopupLayout";
 
 const LOGIN_SESSION_KEY = "login_session";
 
@@ -171,6 +174,7 @@ function ViewMandalart() {
   const projectId = searchParams.get("projectId"); //개별 데이터로 뜯기
   const sessionData = getSession(LOGIN_SESSION_KEY);
 
+  const [infoMandalart, setInfoMandalart] = useState([]); //만다라트 정보
   const [isCopyVisible, setIsCopyVisible] = useState(false); //게시물 복사하기 팝업
   const [isDeleteVisible, setIsDeleteVisible] = useState(false); //게시물 삭제하기 팝업
   const [isDeleteCommentVisible, setIsDeleteCommentVisible] = useState(""); //댓글 삭제하기 팝업
@@ -180,6 +184,29 @@ function ViewMandalart() {
 
   const closeModal = () => {
     setIsCopyVisible(false);
+  };
+
+  /* 날짜 표시 변환 */
+  const dateString = infoMandalart.createdAt;
+  const date = new Date(dateString);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 1을 더해야 함
+  const day = String(date.getDate()).padStart(2, "0");
+  const formattedDate = `${year}-${month}-${day}`;
+  //console.log(formattedDate);
+  /* 날짜 표시 변환 */
+
+  //만다라트 정보 호출
+  const getMandalartInfo = async () => {
+    try {
+      const result = await getGridData(projectId); //axios
+      console.log(result.resultData);
+      setInfoMandalart(result.resultData); //불러온 만다라트 정보 담기
+
+      //console.log(result.resultData);
+    } catch (error) {
+      console.log("검색 실패:", error);
+    }
   };
 
   //댓글 작성
@@ -394,7 +421,44 @@ function ViewMandalart() {
     }
   };
 
+  //좋아요
+  const likeIt = async () => {
+    try {
+      const result = await addLikeIt({
+        projectId: projectId,
+        userId: sessionData?.userId,
+      }); //axios(수정/삭제)
+      if (result.resultData === 1) {
+        alert("좋아요 등록하였습니다.");
+        navigate("/share");
+      } else {
+        alert("좋아요 등록이 실패되었습니다.\n다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.log("좋아요 등록 실패:", error);
+    }
+  };
+
+  //좋아요 해제
+  const likeItDelete = async () => {
+    try {
+      const result = await deleteLikeIt({
+        projectId: projectId,
+        userId: sessionData?.userId,
+      }); //axios(수정/삭제)
+      if (result.resultData === 1) {
+        alert("좋아요 삭제하였습니다.");
+        navigate("/share");
+      } else {
+        alert("좋아요 삭제가 실패되었습니다.\n다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.log("좋아요 삭제 실패:", error);
+    }
+  };
+
   useEffect(() => {
+    getMandalartInfo(); //만다라트 가져오기
     getSharedComment(); //댓글 가져오기
   }, []);
 
@@ -411,7 +475,7 @@ function ViewMandalart() {
         <div className="inputBox" style={{ justifyContent: "space-between" }}>
           <div>
             <label>제목</label>
-            <span>마르고닮도록 님의 6개월 런닝 계획표</span>
+            <span>{infoMandalart.title}</span>
           </div>
 
           <div className="snsShareWrap">
@@ -444,7 +508,9 @@ function ViewMandalart() {
 
         <div className="inputBox">
           <label>작성자/작성일</label>
-          <span>마르고닮도록 / 2024-12-01</span>
+          <span>
+            {infoMandalart.nickName} / {infoMandalart.createdAt}
+          </span>
         </div>
 
         <div
@@ -487,36 +553,7 @@ function ViewMandalart() {
               })}
             </div>
 
-            <div>
-              교감과 공감을 표현한 ‘스타 화가’ 1840년 영국 런던에서 태어난
-              ‘브리튼 리비에르’는 옥스퍼드대학에서 미술 전공 교수로 활동한
-              아버지를 이어
-              <br />
-              4대째 정통 미술교육을 받은 화가 집안의 사람이었어요. 12살 때부터
-              전시회를 열만큼 뛰어난 재능을 자랑했던 그는 아버지가 재직 중인
-              옥스퍼드
-              <br />
-              대학에서 미술을 공부하며 화가로 성장합니다.
-              <br />
-              <br />
-              리비에르가 활동했던 빅토리아 시대에는 주로 종교나 역사, 문학을
-              소재로 한 그림이 유행했었어요. 하지만 이런 소재들은 그에게 특별한
-              감흥을
-              <br />
-              주지 못했죠. 그러던 중, 그가 25세가 되던 해에 ‘사람과 교감하는
-              반려동물’의 모습에서 영감을 얻어 관련 그림을 그리기 시작합니다.
-              리비에르가
-              <br />
-              표현하는 동물의 모습은 여느 화가들의 묘사와는 매우 달랐어요.
-              인형이나 소품처럼 사람 옆에 우두커니 서 있는 동물이 아닌, 사람과의
-              교감과
-              <br />
-              공감을 그림 안에 녹여냈거든요.
-              <br />
-              <br />
-              그의 작품들은 대중들의 마음을 사로잡았고, 그에 힘입어 리비에르는
-              스타 화가의 반열*에 오릅니다.
-            </div>
+            <div>{infoMandalart.content}</div>
           </div>
         </div>
 
@@ -526,7 +563,12 @@ function ViewMandalart() {
             style={{ paddingBottom: "50px", justifyContent: "center" }}
           >
             <label></label>
-            <button className="btnColor">좋아요 10</button>
+            <button className="btnColor" onClick={() => likeIt()}>
+              좋아요
+            </button>
+            <button className="btnLine" onClick={() => likeItDelete()}>
+              좋아요
+            </button>
           </div>
         ) : (
           <div className="inputBox"></div>
@@ -622,18 +664,22 @@ function ViewMandalart() {
               >
                 복사하기
               </button>
-              <button
-                className="btnLine"
-                onClick={() => setIsDeleteVisible(true)}
-              >
-                삭제하기
-              </button>
-              <Link
-                to={`/share/edit?projectId=${projectId}`}
-                className="btnLine"
-              >
-                수정하기
-              </Link>
+              {infoMandalart.nickName === sessionData?.nickName && (
+                <>
+                  <button
+                    className="btnLine"
+                    onClick={() => setIsDeleteVisible(true)}
+                  >
+                    삭제하기
+                  </button>
+                  <Link
+                    to={`/share/edit?projectId=${projectId}`}
+                    className="btnLine"
+                  >
+                    수정하기
+                  </Link>
+                </>
+              )}
             </>
           )}
           <Link to={"/share"} className="btnColor">

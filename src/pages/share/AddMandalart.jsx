@@ -83,7 +83,6 @@ function WriteMandalart() {
       title: "",
       projectId: "",
       content: "",
-      pic: "",
     },
     mode: "all",
   });

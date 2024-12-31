@@ -108,6 +108,7 @@ function MyPlan() {
         userId: sessionData.userId,
         subLocation: "",
       }); //axios
+      console.log(result.resultData);
       setMyList(result.resultData);
     } catch (error) {
       console.log(error);
@@ -193,6 +194,7 @@ function MyPlan() {
         <BoardTop>
           <div className="sortType">
             <span>[전체 : {myList?.length}건]</span>
+            {/*
             <input
               type="radio"
               value="date"
@@ -210,6 +212,7 @@ function MyPlan() {
               {...registerSearch("sort")}
             />
             <label htmlFor="vote">제목순</label>
+            */}
           </div>
 
           <div className="boardSearch">

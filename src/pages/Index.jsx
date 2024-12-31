@@ -157,7 +157,7 @@ function Index() {
           </Link>
         </div>
 
-        <LoopContent location={"share"} datas={isShare} />
+        <LoopContent location={"share"} datas={isShare} viewCnt={4} />
       </div>
     </MainLayout>
   );
