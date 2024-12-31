@@ -200,7 +200,7 @@ function EditMandalart() {
             </div>
 
             <div>
-              <GridLevel0 />
+              <GridLevel0 projectId={projectId} />
             </div>
           </div>
         </div>

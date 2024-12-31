@@ -4,8 +4,12 @@ import "./gridlevel0.css";
 import GridLevel1_MainView from "../mandalartt/GridLevel1_MainView";
 import { getGridData } from "../../apis/grid";
 
-function GridLevel0View() {
-  const [mandalart] = useState(getGridData);
+function GridLevel0View({ projectId }) {
+  useEffect(() => {
+    getGridData(projectId);
+  }, [getGridData]);
+  const [mandalart] = useState(getGridData(projectId));
+
   const [normalData, setNormalData] = useState([
     // ...resultData.mandalart
 
@@ -526,8 +530,9 @@ function GridLevel0View() {
       },
     ],
   ]);
+
   useEffect(() => {
-    console.log("normalData : ", normalData);
+    //console.log("normalData : ", normalData);
     getGridData;
   }, [normalData]);
 
@@ -539,6 +544,7 @@ function GridLevel0View() {
             normalDataIndex={0}
             normalData={normalData}
             setNormalData={setNormalData}
+            projectId={projectId}
           />
         </div>
         <div className="item">
@@ -546,6 +552,7 @@ function GridLevel0View() {
             normalDataIndex={1}
             normalData={normalData}
             setNormalData={setNormalData}
+            projectId={projectId}
           />
         </div>
         <div className="item">
@@ -553,6 +560,7 @@ function GridLevel0View() {
             normalDataIndex={2}
             normalData={normalData}
             setNormalData={setNormalData}
+            projectId={projectId}
           />
         </div>
         <div className="item">
@@ -560,6 +568,7 @@ function GridLevel0View() {
             normalDataIndex={3}
             normalData={normalData}
             setNormalData={setNormalData}
+            projectId={projectId}
           />
         </div>
         <div className="item">
@@ -567,6 +576,7 @@ function GridLevel0View() {
             normalDataIndex={4}
             normalData={normalData}
             setNormalData={setNormalData}
+            projectId={projectId}
           />
         </div>
         <div className="item">
@@ -574,6 +584,7 @@ function GridLevel0View() {
             normalDataIndex={5}
             normalData={normalData}
             setNormalData={setNormalData}
+            projectId={projectId}
           />
         </div>
         <div className="item">
@@ -581,6 +592,7 @@ function GridLevel0View() {
             normalDataIndex={6}
             normalData={normalData}
             setNormalData={setNormalData}
+            projectId={projectId}
           />
         </div>
         <div className="item">
@@ -588,6 +600,7 @@ function GridLevel0View() {
             normalDataIndex={7}
             normalData={normalData}
             setNormalData={setNormalData}
+            projectId={projectId}
           />
         </div>
         <div className="item">
@@ -595,6 +608,7 @@ function GridLevel0View() {
             normalDataIndex={8}
             normalData={normalData}
             setNormalData={setNormalData}
+            projectId={projectId}
           />
         </div>
       </div>

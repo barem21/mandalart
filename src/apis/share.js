@@ -27,3 +27,12 @@ export const deleteShare = async data => {
     return error;
   }
 };
+
+export const postMention = async data => {
+  try {
+    const res = {};
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+};
