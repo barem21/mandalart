@@ -98,9 +98,7 @@ function LoginPage() {
         setSession(LOGIN_SESSION_KEY, result.resultData); //session
         navigate("/"); //홈으로 이동
       } else {
-        alert(
-          "회원정보가 잘못되었습니다.\n아이디, 또는 비밀번호를 확인해 주세요.",
-        );
+        alert(result.resultMsg);
       }
     } catch (error) {
       console.log("로그인 실패:", error);

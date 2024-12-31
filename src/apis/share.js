@@ -59,6 +59,7 @@ export const searchShare = async data => {
 
 //axios연동(공유 만다라트 등록하기)
 export const postShare = async data => {
+  console.log(data);
   try {
     const res = await axios.post("/api/shared_project", data);
     console.log("등록하기 결과 : ", res.data);
@@ -89,7 +90,7 @@ export const deleteShare = async ({ projectId, userId }) => {
     const res = await axios.delete(
       `/api/shared_project?projectId=${projectId}&userId=${userId}`,
     );
-    console.log("공유 만다라트 삭제 결과 : ", res.data);
+    //console.log("공유 만다라트 삭제 결과 : ", res.data);
     return res.data; //결과 리턴
   } catch (error) {
     console.log(error);
@@ -128,7 +129,7 @@ export const editComment = async data => {
   //console.log(data);
   try {
     const res = await axios.patch("/api/shared_project/comments", data);
-    console.log("댓글 수정하기 결과 : ", res.data);
+    //console.log("댓글 수정하기 결과 : ", res.data);
     return res.data; //결과 리턴
   } catch (error) {
     console.log(error);
@@ -143,6 +144,35 @@ export const deleteComment = async ({ commentId, userId }) => {
       `/api/shared_project/comments?commentId=${commentId}&userId=${userId}`,
     );
     //console.log("댓글 삭제하기 결과 : ", res.data);
+    return res.data; //결과 리턴
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+//좋아요 추가삭제
+export const addLikeIt = async ({ projectId, userId }) => {
+  const data = {
+    projectId: projectId,
+    userId: userId,
+  };
+  try {
+    const res = await axios.post(`/api/shared_project/like`, data);
+    //console.log("좋아요 결과 : ", res.data);
+    return res.data; //결과 리턴
+  } catch (error) {
+    console.log(error);
+    return error;
+  }
+};
+
+export const deleteLikeIt = async ({ projectId, userId }) => {
+  try {
+    const res = await axios.delete(`/api/shared_project/like`, {
+      data: { projectId: projectId, userId: userId },
+    });
+    //console.log("좋아요 결과 : ", res.data);
     return res.data; //결과 리턴
   } catch (error) {
     console.log(error);

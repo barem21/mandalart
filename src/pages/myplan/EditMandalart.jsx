@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import PopupLayout from "../../components/PopupLayout";
 import GridLevel0 from "../mandalarttt/GridLevel0";
 import { getSession } from "../../apis/member";
-import { getMyplanView } from "../../apis/myplan";
+import { editMyplan, getMyplanView } from "../../apis/myplan";
 
 const LOGIN_SESSION_KEY = "login_session";
 
@@ -105,7 +105,7 @@ function EditMandalart() {
   } = useForm({
     resolver: yupResolver(addSchema),
     defaultValues: {
-      mid: "",
+      userId: "",
       title: "",
       content: "",
       pic: "",
@@ -113,10 +113,19 @@ function EditMandalart() {
     mode: "all",
   });
 
-  const handleSubmitForm = data => {
-    alert("ok");
-    //모아둔 전송할 데이터(axios.post전송)
-    console.log(data);
+  const handleSubmitForm = async data => {
+    try {
+      const result = await editMyplan(data);
+      console.log(result);
+      if (result.resultData === 1) {
+        alert("공유 만다라트 수정이 완료되었습니다.");
+        navigate("/myplan");
+      } else {
+        alert("공유 만다라트 수정이 실패되었습니다.\n다시 시도해 주세요.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
@@ -144,7 +153,6 @@ function EditMandalart() {
           <input type="hidden" {...register("projectId")} />
           <input type="hidden" {...register("userId")} />
           <div className="writeWrap">
-            <input type="hidden" value="test@test.com" {...register("mid")} />
             <div className="inputBox">
               <label htmlFor="title">
                 제목 <span>*</span>

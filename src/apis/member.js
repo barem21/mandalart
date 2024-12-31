@@ -15,17 +15,10 @@ export const loginMember = async data => {
 //axios연동(회원가입)
 export const joinMember = async data => {
   try {
-    //파일은 string가 아니라 binary
     const formData = new FormData();
 
-    /*
-    formData.append("userId", data.userId);
-    formData.append("upw", data.upw);
-    formData.append("nickName", data.nickName);
-    */
-
-    if (data.pic) {
-      formData.append("pic", data.pic); // 파일일 경우
+    if (data.pic[0]) {
+      formData.append("pic", data.pic[0]); // 파일일 경우
     } else {
       formData.append("pic", null); // 파일이 없을 경우
     }
@@ -62,14 +55,14 @@ export const joinMember = async data => {
 
 //axios연동(회원정보 수정)
 export const editMember = async data => {
+  console.log(data);
   try {
-    //파일은 string가 아니라 binary
     const formData = new FormData();
 
-    if (data.pic) {
-      formData.append("pic", data.pic); // 파일일 경우
+    if (data.pic[0]) {
+      formData.append("pic", data.pic[0]); //파일일 경우
     } else {
-      formData.append("pic", null); // 파일이 없을 경우
+      formData.append("pic", null); //파일이 없을 경우
     }
 
     //JSON 형태로 데이터를 만들어 formData에 추가
@@ -94,7 +87,7 @@ export const editMember = async data => {
         "Content-Type": "multipart/form-data",
       },
     };
-    const res = await axios.put("api/user", formData, header);
+    const res = await axios.patch("api/user", formData, header);
     console.log("회원정보 수정 결과 : ", res.data);
     return res.data; //결과 리턴
   } catch (error) {
