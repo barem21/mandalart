@@ -5,6 +5,7 @@ import { IoIosArrowUp } from "react-icons/io";
 //import SnsShare from "../ShareSns";
 
 const FooterWrap = styled.div`
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -14,7 +15,7 @@ const FooterWrap = styled.div`
   padding: 0px 30px;
   border-top: 1px solid #f0f0f0;
   .btnGoTop {
-    position: fixed;
+    position: absolute;
     bottom: 65px;
     right: 26px;
     display: flex;
@@ -73,7 +74,7 @@ const Footer = () => {
     const observer = new IntersectionObserver(handleIntersection, {
       root: null,
       rootMargin: "0px",
-      threshold: 0.5,
+      threshold: 0.95,
     });
     const target = document.getElementById("FooterWrap");
     if (target) {

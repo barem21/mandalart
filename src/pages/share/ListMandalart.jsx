@@ -13,6 +13,7 @@ const BoardTop = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-width: 1200px;
   margin-bottom: 15px;
   padding: 0px 30px 0px 50px;
   select {

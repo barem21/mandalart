@@ -113,3 +113,15 @@ export const deleteMyplan = async ({ projectId, userId }) => {
     return error;
   }
 };
+
+//나의 만다라트 정보 조회
+export const getMyPlanData = async projectId => {
+  try {
+    const res = await axios.get(`/api/mand?projectId=${projectId}`);
+    //console.log("만다라트 데이터 : ", res.data);
+    return res.data;
+  } catch (error) {
+    console.log(" 데이터 불러오기 실패", error);
+    return error;
+  }
+};

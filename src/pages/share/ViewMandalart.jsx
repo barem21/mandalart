@@ -8,9 +8,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 
-import { getGridData } from "../../apis/grid";
 import { getSession } from "../../apis/member";
 import {
+  getMandalartData,
   addLikeIt,
   deleteComment,
   deleteLikeIt,
@@ -21,8 +21,6 @@ import {
   postCopy,
 } from "../../apis/share";
 import PopupLayout from "../../components/PopupLayout";
-
-import { deleteShare, postCopy } from "../../apis/share";
 import GridLevel0View from "../mandalarttt/GridLevel0View";
 
 const LOGIN_SESSION_KEY = "login_session";
@@ -171,42 +169,34 @@ const schemaEdit = yup.object({
 
 function ViewMandalart() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [toggleSns, setToggleSns] = useState(false);
-  const [commentList, setCommentList] = useState([]);
   const navigate = useNavigate();
   const projectId = searchParams.get("projectId"); //개별 데이터로 뜯기
   const sessionData = getSession(LOGIN_SESSION_KEY);
 
+  const [toggleSns, setToggleSns] = useState(false);
+  const [commentList, setCommentList] = useState([]); //댓글 목록
+  const [isLikeIt, setIsLikeIt] = useState(false);
   const [infoMandalart, setInfoMandalart] = useState([]); //만다라트 정보
   const [isCopyVisible, setIsCopyVisible] = useState(false); //게시물 복사하기 팝업
   const [isDeleteVisible, setIsDeleteVisible] = useState(false); //게시물 삭제하기 팝업
   const [isDeleteCommentVisible, setIsDeleteCommentVisible] = useState(""); //댓글 삭제하기 팝업
   const [isEditCommentVisible, setIsEditCommentVisible] = useState(false); //댓글 수정하기 내용
 
-  const divBox = 81; //총 div
-
   const closeModal = () => {
     setIsCopyVisible(false);
   };
 
-  /* 날짜 표시 변환 */
-  const dateString = infoMandalart.createdAt;
-  const date = new Date(dateString);
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 1을 더해야 함
-  const day = String(date.getDate()).padStart(2, "0");
-  const formattedDate = `${year}-${month}-${day}`;
-  //console.log(formattedDate);
-  /* 날짜 표시 변환 */
-
   //만다라트 정보 호출
   const getMandalartInfo = async () => {
     try {
-      const result = await getGridData(projectId); //axios
-      console.log(result.resultData);
+      const result = await getMandalartData(projectId, sessionData?.userId); //axios
+      //console.log("만다라트 정보 호출 : ", result.resultData);
       setInfoMandalart(result.resultData); //불러온 만다라트 정보 담기
-
       //console.log(result.resultData);
+
+      if (result.resultData.likeFg === 1) {
+        setIsLikeIt(true);
+      }
     } catch (error) {
       console.log("검색 실패:", error);
     }
@@ -432,13 +422,15 @@ function ViewMandalart() {
         userId: sessionData?.userId,
       }); //axios(수정/삭제)
       if (result.resultData === 1) {
-        alert("좋아요 등록하였습니다.");
-        navigate("/share");
+        alert("좋아요에 등록되었습니다.");
+        setIsLikeIt(true);
       } else {
-        alert("좋아요 등록이 실패되었습니다.\n다시 시도해 주세요.");
+        alert("좋아요에 등록 실패하였습니다.\n다시 시도해 주세요.");
+        setIsLikeIt(false);
       }
     } catch (error) {
-      console.log("좋아요 등록 실패:", error);
+      console.log("좋아요에 등록 실패:", error);
+      setIsLikeIt(false);
     }
   };
 
@@ -451,12 +443,14 @@ function ViewMandalart() {
       }); //axios(수정/삭제)
       if (result.resultData === 1) {
         alert("좋아요 삭제하였습니다.");
-        navigate("/share");
+        setIsLikeIt(false);
       } else {
         alert("좋아요 삭제가 실패되었습니다.\n다시 시도해 주세요.");
+        setIsLikeIt(true);
       }
     } catch (error) {
       console.log("좋아요 삭제 실패:", error);
+      setIsLikeIt(true);
     }
   };
 
@@ -537,12 +531,15 @@ function ViewMandalart() {
             style={{ paddingBottom: "50px", justifyContent: "center" }}
           >
             <label></label>
-            <button className="btnColor" onClick={() => likeIt()}>
-              좋아요
-            </button>
-            <button className="btnLine" onClick={() => likeItDelete()}>
-              좋아요
-            </button>
+            {isLikeIt === false ? (
+              <button className="btnLine" onClick={() => likeIt()}>
+                좋아요 👍
+              </button>
+            ) : (
+              <button className="btnColor" onClick={() => likeItDelete()}>
+                좋아요 👍
+              </button>
+            )}
           </div>
         ) : (
           <div className="inputBox"></div>
