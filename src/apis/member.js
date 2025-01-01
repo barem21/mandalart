@@ -67,8 +67,8 @@ export const editMember = async data => {
 
     //JSON 형태로 데이터를 만들어 formData에 추가
     formData.append(
+      "p",
       new Blob(
-        "p",
         [
           JSON.stringify({
             userId: data.userId,

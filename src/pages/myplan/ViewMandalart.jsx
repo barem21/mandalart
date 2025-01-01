@@ -3,10 +3,9 @@ import { ResponsivePie } from "@nivo/pie";
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import PopupLayout from "../../components/PopupLayout";
-import { deleteMyplan, getMyplanView } from "../../apis/myplan";
+import { deleteMyplan, getMyPlanData } from "../../apis/myplan";
 import GridLevel0View from "../mandalarttt/GridLevel0View";
 import { getSession } from "../../apis/member";
-import { getGridData } from "../../apis/grid";
 
 const LOGIN_SESSION_KEY = "login_session";
 
@@ -66,8 +65,8 @@ function ViewMandalart() {
   //만다라트 정보 호출
   const getMandalartInfo = async () => {
     try {
-      const result = await getGridData(projectId); //axios
-      console.log(result.resultData);
+      const result = await getMyPlanData(projectId); //axios
+      console.log("만다라트 호출 : ", result.resultData);
       setMyPlanView(result.resultData); //불러온 만다라트 정보 담기
       setMandalartView(result.resultData.mandalart); //불러온 만다라트 따로 담기
     } catch (error) {

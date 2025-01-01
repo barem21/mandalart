@@ -180,6 +180,19 @@ export const deleteLikeIt = async ({ projectId, userId }) => {
   }
 };
 
+export const getMandalartData = async (projectId, userId) => {
+  try {
+    const res = await axios.get(
+      `/api/mand/shared?projectId=${projectId}&userId=${userId}`,
+    );
+    console.log("만다라트 데이터 : ", res.data);
+    return res.data;
+  } catch (error) {
+    console.log(" 데이터 불러오기 실패", error);
+    return error;
+  }
+};
+
 export const postMention = async data => {
   try {
     const res = {};
