@@ -35,6 +35,9 @@ const FooterWrap = styled.div`
 const FooterLeft = styled.div`
   color: #666;
   font-size: 12px;
+  span {
+    color: #55ad9b;
+  }
 `;
 const FooterRight = styled.div`
   display: flex;
@@ -90,7 +93,9 @@ const Footer = () => {
 
   return (
     <FooterWrap id="FooterWrap">
-      <FooterLeft>COPYRIGHT 2024 MY.MANDA. ALL RIGHTS RESERVED.</FooterLeft>
+      <FooterLeft>
+        COPYRIGHT BY <span>MANDA</span>. ALL RIGHTS RESERVED.
+      </FooterLeft>
       <FooterRight>
         {/* <SnsShare /> */}
 

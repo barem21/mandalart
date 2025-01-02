@@ -219,8 +219,7 @@ function JoinPage() {
     try {
       const result = await joinMember(data); //axios 전송하기(등록)
       if (result.data) {
-        alert("회원가입이 완료되었습니다.");
-        navigate("/login");
+        navigate("/joinEnd");
       } else {
         //회원가입 실패
         alert("회원가입이 실패되었습니다.\n다시 시도해 주세요.");
