@@ -84,7 +84,7 @@ function ListMandalart() {
   const onSubmitSearch = async data => {
     try {
       const result = await searchShare(data); //axios
-      console.log(result);
+      //console.log(result);
       setIsShare(result.resultData);
     } catch (error) {
       console.log("검색 실패:", error);

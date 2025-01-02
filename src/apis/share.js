@@ -1,12 +1,11 @@
 import axios from "axios";
 
 //axios연동(복사하기)
-export const postCopy = async data => {
-  //console.log(data);
+export const postCopy = async ({ copyProjectId, userId }) => {
+  const data = { copyProjectId: copyProjectId, userId: userId };
   try {
-    const res = { data: "ok" };
-    //const res = await axios.post("http://192.168.0.106:5000/share", data);
-    //console.log("복사하기 결과 : ", res.data);
+    const res = await axios.post("/api/shared_project/copy", data);
+    console.log("복사하기 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
     console.log(error);
@@ -34,7 +33,7 @@ export const getShareView = async ({ projectId, subLocation }) => {
     const res = await axios.get(
       `${subLocation}api/shared_project?projectId=${projectId}`,
     );
-    console.log("공유 만다라트 상세보기 결과 : ", res.data);
+    //console.log("공유 만다라트 상세보기 결과 : ", res.data);
     return res.data; //결과 리턴
   } catch (error) {
     console.log(error);
@@ -49,7 +48,7 @@ export const searchShare = async data => {
     const res = await axios.get(
       `/api/shared_project?orderFilter=${data.orderFilter ? data.orderFilter : 0}&searchFilter=${data.searchFilter ? data.searchFilter : 1}&searchText=${data.searchText}&userId=${data.userId}&page=1&size=30`,
     );
-    console.log("검색 결과 : ", res.data);
+    //console.log("검색 결과 : ", res.data);
     return res.data; //결과 리턴
   } catch (error) {
     console.log(error);
@@ -62,7 +61,7 @@ export const postShare = async data => {
   console.log(data);
   try {
     const res = await axios.post("/api/shared_project", data);
-    console.log("등록하기 결과 : ", res.data);
+    //console.log("등록하기 결과 : ", res.data);
     return res.data; //결과 리턴
   } catch (error) {
     console.log(error);
@@ -72,11 +71,9 @@ export const postShare = async data => {
 
 //axios연동(공유 만다라트 수정하기)
 export const editShare = async data => {
-  //console.log(data);
   try {
-    const res = { data: "ok" };
-    //const res = await axios.patch("api/shared_project", data);
-    //console.log("등록하기 결과 : ", res.data);
+    const res = await axios.patch("/api/shared_project", data);
+    //console.log("수정하기 결과 : ", res.data);
     return res.data; //결과 리턴
   } catch (error) {
     console.log(error);

@@ -8,11 +8,13 @@ import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { getSession } from "../apis/member";
 import styled from "@emotion/styled";
+import axios from "axios";
 
 //세션 생성
 const LOGIN_SESSION_KEY = "login_session";
 
 // 일정 데이터를 상태로 관리
+/*
 const events = [
   {
     id: 1,
@@ -33,6 +35,7 @@ const events = [
     background: "#0b46e7",
   },
 ];
+*/
 
 const CalendarWrap = styled.div`
   max-width: 1280px;
@@ -62,6 +65,7 @@ const Calendar = () => {
   const sessionData = getSession(LOGIN_SESSION_KEY);
 
   // 수정 폼을 위한 상태
+  const [events, setEvents] = useState([]);
   const [issModalVisible, setIsModalVisible] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState({
     title: "",
@@ -89,6 +93,21 @@ const Calendar = () => {
     },
     mode: "all",
   });
+
+  //axios연동(캘린더용 데이터 호출)
+  const getCalendal = async () => {
+    try {
+      const res = await axios.get(
+        `api/mand/calendar?userId=barem211@gmail.com&year=2024&month=12`,
+      );
+      console.log("목록보기 결과 : ", res.data.resultData);
+      setEvents([...res.data.resultData, { background: "#dddddd" }]);
+      //return res.data.resultData; //결과 리턴
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
 
   const handleSubmitForm = data => {
     alert("ok");
@@ -135,13 +154,17 @@ const Calendar = () => {
   };
 
   useEffect(() => {
-    if (!sessionData) {
+    if (!sessionData?.userId) {
       alert("회원 로그인이 필요합니다.");
       navigate("/login?url=/calendar");
       return;
     }
     return () => {};
   }, [sessionData, navigate]);
+
+  useEffect(() => {
+    getCalendal();
+  }, []);
 
   return (
     <CalendarWrap>

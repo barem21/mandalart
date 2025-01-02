@@ -183,8 +183,8 @@ function EditPage() {
 
     try {
       const result = await editMember(data); //axios처리(수정)
-      console.log(result.data);
-      if (result.data) {
+      console.log(result.resultData);
+      if (result.resultData === 1) {
         alert("회원정보 수정이 완료되었습니다.");
         navigate("/");
       } else {

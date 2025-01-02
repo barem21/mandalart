@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { FaFacebookF, FaRegShareFromSquare, FaXTwitter } from "react-icons/fa6";
 import { SiNaver } from "react-icons/si";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-
+import DOMPurify from "dompurify";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
@@ -283,7 +283,7 @@ function ViewMandalart() {
   const snsSendProc = type => {
     let shareTitle = "공유 테스트";
     let shareURL = `http://localhost:5173/share/view?projectId=${projectId}`;
-    let imagesrc = "gshqg0060020010010000011.jpg";
+    //let imagesrc = `http://112.222.157.156:5211/pic/project/${projectId}/${pic}`;
     let a;
     let href;
 
@@ -312,29 +312,6 @@ function ViewMandalart() {
         }
         break;
 
-      case "PI":
-        href =
-          "http://www.pinterest.com/pin/create/button/?url=" +
-          encodeURIComponent(shareURL) +
-          "&media=" +
-          encodeURIComponent(imagesrc) +
-          "&description=" +
-          encodeURIComponent(shareTitle);
-        a = window.open(href, "Pinterest", "");
-        if (a) {
-          a.focus();
-        }
-        break;
-
-      case "GO":
-        href =
-          "https://plus.google.com/share?url=" + encodeURIComponent(shareURL);
-        a = window.open(href, "GooglePlus", "");
-        if (a) {
-          a.focus();
-        }
-        break;
-
       case "NB":
         href =
           "https://share.naver.com/web/shareView.nhn?url=" +
@@ -354,7 +331,10 @@ function ViewMandalart() {
     data.preventDefault(); //submit 동작 방지
 
     try {
-      const result = await postCopy(data); //axios 전송하기(복사요청)
+      const result = await postCopy({
+        copyProjectId: projectId,
+        userId: sessionData?.userId,
+      }); //axios 전송하기(복사요청)
       if (result.data) {
         alert("만다라트 복제가 완료되었습니다.");
         navigate("/myplan");
@@ -521,7 +501,11 @@ function ViewMandalart() {
               <GridLevel0View />
             </div>
 
-            <div>{infoMandalart.content}</div>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(infoMandalart.content),
+              }}
+            ></div>
           </div>
         </div>
 
@@ -629,12 +613,15 @@ function ViewMandalart() {
         <ButtonWrap>
           {sessionData?.userId && (
             <>
-              <button
-                className="btnLine"
-                onClick={() => setIsCopyVisible(true)}
-              >
-                복사하기
-              </button>
+              {infoMandalart.nickName !== sessionData?.nickName && (
+                <button
+                  className="btnLine"
+                  onClick={() => setIsCopyVisible(true)}
+                >
+                  복사하기
+                </button>
+              )}
+
               {infoMandalart.nickName === sessionData?.nickName && (
                 <>
                   <button
@@ -666,8 +653,6 @@ function ViewMandalart() {
           title={"만다라트 복사하기"}
         >
           <form onSubmit={e => handleCopySubmit(e)}>
-            <input type="hidden" name="idx" value="1" />
-            <input type="hidden" name="mid" value="test@test.com" />
             <div className="guideText inputBox">
               해당 만다라트 계획표를 나의 만다라트로 복사하시겠습니까?
             </div>

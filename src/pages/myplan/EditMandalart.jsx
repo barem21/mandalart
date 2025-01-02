@@ -8,7 +8,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import PopupLayout from "../../components/PopupLayout";
 import GridLevel0 from "../mandalarttt/GridLevel0";
 import { getSession } from "../../apis/member";
-import { editMyplan, getMyplanView } from "../../apis/myplan";
+import { editMyplan, getMyPlanData, getMyplanView } from "../../apis/myplan";
 
 const LOGIN_SESSION_KEY = "login_session";
 
@@ -58,7 +58,6 @@ const ButtonWrap = styled.div`
 const addSchema = yup.object({
   title: yup.string().required("제목을 입력해 주세요!"),
   content: yup.string().required("간단 소개글을 입력해 주세요."),
-  /*
   pic: yup
     .mixed()
     .test("fileType", "이미지(jpg, png) 파일만 첨부가능합니다.", value => {
@@ -67,34 +66,17 @@ const addSchema = yup.object({
     .test("filesize", "파일 크기는 500KB 이하만 가능합니다.", value => {
       return value && value[0]?.size <= 0.5 * 1024 * 1024; // 500KB 이하
     }),
-  */
 });
 
 function EditMandalart() {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [myPlanView, setMyPlanView] = useState([]);
   const navigate = useNavigate();
   const projectId = searchParams.get("projectId"); //개별 데이터로 뜯기
   const sessionData = getSession(LOGIN_SESSION_KEY);
-  /*
-  const divBox = 81; //총 div
-  */
   const [isAddVisible, setIsAddVisible] = useState(false); //복사하기 팝업
 
   const closeModal = () => {
     setIsAddVisible(false);
-  };
-
-  const getMyplan = async ({ projectId }) => {
-    try {
-      const result = await getMyplanView({
-        projectId: projectId,
-        subLocation: "/",
-      }); //axios
-      setMyPlanView(result.resultData);
-    } catch (error) {
-      console.log(error);
-    }
   };
 
   const {
@@ -116,12 +98,12 @@ function EditMandalart() {
   const handleSubmitForm = async data => {
     try {
       const result = await editMyplan(data);
-      console.log(result);
+      //console.log(result);
       if (result.resultData === 1) {
-        alert("공유 만다라트 수정이 완료되었습니다.");
+        alert("나의 만다라트 수정이 완료되었습니다.");
         navigate("/myplan");
       } else {
-        alert("공유 만다라트 수정이 실패되었습니다.\n다시 시도해 주세요.");
+        alert("나의 만다라트 수정이 실패되었습니다.\n다시 시도해 주세요.");
       }
     } catch (error) {
       console.log(error);
@@ -137,7 +119,18 @@ function EditMandalart() {
   }, [sessionData, navigate]);
 
   useEffect(() => {
-    //getMyplan(projectId);
+    //만다라트 정보 호출
+    const getMandalartInfo = async () => {
+      try {
+        const result = await getMyPlanData(projectId); //axios
+        console.log("만다라트 호출 : ", result.resultData);
+        setValue("title", result.resultData.title);
+        setValue("content", result.resultData.content);
+      } catch (error) {
+        console.log("검색 실패:", error);
+      }
+    };
+    getMandalartInfo(projectId);
   }, []);
 
   useEffect(() => {
@@ -166,12 +159,12 @@ function EditMandalart() {
             </div>
             <div className="inputBox">
               <label htmlFor="content">
-                간단 소개글 <span>*</span>
+                간단 설명 <span>*</span>
               </label>
               <div style={{ width: "100%", fontSize: "0px" }}>
                 <textarea
                   id="content"
-                  placeholder="간단 소개글을 입력해 주세요."
+                  placeholder="간단 설명을 입력해 주세요."
                   {...register("content")}
                 />
                 {errors.content?.message && (
@@ -180,7 +173,9 @@ function EditMandalart() {
               </div>
             </div>
             <div className="inputBox">
-              <label htmlFor="content">섬네일 등록</label>
+              <label htmlFor="content">
+                섬네일 등록 <span>*</span>
+              </label>
               <input type="file" {...register("pic")} />
 
               <button type="submit" className="btnColor">
