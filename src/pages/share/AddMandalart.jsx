@@ -1,8 +1,10 @@
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { useNavigate } from "react-router-dom";
 import { getSession } from "../../apis/member";
 import { getMyplan } from "../../apis/myplan";
@@ -28,10 +30,15 @@ const ShareWriteWrap = styled.div`
     padding: 15px 10px;
     resize: vertical;
   }
+  .ql-editor {
+    height: 250px;
+  }
+  /*
   .writeWrap button {
     width: 100%;
     margin: 0px;
   }
+  */
 `;
 
 const ErrorMessage = styled.p`
@@ -45,7 +52,7 @@ const ButtonWrap = styled.div`
   align-items: center;
   justify-content: center;
   padding-top: 40px;
-  border-top: 1px solid #eee;
+  border-top: 0px solid #eee;
 `;
 
 //schema 먼저 생성
@@ -70,7 +77,63 @@ function WriteMandalart() {
   const navigate = useNavigate();
   const sessionData = getSession(LOGIN_SESSION_KEY);
 
+  // 모듈 활용
+  const modules = {
+    toolbar: {
+      container: [
+        [{ header: [1, 2, 3, 4, 5, 6, false] }],
+        [{ align: [] }],
+        ["bold", "italic", "underline", "strike"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        [
+          {
+            color: [
+              "#000000",
+              "#e60000",
+              "#ff9900",
+              "#ffff00",
+              "#008a00",
+              "#0066cc",
+              "#9933ff",
+              "#ffffff",
+              "#facccc",
+              "#ffebcc",
+              "#ffffcc",
+              "#cce8cc",
+              "#cce0f5",
+              "#ebd6ff",
+              "#bbbbbb",
+              "#f06666",
+              "#ffc266",
+              "#ffff66",
+              "#66b966",
+              "#66a3e0",
+              "#c285ff",
+              "#888888",
+              "#a10000",
+              "#b26b00",
+              "#b2b200",
+              "#006100",
+              "#0047b2",
+              "#6b24b2",
+              "#444444",
+              "#5c0000",
+              "#663d00",
+              "#666600",
+              "#003700",
+              "#002966",
+              "#3d1466",
+              "custom-color",
+            ],
+          },
+          { background: [] },
+        ],
+      ],
+    },
+  };
+
   const {
+    control,
     register,
     reset,
     handleSubmit,
@@ -154,9 +217,11 @@ function WriteMandalart() {
                   <option value="">선택해주세요.</option>
                   {myList.map((item, index) => {
                     return (
-                      <option key={index} value={item.projectId}>
-                        {item.title}
-                      </option>
+                      item.sharedFg === 0 && (
+                        <option key={index} value={item.projectId}>
+                          {item.title}
+                        </option>
+                      )
                     );
                   })}
                 </select>
@@ -170,11 +235,18 @@ function WriteMandalart() {
                 간단 소개글 <span>*</span>
               </label>
               <div style={{ width: "100%" }}>
-                <textarea
-                  id="content"
-                  placeholder="간단 소개글을 입력해 주세요."
-                  {...register("content")}
-                ></textarea>
+                <Controller
+                  name="content" // name을 지정하여 React Hook Form과 연결
+                  control={control}
+                  rules={{ required: "간단 소개글을 입력해 주세요." }} // validation
+                  render={({ field }) => (
+                    <ReactQuill
+                      modules={modules}
+                      {...field}
+                      placeholder="간단 소개글을 입력해 주세요."
+                    />
+                  )}
+                />
                 {errors.content?.message && (
                   <ErrorMessage>({errors.content?.message})</ErrorMessage>
                 )}
