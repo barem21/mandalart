@@ -119,3 +119,21 @@ const getGridData = [{id:0},{id:1},{id:2},{id:3}]
     //console.log(selectDat/a.title);
     setIsModalOpen(false);
   };
+
+
+
+
+
+{showData?.map((item, index) => (
+          <div
+            key={index}
+            id={item.cellId}
+            onClick={() => openModal(item.cellId)}
+            className="sub-item"
+            style={{
+              backgroundColor: `${item.bgcolor}`,
+            }}
+          >
+            {item.title}
+          </div>
+        ))}

@@ -25,7 +25,9 @@ function GridLevel1_Main({
   const [showData, setShowData] = useState();
   // const [subClear, setSubClear] = useState(false);
   const [color, setColor] = useState(true);
+  // 주목표 상태
 
+  const [mainObj, setMainObj] = useState(normalData[4]?.[4].title);
   // 제외 셀
   const exceptionCell = cellId => {
     switch (cellId) {
@@ -52,25 +54,24 @@ function GridLevel1_Main({
         setColor(true);
     }
   };
-  // const exceptionCellId = [
-  //   "cell-0-0-1-1",
-  //   "cell-0-1-1-1",
-  //   "cell-0-2-1-1",
-  //   "cell-1-0-1-1",
-  //   "cell-1-1-1-0",
-  //   "cell-1-1-1-1",
-  //   "cell-1-1-1-2",
-  //   "cell-1-1-0-0",
-  //   "cell-1-1-0-1",
-  //   "cell-1-1-0-2",
-  //   "cell-1-1-2-0",
-  //   "cell-1-1-2-1",
-  //   "cell-1-1-2-2",
-  //   "cell-1-2-1-1",
-  //   "cell-2-0-1-1",
-  //   "cell-2-1-1-1",
-  //   "cell-2-2-1-1",
-  // ];
+  const exceptionCellId = [
+    "cell-0-0-1-1",
+    "cell-0-1-1-1",
+    "cell-0-2-1-1",
+    "cell-1-0-1-1",
+    "cell-1-1-1-0",
+    "cell-1-1-1-2",
+    "cell-1-1-0-0",
+    "cell-1-1-0-1",
+    "cell-1-1-0-2",
+    "cell-1-1-2-0",
+    "cell-1-1-2-1",
+    "cell-1-1-2-2",
+    "cell-1-2-1-1",
+    "cell-2-0-1-1",
+    "cell-2-1-1-1",
+    "cell-2-2-1-1",
+  ];
 
   //완료;
   // const handleClearChange = e => {
@@ -86,22 +87,31 @@ function GridLevel1_Main({
   useEffect(() => {
     setShowData(normalData[normalDataIndex]);
   }, [normalData, normalDataIndex]);
-  
-  // 모달 열기
+  // 모달 열기(주, 서브 목표 빈칸 경고창 포함 )
   const openModal = id => {
-    // 선택된 객체 정보 한개를 보관
-    const isEmptyTitle = title => !title || title.trim() === "";
-
-    if (Array.isArray(showData) && isEmptyTitle(showData[5]?.[5]?.title)) {
-      alert("주 목표를 입력해주세요");
+    // 선택된 객체 정보 한개를 보관]
+    console.log(normalData[4]?.[4].title);
+    // if (Array.isArray(showData) && normalData[4]?.[4].title === "") {
+    //   alert("주 목표를 먼저 입력해주세요");
+    // }
+    if (Array.isArray(showData) && showData[4].title === "") {
+      if (
+        showData[4] === normalData[4]?.[4] &&
+        normalData[4]?.[4].title === ""
+      ) {
+        normalData[4][4].title = "주 목표";
+        alert("주 목표를 먼저 입력해주세요");
+        openModal(normalData[4][4].cellId);
+      } else {
+        alert("서브 목표를 먼저 입력해주세요");
+      }
+    } else {
+      const nowSelectItem = showData.find(item => item.cellId === id);
+      setSelectData(nowSelectItem);
+      setIsModalOpen(true);
     }
-    exceptionCell(id);
-
-    const nowSelectItem = showData.find(item => item.cellId === id);
-    // console.log("nowSelectItem ==== ", nowSelectItem);
-    setSelectData(nowSelectItem);
     // 완료미완료 선택창 제외 셀 case
-    setIsModalOpen(true);
+    console.log(normalData[4][0].bgColor);
   };
 
   // 모달 입력값 변경 처리
@@ -128,6 +138,7 @@ function GridLevel1_Main({
           item =>
             item.isbindKey === itemNow.cellId || item.cellId === itemNow.cellId,
         );
+
         if (bindedItem) {
           // console.log(bindedItem);
           return {
@@ -146,6 +157,7 @@ function GridLevel1_Main({
       });
       return updatedOriginalItem;
     });
+    console.log(updatedNormalData);
     // console.log(updatedNormalData);
     // const uploadDataForm =  selectData.value =>
     //   ;
@@ -165,10 +177,15 @@ function GridLevel1_Main({
     } catch (error) {
       console.error("Error updating data:", error);
     }
-
-    // console.log(showData);
-    setIsModalOpen(false);
     console.log(selectData);
+    if (selectData.title === "" || selectData.contents === null) {
+      alert("목표와 세부 내용을 입력해주세요");
+    }
+    // console.log(showData);
+    else {
+      setIsModalOpen(false);
+    }
+
     return; // 모달 닫기
   };
 
@@ -181,19 +198,23 @@ function GridLevel1_Main({
     <div>
       <div className="sub-container">
         {/* 각 셀 */}
-        {showData?.map((item, index) => (
-          <div
-            key={index}
-            id={item.cellId}
-            onClick={() => openModal(item.cellId)}
-            className="sub-item"
-            style={{
-              backgroundColor: item.bgcolor,
-            }}
-          >
-            {item.title}
-          </div>
-        ))}
+        {showData?.map((item, index) => {
+          console.log(showData); // 디버깅용
+          return (
+            <div
+              key={index}
+              id={item.cellId}
+              onClick={() => openModal(item.cellId)}
+              className="sub-item"
+              style={{
+                backgroundColor:
+                  item.completedFg === 1 ? item.bgColor : "transparent", // 조건에 따른 색상 설정
+              }}
+            >
+              {item.title}
+            </div>
+          );
+        })}
       </div>
 
       {/* 모달 */}
