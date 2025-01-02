@@ -92,18 +92,17 @@ function Index() {
     }
   };
 
-  window.onscroll = function () {
-    scrollRotate(); // 스크롤할때 이미지를 회전 시킨다.
-  };
-
-  const scrollRotate = () => {
-    // 스크롤할때 이미지를 회전 시킨다.
+  const handleScroll = () => {
     let image = document.getElementById("reload");
     image.style.transform = "rotate(" + window.pageYOffset / 2 + "deg)";
   };
 
   useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
     getSharedMandalart();
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   return (

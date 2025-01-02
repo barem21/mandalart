@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FullCalendar from "@fullcalendar/react";
 import dayGridPlugin from "@fullcalendar/daygrid";
 import PopupLayout from "../components/PopupLayout";
@@ -12,30 +12,6 @@ import axios from "axios";
 
 //세션 생성
 const LOGIN_SESSION_KEY = "login_session";
-
-// 일정 데이터를 상태로 관리
-/*
-const events = [
-  {
-    id: 1,
-    title: "👍 샘플데이터 입니다.",
-    start: "2024-12-25",
-    end: "2024-12-31",
-    description: "샘플 데이터 상세보기 입니다.",
-    color: "#ff6600",
-    background: "#ff6600",
-  },
-  {
-    id: 2,
-    title: "👍 샘플2데이터 입니다.",
-    start: "2024-12-20",
-    end: "2024-12-26",
-    description: "샘플 데이터 상세보기 입니다.",
-    color: "#0b46e7",
-    background: "#0b46e7",
-  },
-];
-*/
 
 const CalendarWrap = styled.div`
   max-width: 1280px;
@@ -61,6 +37,10 @@ const addSchema = yup.object({
 });
 
 const Calendar = () => {
+  const [currentYear, setCurrentYear] = useState("");
+  const [currentMonth, setCurrentMonth] = useState("");
+  const calendarRef = useRef(null);
+
   const navigate = useNavigate();
   const sessionData = getSession(LOGIN_SESSION_KEY);
 
@@ -74,6 +54,29 @@ const Calendar = () => {
     description: "",
     id: null, // 이벤트 ID 추가
   });
+
+  // datesSet 이벤트를 사용하여 년/월 정보를 가져옴
+  const handleDatesSet = info => {
+    const currentDate = info.view.currentStart;
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1; // month는 0부터 시작
+    setCurrentYear(year);
+    setCurrentMonth(month);
+
+    const getShareView = async () => {
+      try {
+        const res = await axios.get(
+          `/api/mand/calendar?userId=${sessionData?.userId}&year=${year}&month=${month}`,
+        );
+        console.log("공유 만다라트 상세보기 결과 : ", res.data);
+        return res.data; //결과 리턴
+      } catch (error) {
+        console.log(error);
+        return error;
+      }
+    };
+    getShareView();
+  };
 
   const closeModal = () => {
     setIsModalVisible(false);
@@ -98,16 +101,20 @@ const Calendar = () => {
   const getCalendal = async () => {
     try {
       const res = await axios.get(
-        `api/mand/calendar?userId=barem211@gmail.com&year=2024&month=12`,
+        `api/mand/calendar?userId=barem210@gmail.com&year=2025&month=01`,
       );
       console.log("목록보기 결과 : ", res.data.resultData);
-      setEvents([...res.data.resultData, { background: "#dddddd" }]);
+      const resultArr = res.data.resultData[0];
+      resultArr.background = "#aaaaaa";
+      setEvents(resultArr);
       //return res.data.resultData; //결과 리턴
     } catch (error) {
       console.log(error);
       return error;
     }
   };
+
+  console.log(events);
 
   const handleSubmitForm = data => {
     alert("ok");
@@ -168,8 +175,12 @@ const Calendar = () => {
 
   return (
     <CalendarWrap>
+      <div>
+        {currentYear}/{currentMonth}
+      </div>
       <h1 className="subTitle">계획표 캘린더</h1>
       <FullCalendar
+        ref={calendarRef}
         plugins={[dayGridPlugin]}
         initialView="dayGridMonth"
         headerToolbar={{
@@ -177,6 +188,7 @@ const Calendar = () => {
           center: "title",
           right: "today",
         }}
+        datesSet={handleDatesSet}
         nowIndicator={true}
         events={events}
         locale="ko"

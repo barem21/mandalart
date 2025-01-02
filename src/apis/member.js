@@ -88,7 +88,15 @@ export const editMember = async data => {
       },
     };
     const res = await axios.patch("api/user", formData, header);
-    console.log("회원정보 수정 결과 : ", res.data);
+
+    let datas = sessionStorage.getItem("login_session");
+    if (datas) {
+      datas = JSON.parse(datas);
+    }
+    datas.nickName = data.nickName;
+    sessionStorage.setItem("login_session", JSON.stringify(datas));
+
+    //console.log("회원정보 수정 결과 : ", res.data);
     return res.data; //결과 리턴
   } catch (error) {
     console.log(error);
