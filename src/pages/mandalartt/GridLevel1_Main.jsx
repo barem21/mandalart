@@ -56,7 +56,6 @@ function GridLevel1_Main({
       setIsModalOpen(true);
     }
     // 완료미완료 선택창 제외 셀 case
-    // console.log(normalData[4][0].bgColor);
   };
 
   // 모달 입력값 변경 처리
@@ -130,33 +129,39 @@ function GridLevel1_Main({
 
     // 날짜 경고창
 
-    if (selectData.startDate === null || selectData.finishDate === null) {
-      const isNormalDataInvalid =
-        selectData === normalData?.[4]?.[4] &&
-        (selectData.startDate === null || selectData.finishDate === null);
-
-      const isNewShowDataInvalid =
-        selectData === newShowData?.[4] &&
-        (selectData.startDate === null || selectData.finishDate === null);
-
-      const isDateRangeInvalid =
-        (selectData.startDate < normalData?.[4]?.[4]?.startDate &&
-          selectData.finishDate > normalData?.[4]?.[4]?.finishDate) ||
-        (selectData.startDate < newShowData?.[4]?.startDate &&
-          selectData.finishDate > newShowData?.[4]?.finishDate);
-
-      if (
-        !isNormalDataInvalid ||
-        !isNewShowDataInvalid ||
-        !isDateRangeInvalid
-      ) {
-        alert("날짜를 확인해주세요.");
-      } else {
-        setIsModalOpen(false);
-        getGridApiCall();
-      }
+    console.log("실패", selectData.startDate, selectData.finishDate);
+    console.log(selectData);
+    console.log(newShowData?.[4]);
+    const isDateRangeInvalid =
+      selectData.startDate >= normalData?.[4]?.[4]?.startDate &&
+      selectData.finishDate <= normalData?.[4]?.[4]?.finishDate &&
+      selectData.startDate >= newShowData?.[4]?.startDate &&
+      selectData.finishDate <= newShowData?.[4]?.finishDate;
+    const isNormalDataInvalid =
+      selectData === normalData?.[4]?.[4] &&
+      (selectData.startDate === null || selectData.finishDate === null);
+    const isNewShowDataInvalid =
+      (selectData === newShowData?.[4] &&
+        (selectData.startDate === null || selectData.finishDate === null)) ||
+      (selectData.startDate < normalData?.[4]?.[4]?.startDate &&
+        selectData.finishDate > normalData?.[4]?.[4]?.finishDate);
+    console.log("isDateRangeInvalid", !isDateRangeInvalid);
+    console.log("isNormalDataInvalid", !isNormalDataInvalid);
+    console.log("isNewShowDataInvalid", !isNewShowDataInvalid);
+    if (
+      selectData.startDate === null ||
+      selectData.finishDate === null ||
+      isNormalDataInvalid ||
+      isNewShowDataInvalid ||
+      !isDateRangeInvalid
+    ) {
+      alert("날짜를 확인해주세요.");
+    } else {
+      getGridApiCall();
+      setIsModalOpen(false);
     }
 
+    return;
     // 모달 닫기
   };
 
