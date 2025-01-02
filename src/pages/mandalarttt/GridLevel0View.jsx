@@ -8,7 +8,8 @@ function GridLevel0({ projectId }) {
   // console.log("projectId", projectId);
   const getGridApiCall = async () => {
     const tempDatas = await getGridData(projectId);
-    // setMandalart(tempDatas.mandalart);
+    console.log(tempDatas.mandalart);
+    setMandalart(tempDatas.mandalart);
     setNormalData([
       //0-8
       [
@@ -529,7 +530,7 @@ function GridLevel0({ projectId }) {
     ]);
   };
 
-  // const [mandalart, setMandalart] = useState([]);
+  const [mandalart, setMandalart] = useState([]);
   const [normalData, setNormalData] = useState([]);
 
   useEffect(() => {

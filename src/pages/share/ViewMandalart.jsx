@@ -518,7 +518,7 @@ function ViewMandalart() {
           <div>
             <div>
               {/* 만다라트 계획표 출력 */}
-              <GridLevel0View />
+              <GridLevel0View projectId={projectId} />
             </div>
 
             <div>{infoMandalart.content}</div>
