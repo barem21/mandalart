@@ -108,7 +108,7 @@ function MyPlan() {
         userId: sessionData.userId,
         subLocation: "",
       }); //axios
-      console.log(result.resultData);
+      //console.log(result.resultData);
       setMyList(result.resultData);
     } catch (error) {
       console.log(error);

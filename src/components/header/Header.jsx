@@ -55,7 +55,21 @@ const HeaderNav = styled.div`
 const HeaderRight = styled.div`
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 8px;
+  .profileImg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    border: 1px solid #eee;
+    border-radius: 50%;
+    overflow: hidden;
+    img {
+      height: 30px;
+      object-fit: cover;
+    }
+  }
   a {
     color: #666;
     font-size: 14px;
@@ -137,8 +151,14 @@ const Header = () => {
       <HeaderRight>
         {sessionData ? (
           <>
+            <div className="profileImg">
+              <img
+                src={`http://112.222.157.156:5211/pic/user/${sessionData?.userId}/${sessionData?.pic}`}
+                alt=""
+              />
+            </div>
             <p className="userInfo">
-              <span>{sessionData.nickName}</span>님, 환영합니다.
+              <span>{sessionData?.nickName}</span>님, 환영합니다.
             </p>
             <Link to={"/logout"}>로그아웃</Link>
             <span className="vLine">|</span>

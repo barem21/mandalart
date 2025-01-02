@@ -174,7 +174,7 @@ function EditPage() {
 
   //회원정보 수정
   const onSubmit = async data => {
-    if (userNick !== sessionData?.nickName) {
+    if (isNicknameAvailable === null && userNick !== sessionData?.nickName) {
       alert("닉네임 중복체크를 진행해 주세요.");
       return;
     }
@@ -187,7 +187,6 @@ function EditPage() {
 
     try {
       const result = await editMember(data); //axios처리(수정)
-      console.log(result.resultData);
       if (result.resultData === 1) {
         alert("회원정보 수정이 완료되었습니다.");
         navigate("/");
