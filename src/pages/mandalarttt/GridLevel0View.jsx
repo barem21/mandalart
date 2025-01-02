@@ -1,40 +1,39 @@
 import { useEffect, useState } from "react";
 import "./gridlevel0.css";
 
-import GridLevel1_MainView from "../mandalartt/GridLevel1_MainView";
+import GridLevel1_Main from "../mandalartt/GridLevel1_Main";
 import { getGridData } from "../../apis/grid";
 
-function GridLevel0View({ projectId }) {
+function GridLevel0({ projectId }) {
+  // console.log("projectId", projectId);
   const getGridApiCall = async () => {
     const tempDatas = await getGridData(projectId);
-    setMandalart(tempDatas.mandalart);
+    // setMandalart(tempDatas.mandalart);
     setNormalData([
-      // ...resultData.mandalart
-
       //0-8
       [
         {
           // 고유 값
-          ...tempDatas.mandalart[10],
+          ...tempDatas.mandalart[9],
           cellId: "cell-0-0-0-0",
           // 연동
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[11],
+          ...tempDatas.mandalart[10],
           cellId: "cell-0-0-0-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[12],
+          ...tempDatas.mandalart[11],
           cellId: "cell-0-0-0-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[13],
+          ...tempDatas.mandalart[12],
           cellId: "cell-0-0-1-0",
           isActive: false,
           isbindKey: null,
@@ -46,25 +45,25 @@ function GridLevel0View({ projectId }) {
           isbindKey: "cell-1-1-0-0",
         },
         {
-          ...tempDatas.mandalart[14],
+          ...tempDatas.mandalart[13],
           cellId: "cell-0-0-1-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[15],
+          ...tempDatas.mandalart[14],
           cellId: "cell-0-0-2-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[16],
+          ...tempDatas.mandalart[15],
           cellId: "cell-0-0-2-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[17],
+          ...tempDatas.mandalart[16],
           cellId: "cell-0-0-2-2",
           isActive: false,
           isbindKey: null,
@@ -73,25 +72,25 @@ function GridLevel0View({ projectId }) {
       //9-17
       [
         {
-          ...tempDatas.mandalart[18],
+          ...tempDatas.mandalart[17],
           cellId: "cell-0-1-0-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[19],
+          ...tempDatas.mandalart[18],
           cellId: "cell-0-1-0-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[20],
+          ...tempDatas.mandalart[19],
           cellId: "cell-0-1-0-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[21],
+          ...tempDatas.mandalart[20],
           cellId: "cell-0-1-1-0",
           isActive: false,
           isbindKey: null,
@@ -103,25 +102,25 @@ function GridLevel0View({ projectId }) {
           isbindKey: "cell-1-1-0-1",
         },
         {
-          ...tempDatas.mandalart[22],
+          ...tempDatas.mandalart[21],
           cellId: "cell-0-1-1-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[23],
+          ...tempDatas.mandalart[22],
           cellId: "cell-0-1-2-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[24],
+          ...tempDatas.mandalart[23],
           cellId: "cell-0-1-2-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[25],
+          ...tempDatas.mandalart[24],
           cellId: "cell-0-1-2-2",
           isActive: false,
           isbindKey: null,
@@ -130,25 +129,25 @@ function GridLevel0View({ projectId }) {
       //18-26
       [
         {
-          ...tempDatas.mandalart[26],
+          ...tempDatas.mandalart[25],
           cellId: "cell-0-2-0-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[27],
+          ...tempDatas.mandalart[26],
           cellId: "cell-0-2-0-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[28],
+          ...tempDatas.mandalart[27],
           cellId: "cell-0-2-0-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[29],
+          ...tempDatas.mandalart[28],
           cellId: "cell-0-2-1-0",
           isActive: false,
           isbindKey: null,
@@ -161,25 +160,25 @@ function GridLevel0View({ projectId }) {
           isbindKey: "cell-1-1-0-2",
         },
         {
-          ...tempDatas.mandalart[30],
+          ...tempDatas.mandalart[29],
           cellId: "cell-0-2-1-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[31],
+          ...tempDatas.mandalart[30],
           cellId: "cell-0-2-2-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[32],
+          ...tempDatas.mandalart[31],
           cellId: "cell-0-2-2-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[33],
+          ...tempDatas.mandalart[32],
           cellId: "cell-0-2-2-2",
           isActive: false,
           isbindKey: null,
@@ -188,25 +187,25 @@ function GridLevel0View({ projectId }) {
       //27-35
       [
         {
-          ...tempDatas.mandalart[34],
+          ...tempDatas.mandalart[33],
           cellId: "cell-1-0-0-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[35],
+          ...tempDatas.mandalart[34],
           cellId: "cell-1-0-0-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[36],
+          ...tempDatas.mandalart[35],
           cellId: "cell-1-0-0-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[37],
+          ...tempDatas.mandalart[36],
           cellId: "cell-1-0-1-0",
           isActive: false,
           isbindKey: null,
@@ -218,25 +217,25 @@ function GridLevel0View({ projectId }) {
           isbindKey: "cell-1-1-1-0",
         },
         {
-          ...tempDatas.mandalart[38],
+          ...tempDatas.mandalart[37],
           cellId: "cell-1-0-1-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[39],
+          ...tempDatas.mandalart[38],
           cellId: "cell-1-0-2-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[40],
+          ...tempDatas.mandalart[39],
           cellId: "cell-1-0-2-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[41],
+          ...tempDatas.mandalart[40],
           cellId: "cell-1-0-2-2",
           isActive: false,
           isbindKey: null,
@@ -302,25 +301,25 @@ function GridLevel0View({ projectId }) {
       //45-53
       [
         {
-          ...tempDatas.mandalart[42],
+          ...tempDatas.mandalart[41],
           cellId: "cell-1-2-0-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[43],
+          ...tempDatas.mandalart[42],
           cellId: "cell-1-2-0-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[44],
+          ...tempDatas.mandalart[43],
           cellId: "cell-1-2-0-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[45],
+          ...tempDatas.mandalart[44],
           cellId: "cell-1-2-1-0",
           isActive: false,
           isbindKey: null,
@@ -332,25 +331,25 @@ function GridLevel0View({ projectId }) {
           isbindKey: "cell-1-1-1-2",
         },
         {
-          ...tempDatas.mandalart[46],
+          ...tempDatas.mandalart[45],
           cellId: "cell-1-2-1-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[47],
+          ...tempDatas.mandalart[46],
           cellId: "cell-1-2-2-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[48],
+          ...tempDatas.mandalart[47],
           cellId: "cell-1-2-2-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[49],
+          ...tempDatas.mandalart[48],
           cellId: "cell-1-2-2-2",
           isActive: false,
           isbindKey: null,
@@ -359,25 +358,25 @@ function GridLevel0View({ projectId }) {
       //54-62
       [
         {
-          ...tempDatas.mandalart[50],
+          ...tempDatas.mandalart[49],
           cellId: "cell-2-0-0-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[51],
+          ...tempDatas.mandalart[50],
           cellId: "cell-2-0-0-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[52],
+          ...tempDatas.mandalart[51],
           cellId: "cell-2-0-0-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[53],
+          ...tempDatas.mandalart[52],
           cellId: "cell-2-0-1-0",
           isActive: false,
           isbindKey: null,
@@ -389,25 +388,25 @@ function GridLevel0View({ projectId }) {
           isbindKey: "cell-1-1-2-1",
         },
         {
-          ...tempDatas.mandalart[54],
+          ...tempDatas.mandalart[53],
           cellId: "cell-2-0-1-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[55],
+          ...tempDatas.mandalart[54],
           cellId: "cell-2-0-2-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[56],
+          ...tempDatas.mandalart[55],
           cellId: "cell-2-0-2-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[57],
+          ...tempDatas.mandalart[56],
           cellId: "cell-2-0-2-2",
           isActive: false,
           isbindKey: null,
@@ -416,25 +415,25 @@ function GridLevel0View({ projectId }) {
       //63-71
       [
         {
-          ...tempDatas.mandalart[58],
+          ...tempDatas.mandalart[57],
           cellId: "cell-2-1-0-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[59],
+          ...tempDatas.mandalart[58],
           cellId: "cell-2-1-0-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[60],
+          ...tempDatas.mandalart[59],
           cellId: "cell-2-1-0-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[61],
+          ...tempDatas.mandalart[60],
           cellId: "cell-2-1-1-0",
           isActive: false,
           isbindKey: null,
@@ -446,25 +445,25 @@ function GridLevel0View({ projectId }) {
           isbindKey: "cell-1-1-2-2",
         },
         {
-          ...tempDatas.mandalart[62],
+          ...tempDatas.mandalart[61],
           cellId: "cell-2-1-1-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[63],
+          ...tempDatas.mandalart[62],
           cellId: "cell-2-1-2-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[64],
+          ...tempDatas.mandalart[63],
           cellId: "cell-2-1-2-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[65],
+          ...tempDatas.mandalart[64],
           cellId: "cell-2-1-2-2",
           isActive: false,
           isbindKey: null,
@@ -473,25 +472,25 @@ function GridLevel0View({ projectId }) {
       //72-80
       [
         {
-          ...tempDatas.mandalart[66],
+          ...tempDatas.mandalart[65],
           cellId: "cell-2-2-0-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[67],
+          ...tempDatas.mandalart[66],
           cellId: "cell-2-2-0-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[68],
+          ...tempDatas.mandalart[67],
           cellId: "cell-2-2-0-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[69],
+          ...tempDatas.mandalart[68],
           cellId: "cell-2-2-1-0",
           isActive: false,
           isbindKey: null,
@@ -503,38 +502,35 @@ function GridLevel0View({ projectId }) {
           isbindKey: "cell-1-1-2-2",
         },
         {
-          ...tempDatas.mandalart[70],
+          ...tempDatas.mandalart[69],
           cellId: "cell-2-2-1-2",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[71],
+          ...tempDatas.mandalart[70],
           cellId: "cell-2-2-2-0",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[72],
+          ...tempDatas.mandalart[71],
           cellId: "cell-2-2-2-1",
           isActive: false,
           isbindKey: null,
         },
         {
-          ...tempDatas.mandalart[73],
+          ...tempDatas.mandalart[72],
           cellId: "cell-2-2-2-2",
           isActive: false,
           isbindKey: null,
         },
       ],
     ]);
-    console.log("tempData : ", tempDatas.mandalart);
-    console.log("tempData : ", tempDatas.mandalart[10]?.completedFg);
   };
 
-  const [mandalart, setMandalart] = useState([]);
+  // const [mandalart, setMandalart] = useState([]);
   const [normalData, setNormalData] = useState([]);
-  // console.log(normalData);
 
   useEffect(() => {
     getGridApiCall();
@@ -544,75 +540,84 @@ function GridLevel0View({ projectId }) {
     <div className="cbox">
       <div className="container">
         <div className="item">
-          <GridLevel1_MainView
+          <GridLevel1_Main
             normalDataIndex={0}
             normalData={normalData}
             setNormalData={setNormalData}
             projectId={projectId}
+            getGridApiCall={getGridApiCall}
           />
         </div>
         <div className="item">
-          <GridLevel1_MainView
+          <GridLevel1_Main
             normalDataIndex={1}
             normalData={normalData}
             setNormalData={setNormalData}
             projectId={projectId}
+            getGridApiCall={getGridApiCall}
           />
         </div>
         <div className="item">
-          <GridLevel1_MainView
+          <GridLevel1_Main
             normalDataIndex={2}
             normalData={normalData}
             setNormalData={setNormalData}
             projectId={projectId}
+            getGridApiCall={getGridApiCall}
           />
         </div>
         <div className="item">
-          <GridLevel1_MainView
+          <GridLevel1_Main
             normalDataIndex={3}
             normalData={normalData}
             setNormalData={setNormalData}
             projectId={projectId}
+            getGridApiCall={getGridApiCall}
           />
         </div>
         <div className="item">
-          <GridLevel1_MainView
+          <GridLevel1_Main
             normalDataIndex={4}
             normalData={normalData}
             setNormalData={setNormalData}
             projectId={projectId}
+            getGridApiCall={getGridApiCall}
           />
         </div>
         <div className="item">
-          <GridLevel1_MainView
+          <GridLevel1_Main
             normalDataIndex={5}
             normalData={normalData}
             setNormalData={setNormalData}
             projectId={projectId}
+            getGridApiCall={getGridApiCall}
           />
         </div>
         <div className="item">
-          <GridLevel1_MainView
+          <GridLevel1_Main
             normalDataIndex={6}
             normalData={normalData}
             setNormalData={setNormalData}
             projectId={projectId}
+            getGridApiCall={getGridApiCall}
           />
         </div>
         <div className="item">
-          <GridLevel1_MainView
+          <GridLevel1_Main
             normalDataIndex={7}
             normalData={normalData}
             setNormalData={setNormalData}
             projectId={projectId}
+            getGridApiCall={getGridApiCall}
           />
         </div>
         <div className="item">
-          <GridLevel1_MainView
+          <GridLevel1_Main
             normalDataIndex={8}
             normalData={normalData}
             setNormalData={setNormalData}
             projectId={projectId}
+            getGridApiCall={getGridApiCall}
           />
         </div>
       </div>
@@ -620,4 +625,4 @@ function GridLevel0View({ projectId }) {
   );
 }
 
-export default GridLevel0View;
+export default GridLevel0;

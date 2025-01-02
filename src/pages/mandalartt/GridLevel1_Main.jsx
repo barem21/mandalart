@@ -3,7 +3,7 @@ import "./gridLevel1_1.css";
 import { patchGridData } from "../../apis/grid";
 
 function GridLevel1_Main({
-  projectId,
+  getGridApiCall,
   normalDataIndex,
   normalData,
   setNormalData,
@@ -23,61 +23,6 @@ function GridLevel1_Main({
   });
   // 현재 9칸의 데이터를 가지고 있음.
   const [showData, setShowData] = useState();
-  // const [subClear, setSubClear] = useState(false);
-  const [color, setColor] = useState(true);
-  // 주목표 상태
-
-  const [mainObj, setMainObj] = useState(normalData[4]?.[4].title);
-  // 제외 셀
-  const exceptionCell = cellId => {
-    switch (cellId) {
-      case "cell-0-0-1-1":
-      case "cell-0-1-1-1":
-      case "cell-0-2-1-1":
-      case "cell-1-0-1-1":
-      case "cell-1-1-1-0":
-      case "cell-1-1-1-1":
-      case "cell-1-1-1-2":
-      case "cell-1-1-0-0":
-      case "cell-1-1-0-1":
-      case "cell-1-1-0-2":
-      case "cell-1-1-2-0":
-      case "cell-1-1-2-1":
-      case "cell-1-1-2-2":
-      case "cell-1-2-1-1":
-      case "cell-2-0-1-1":
-      case "cell-2-1-1-1":
-      case "cell-2-2-1-1":
-        setColor(false);
-        break;
-      default:
-        setColor(true);
-    }
-  };
-  const exceptionCellId = [
-    "cell-0-0-1-1",
-    "cell-0-1-1-1",
-    "cell-0-2-1-1",
-    "cell-1-0-1-1",
-    "cell-1-1-1-0",
-    "cell-1-1-1-2",
-    "cell-1-1-0-0",
-    "cell-1-1-0-1",
-    "cell-1-1-0-2",
-    "cell-1-1-2-0",
-    "cell-1-1-2-1",
-    "cell-1-1-2-2",
-    "cell-1-2-1-1",
-    "cell-2-0-1-1",
-    "cell-2-1-1-1",
-    "cell-2-2-1-1",
-  ];
-
-  //완료;
-  // const handleClearChange = e => {
-  //   selectData.completedFg = e.target.value;
-  //   // console.log(e.target.completedFg);
-  // };
 
   const handleSubmit = async event => {
     event.preventDefault(); // 기본 동작 방지
@@ -90,10 +35,7 @@ function GridLevel1_Main({
   // 모달 열기(주, 서브 목표 빈칸 경고창 포함 )
   const openModal = id => {
     // 선택된 객체 정보 한개를 보관]
-    console.log(normalData[4]?.[4].title);
-    // if (Array.isArray(showData) && normalData[4]?.[4].title === "") {
-    //   alert("주 목표를 먼저 입력해주세요");
-    // }
+
     if (Array.isArray(showData) && showData[4].title === "") {
       if (
         showData[4] === normalData[4]?.[4] &&
@@ -102,7 +44,10 @@ function GridLevel1_Main({
         normalData[4][4].title = "주 목표";
         alert("주 목표를 먼저 입력해주세요");
         openModal(normalData[4][4].cellId);
-      } else {
+      }
+      if (showData[4].title === "") {
+        showData[4].title = "서브 목표";
+        openModal(showData[4].cellId);
         alert("서브 목표를 먼저 입력해주세요");
       }
     } else {
@@ -111,7 +56,7 @@ function GridLevel1_Main({
       setIsModalOpen(true);
     }
     // 완료미완료 선택창 제외 셀 case
-    console.log(normalData[4][0].bgColor);
+    // console.log(normalData[4][0].bgColor);
   };
 
   // 모달 입력값 변경 처리
@@ -163,33 +108,61 @@ function GridLevel1_Main({
     //   ;
 
     // 원본 데이터와 showData 동기화
-
-    setNormalData(updatedNormalData);
-    setShowData(newShowData);
     const updatedSelectData = newShowData.find(
       item => item.cellId === selectData.cellId,
     );
-    setSelectData(updatedSelectData);
-
     try {
       const res = await patchGridData(updatedSelectData); // 서버 동기화
       console.log(res.data);
     } catch (error) {
       console.error("Error updating data:", error);
     }
+
+    setNormalData(updatedNormalData);
+    setShowData(newShowData);
+    setSelectData(updatedSelectData);
+
     console.log(selectData);
-    if (selectData.title === "" || selectData.contents === null) {
-      alert("목표와 세부 내용을 입력해주세요");
+    if (selectData.title === "") {
+      alert("목표을 입력해주세요");
     }
     // console.log(showData);
-    else {
-      setIsModalOpen(false);
+
+    // 날짜 경고창
+
+    if (selectData.startDate === null || selectData.finishDate === null) {
+      const isNormalDataInvalid =
+        selectData === normalData?.[4]?.[4] &&
+        (selectData.startDate === null || selectData.finishDate === null);
+
+      const isNewShowDataInvalid =
+        selectData === newShowData?.[4] &&
+        (selectData.startDate === null || selectData.finishDate === null);
+
+      const isDateRangeInvalid =
+        (selectData.startDate < normalData?.[4]?.[4]?.startDate &&
+          selectData.finishDate > normalData?.[4]?.[4]?.finishDate) ||
+        (selectData.startDate < newShowData?.[4]?.startDate &&
+          selectData.finishDate > newShowData?.[4]?.finishDate);
+
+      if (
+        !isNormalDataInvalid ||
+        !isNewShowDataInvalid ||
+        !isDateRangeInvalid
+      ) {
+        alert("날짜를 확인해주세요.");
+      } else {
+        setIsModalOpen(false);
+        getGridApiCall();
+      }
     }
 
-    return; // 모달 닫기
+    // 모달 닫기
   };
 
-  useEffect(() => {}, [showData]);
+  useEffect(() => {
+    // console.log(normalData);
+  }, [showData, normalData]);
 
   useEffect(() => {
     // console.log("selectData ========== ", selectData);
@@ -199,7 +172,7 @@ function GridLevel1_Main({
       <div className="sub-container">
         {/* 각 셀 */}
         {showData?.map((item, index) => {
-          console.log(showData); // 디버깅용
+          // console.log(showData); // 디버깅용
           return (
             <div
               key={index}
