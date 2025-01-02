@@ -25,14 +25,15 @@ const HeaderLogo = styled.div`
   a {
     margin-top: -5px;
     color: #55ad9b;
-    font-size: 24px;
-    font-weight: 900;
+    font-size: 32px;
+    font-family: "Pacifico", serif;
     letter-spacing: -1px;
   }
 `;
 const HeaderNav = styled.div`
   display: flex;
   gap: 50px;
+  align-items: center;
   transition: all 0.3s;
   a {
     font-size: 20px;
@@ -108,7 +109,7 @@ const Header = () => {
     <HeaderWrap>
       <HeaderLeft>
         <HeaderLogo>
-          <Link to={"/"}>my.manda</Link>
+          <Link to={"/"}>manda</Link>
         </HeaderLogo>
 
         <HeaderNav>

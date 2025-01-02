@@ -19,12 +19,18 @@ const ShowMandalartList = styled.div`
     margin-bottom: 30px;
   }
   .profileImage {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
+    max-height: 250px;
     margin-bottom: 10px;
     font-size: 0px;
     overflow: hidden;
   }
   .profileImage img {
+    max-width: 100%;
+    object-fit: cover;
     transition: all 0.3s;
     opacity: 0.9;
   }

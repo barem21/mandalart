@@ -77,51 +77,75 @@ function ViewMandalart() {
   //그래프 데이터 처리
   const chartData = [
     {
-      id: mandalartView[0]?.title ? mandalartView[0]?.title : "no-data",
-      label: mandalartView[0]?.title ? mandalartView[0]?.title : "no-data",
-      value: 300,
+      id: mandalartView[1]?.title ? mandalartView[1]?.title : "data-1",
+      label: mandalartView[1]?.title ? mandalartView[1]?.title : "data-1",
+      value:
+        mandalartView[1]?.completedPer === 0
+          ? 1
+          : mandalartView[1]?.completedPer,
       color: "",
     },
     {
-      id: "제구",
-      label: "제구",
-      value: 110,
+      id: mandalartView[2]?.title ? mandalartView[2]?.title : "data-2",
+      label: mandalartView[2]?.title ? mandalartView[2]?.title : "data-2",
+      value:
+        mandalartView[2]?.completedPer === 0
+          ? 1
+          : mandalartView[2]?.completedPer,
       color: "",
     },
     {
-      id: "구위",
-      label: "구위",
-      value: 110,
+      id: mandalartView[3]?.title ? mandalartView[3]?.title : "data-3",
+      label: mandalartView[3]?.title ? mandalartView[3]?.title : "data-3",
+      value:
+        mandalartView[3]?.completedPer === 0
+          ? 1
+          : mandalartView[3]?.completedPer,
       color: "",
     },
     {
-      id: "맨탈",
-      label: "맨탈",
-      value: 80,
+      id: mandalartView[4]?.title ? mandalartView[4]?.title : "data-4",
+      label: mandalartView[4]?.title ? mandalartView[4]?.title : "data-4",
+      value:
+        mandalartView[4]?.completedPer === 0
+          ? 1
+          : mandalartView[4]?.completedPer,
       color: "",
     },
     {
-      id: "스피드 160km/h",
-      label: "스피드 160km/h",
-      value: 50,
+      id: mandalartView[5]?.title ? mandalartView[5]?.title : "data-5",
+      label: mandalartView[5]?.title ? mandalartView[5]?.title : "data-5",
+      value:
+        mandalartView[5]?.completedPer === 0
+          ? 1
+          : mandalartView[5]?.completedPer,
       color: "",
     },
     {
-      id: "인간성",
-      label: "인간성",
-      value: 120,
+      id: mandalartView[6]?.title ? mandalartView[6]?.title : "data-6",
+      label: mandalartView[6]?.title ? mandalartView[6]?.title : "data-6",
+      value:
+        mandalartView[6]?.completedPer === 0
+          ? 1
+          : mandalartView[6]?.completedPer,
       color: "",
     },
     {
-      id: "운",
-      label: "운",
-      value: 50,
+      id: mandalartView[7]?.title ? mandalartView[7]?.title : "data-7",
+      label: mandalartView[7]?.title ? mandalartView[7]?.title : "data-7",
+      value:
+        mandalartView[7]?.completedPer === 0
+          ? 1
+          : mandalartView[7]?.completedPer,
       color: "",
     },
     {
-      id: "변화구",
-      label: "변화구",
-      value: 150,
+      id: mandalartView[8]?.title ? mandalartView[8]?.title : "data-8",
+      label: mandalartView[8]?.title ? mandalartView[8]?.title : "data-8",
+      value:
+        mandalartView[8]?.completedPer === 0
+          ? 1
+          : mandalartView[8]?.completedPer,
       color: "",
     },
   ];
