@@ -15,7 +15,7 @@ export const getGridData = async projectId => {
 
 export const patchGridData = async updatedSelectData => {
   try {
-    //console.log(projectId);
+    // console.log(projectId);
     // console.log(updatedSelectData);
     const obj = updatedSelectData;
     const {
@@ -37,7 +37,9 @@ export const patchGridData = async updatedSelectData => {
       parentId,
     };
     const res = await axios.patch("/api/mand/update", objData);
-    // console.log(objData);
+
+    console.log(objData);
+
     return res;
   } catch (error) {
     console.log("네트워크 연결을 확인 해주세요.", error);

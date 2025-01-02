@@ -3,7 +3,7 @@ import "./gridLevel1_1.css";
 import { patchGridData } from "../../apis/grid";
 
 function GridLevel1_Main({
-  projectId,
+  getGridApiCall,
   normalDataIndex,
   normalData,
   setNormalData,
@@ -23,60 +23,6 @@ function GridLevel1_Main({
   });
   // 현재 9칸의 데이터를 가지고 있음.
   const [showData, setShowData] = useState();
-  // const [subClear, setSubClear] = useState(false);
-  const [color, setColor] = useState(true);
-
-  // 제외 셀
-  const exceptionCell = cellId => {
-    switch (cellId) {
-      case "cell-0-0-1-1":
-      case "cell-0-1-1-1":
-      case "cell-0-2-1-1":
-      case "cell-1-0-1-1":
-      case "cell-1-1-1-0":
-      case "cell-1-1-1-1":
-      case "cell-1-1-1-2":
-      case "cell-1-1-0-0":
-      case "cell-1-1-0-1":
-      case "cell-1-1-0-2":
-      case "cell-1-1-2-0":
-      case "cell-1-1-2-1":
-      case "cell-1-1-2-2":
-      case "cell-1-2-1-1":
-      case "cell-2-0-1-1":
-      case "cell-2-1-1-1":
-      case "cell-2-2-1-1":
-        setColor(false);
-        break;
-      default:
-        setColor(true);
-    }
-  };
-  // const exceptionCellId = [
-  //   "cell-0-0-1-1",
-  //   "cell-0-1-1-1",
-  //   "cell-0-2-1-1",
-  //   "cell-1-0-1-1",
-  //   "cell-1-1-1-0",
-  //   "cell-1-1-1-1",
-  //   "cell-1-1-1-2",
-  //   "cell-1-1-0-0",
-  //   "cell-1-1-0-1",
-  //   "cell-1-1-0-2",
-  //   "cell-1-1-2-0",
-  //   "cell-1-1-2-1",
-  //   "cell-1-1-2-2",
-  //   "cell-1-2-1-1",
-  //   "cell-2-0-1-1",
-  //   "cell-2-1-1-1",
-  //   "cell-2-2-1-1",
-  // ];
-
-  //완료;
-  // const handleClearChange = e => {
-  //   selectData.completedFg = e.target.value;
-  //   // console.log(e.target.completedFg);
-  // };
 
   const handleSubmit = async event => {
     event.preventDefault(); // 기본 동작 방지
@@ -86,22 +32,31 @@ function GridLevel1_Main({
   useEffect(() => {
     setShowData(normalData[normalDataIndex]);
   }, [normalData, normalDataIndex]);
-  
-  // 모달 열기
+  // 모달 열기(주, 서브 목표 빈칸 경고창 포함 )
   const openModal = id => {
-    // 선택된 객체 정보 한개를 보관
-    const isEmptyTitle = title => !title || title.trim() === "";
+    // 선택된 객체 정보 한개를 보관]
 
-    if (Array.isArray(showData) && isEmptyTitle(showData[5]?.[5]?.title)) {
-      alert("주 목표를 입력해주세요");
+    if (Array.isArray(showData) && showData[4].title === "") {
+      if (
+        showData[4] === normalData[4]?.[4] &&
+        normalData[4]?.[4].title === ""
+      ) {
+        normalData[4][4].title = "주 목표";
+        alert("주 목표를 먼저 입력해주세요");
+        openModal(normalData[4][4].cellId);
+      }
+      if (showData[4].title === "") {
+        showData[4].title = "서브 목표";
+        openModal(showData[4].cellId);
+        alert("서브 목표를 먼저 입력해주세요");
+      }
+    } else {
+      const nowSelectItem = showData.find(item => item.cellId === id);
+      setSelectData(nowSelectItem);
+      setIsModalOpen(true);
     }
-    exceptionCell(id);
-
-    const nowSelectItem = showData.find(item => item.cellId === id);
-    // console.log("nowSelectItem ==== ", nowSelectItem);
-    setSelectData(nowSelectItem);
     // 완료미완료 선택창 제외 셀 case
-    setIsModalOpen(true);
+    // console.log(normalData[4][0].bgColor);
   };
 
   // 모달 입력값 변경 처리
@@ -128,6 +83,7 @@ function GridLevel1_Main({
           item =>
             item.isbindKey === itemNow.cellId || item.cellId === itemNow.cellId,
         );
+
         if (bindedItem) {
           // console.log(bindedItem);
           return {
@@ -146,19 +102,15 @@ function GridLevel1_Main({
       });
       return updatedOriginalItem;
     });
+    console.log(updatedNormalData);
     // console.log(updatedNormalData);
     // const uploadDataForm =  selectData.value =>
     //   ;
 
     // 원본 데이터와 showData 동기화
-
-    setNormalData(updatedNormalData);
-    setShowData(newShowData);
     const updatedSelectData = newShowData.find(
       item => item.cellId === selectData.cellId,
     );
-    setSelectData(updatedSelectData);
-
     try {
       const res = await patchGridData(updatedSelectData); // 서버 동기화
       console.log(res.data);
@@ -166,13 +118,51 @@ function GridLevel1_Main({
       console.error("Error updating data:", error);
     }
 
-    // console.log(showData);
-    setIsModalOpen(false);
+    setNormalData(updatedNormalData);
+    setShowData(newShowData);
+    setSelectData(updatedSelectData);
+
     console.log(selectData);
-    return; // 모달 닫기
+    if (selectData.title === "") {
+      alert("목표을 입력해주세요");
+    }
+    // console.log(showData);
+
+    // 날짜 경고창
+
+    if (selectData.startDate === null || selectData.finishDate === null) {
+      const isNormalDataInvalid =
+        selectData === normalData?.[4]?.[4] &&
+        (selectData.startDate === null || selectData.finishDate === null);
+
+      const isNewShowDataInvalid =
+        selectData === newShowData?.[4] &&
+        (selectData.startDate === null || selectData.finishDate === null);
+
+      const isDateRangeInvalid =
+        (selectData.startDate < normalData?.[4]?.[4]?.startDate &&
+          selectData.finishDate > normalData?.[4]?.[4]?.finishDate) ||
+        (selectData.startDate < newShowData?.[4]?.startDate &&
+          selectData.finishDate > newShowData?.[4]?.finishDate);
+
+      if (
+        !isNormalDataInvalid ||
+        !isNewShowDataInvalid ||
+        !isDateRangeInvalid
+      ) {
+        alert("날짜를 확인해주세요.");
+      } else {
+        setIsModalOpen(false);
+        getGridApiCall();
+      }
+    }
+
+    // 모달 닫기
   };
 
-  useEffect(() => {}, [showData]);
+  useEffect(() => {
+    // console.log(normalData);
+  }, [showData, normalData]);
 
   useEffect(() => {
     // console.log("selectData ========== ", selectData);
@@ -181,19 +171,23 @@ function GridLevel1_Main({
     <div>
       <div className="sub-container">
         {/* 각 셀 */}
-        {showData?.map((item, index) => (
-          <div
-            key={index}
-            id={item.cellId}
-            onClick={() => openModal(item.cellId)}
-            className="sub-item"
-            style={{
-              backgroundColor: item.bgcolor,
-            }}
-          >
-            {item.title}
-          </div>
-        ))}
+        {showData?.map((item, index) => {
+          // console.log(showData); // 디버깅용
+          return (
+            <div
+              key={index}
+              id={item.cellId}
+              onClick={() => openModal(item.cellId)}
+              className="sub-item"
+              style={{
+                backgroundColor:
+                  item.completedFg === 1 ? item.bgColor : "transparent", // 조건에 따른 색상 설정
+              }}
+            >
+              {item.title}
+            </div>
+          );
+        })}
       </div>
 
       {/* 모달 */}
