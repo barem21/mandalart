@@ -174,6 +174,10 @@ function EditPage() {
 
   //회원정보 수정
   const onSubmit = async data => {
+    if (userNick !== sessionData?.nickName) {
+      alert("닉네임 중복체크를 진행해 주세요.");
+      return;
+    }
     if (isNicknameAvailable === false) {
       alert(
         "이미 사용중인 닉네임입니다.\n닉네임 중복체크를 다시 진행해 주세요.",
