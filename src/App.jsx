@@ -20,6 +20,7 @@ import EditMandalart from "./pages/myplan/EditMandalart";
 import EditShareMandalart from "./pages/share/EditMandalart";
 import ScrollToTop from "./components/ScrollTop";
 import { UserInfoProvider } from "./contexts/UserInfoContext";
+import JoinEndPage from "./pages/member/JoinEndPage";
 
 function App() {
   return (
@@ -63,6 +64,9 @@ function App() {
 
             {/* 회원가입 */}
             <Route path="/join" element={<JoinPage />} />
+
+            {/* 회원가입 완료 */}
+            <Route path="/joinEnd" element={<JoinEndPage />} />
 
             {/* 회원정보 수정 */}
             <Route path="/modify" element={<ModifyPage />} />
