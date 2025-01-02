@@ -137,3 +137,37 @@ const getGridData = [{id:0},{id:1},{id:2},{id:3}]
             {item.title}
           </div>
         ))}
+
+        style={{
+                backgroundColor: if(item.completedFg === 1) {item.bgColor}, // 템플릿 리터럴 불필요
+              }}
+
+              if (selectData.startDate === null || selectData.finishDate === null) {
+        if (
+          (selectData === normalData[4][4] && selectData.startDate === null) ||
+          selectData.finishDate === null
+        ) {
+          alert("날짜를 확인해주세요.");
+        } else {
+         
+         
+          if (
+            (selectData === newShowData[4] &&
+              (selectData.startDate === null ||
+                selectData.finishDate === null)) ||
+            (selectData.startDate < normalData[4][4].startDate &&
+              selectData.finishDate > normalData[4][4].finishData)
+          ) {
+            alert("날짜를 확인해주세요.");
+          } else {
+            if (
+              selectData.startDate === null ||
+              selectData.finishDate === null ||
+              (selectData.startDate < newShowData[4].startDate &&
+                selectData.finishDate > newShowData[4].finishDate)
+            ) {
+              alert("날짜를 확인해주세요.");
+            }
+          }
+        }
+      }
