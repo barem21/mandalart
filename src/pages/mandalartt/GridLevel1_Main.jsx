@@ -35,7 +35,10 @@ function GridLevel1_Main({
   // 모달 열기(주, 서브 목표 빈칸 경고창 포함 )
   const openModal = id => {
     // 선택된 객체 정보 한개를 보관]
-
+    const nowSelectItem = showData.find(item => item.cellId === id);
+    console.log(
+      normalData[4].find(item => item.mandalartId === showData[4].mandalartId),
+    );
     if (Array.isArray(showData) && showData[4].title === "") {
       if (
         showData[4] === normalData[4]?.[4] &&
@@ -47,11 +50,11 @@ function GridLevel1_Main({
       }
       if (showData[4].title === "") {
         showData[4].title = "서브 목표";
+
         openModal(showData[4].cellId);
         alert("서브 목표를 먼저 입력해주세요");
       }
     } else {
-      const nowSelectItem = showData.find(item => item.cellId === id);
       setSelectData(nowSelectItem);
       setIsModalOpen(true);
     }
@@ -153,7 +156,9 @@ function GridLevel1_Main({
       selectData.finishDate === null ||
       isNormalDataInvalid ||
       isNewShowDataInvalid ||
-      !isDateRangeInvalid
+      selectData === normalData[4][4]
+        ? false
+        : !isDateRangeInvalid
     ) {
       alert("날짜를 확인해주세요.");
     } else {
