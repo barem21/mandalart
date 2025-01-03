@@ -49,6 +49,7 @@
 .modal .planDate {
   border-radius: 5px;
   border: 1px solid rgba(0, 0, 0, 0.2);
+  background-color: (0, 0, 0, 0.5);
 }
 .modal input,
 .modal textarea {
@@ -81,4 +82,8 @@
   height: 30px;
   font-size: 14px;
   border-radius: 5px;
+}
+.save-button {
+  width: 60px;
+  height: 40px;
 }

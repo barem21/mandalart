@@ -158,7 +158,7 @@ function GridLevel1_Main({
       isNewShowDataInvalid ||
       selectData === normalData[4][4]
         ? false
-        : !isDateRangeInvalid
+        : isDateRangeInvalid
     ) {
       alert("날짜를 확인해주세요.");
     } else {
@@ -215,15 +215,6 @@ function GridLevel1_Main({
                 />
               </label>
               <label>
-                세부 내용:
-                <input
-                  name="contents"
-                  type="text"
-                  value={selectData?.contents || ""}
-                  onChange={handleModalChange}
-                />
-              </label>
-              <label>
                 시작 날짜:
                 <input
                   className="planDate"
@@ -243,6 +234,15 @@ function GridLevel1_Main({
                   onChange={handleModalChange}
                 />
               </label>
+              <label>
+                세부 내용:
+                <input
+                  name="contents"
+                  type="text"
+                  value={selectData?.contents || ""}
+                  onChange={handleModalChange}
+                />
+              </label>
               {/* depth가 0또는 1이면 보이지 마라 */}
               {!(selectData?.depth === 0 || selectData?.depth === 1) && (
                 <div className="selectbox">
@@ -258,8 +258,15 @@ function GridLevel1_Main({
               )}
 
               <div className="modal-buttons">
-                <button type="submit">저장</button>
-                <button onClick={() => setIsModalOpen(false)}>취소</button>
+                <button className="save-button" type="submit">
+                  저장
+                </button>
+                <button
+                  className="cancel-button"
+                  onClick={() => setIsModalOpen(false)}
+                >
+                  취소
+                </button>
               </div>
             </div>
           </form>
