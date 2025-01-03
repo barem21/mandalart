@@ -14,7 +14,7 @@ const ModalPopup = styled.div`
 
   .modalWrap {
     position: relative;
-    max-width: 320px;
+    max-width: 360px;
     min-width: 320px;
     padding: 25px;
     border-radius: 10px;
@@ -25,6 +25,7 @@ const ModalPopup = styled.div`
     font-size: 18px;
     font-weight: 500;
   }
+
   .modalWrap .guideText {
     color: #666;
     font-size: 14px;

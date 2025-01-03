@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import "./gridLevel1_1.css";
 import { patchGridData } from "../../apis/grid";
-import PopupLayout from "../../components/PopupLayout";
 
 function GridLevel1_Main({
   getGridApiCall,
@@ -37,24 +36,22 @@ function GridLevel1_Main({
   const openModal = id => {
     // 선택된 객체 정보 한개를 보관]
     const nowSelectItem = showData.find(item => item.cellId === id);
-    console.log(
-      normalData[4].find(item => item.mandalartId === showData[4].mandalartId),
-    );
-    if (Array.isArray(showData) && showData[4].title === "") {
-      if (
-        showData[4] === normalData[4]?.[4] &&
-        normalData[4]?.[4].title === ""
-      ) {
-        normalData[4][4].title = "주 목표";
-        alert("주 목표를 먼저 입력해주세요");
-        openModal(normalData[4][4].cellId);
-      }
-      if (showData[4].title === "") {
-        showData[4].title = "서브 목표";
 
-        openModal(showData[4].cellId);
-        alert("서브 목표를 먼저 입력해주세요");
-      }
+    if (
+      (Array.isArray(showData) &&
+        showData[4].title === "" &&
+        showData[4] === normalData[4]?.[4]) ||
+      normalData[4]?.[4].title === ""
+    ) {
+      normalData[4][4].title = "주 목표";
+      alert("주 목표 1 를 먼저 입력해주세요");
+      openModal(normalData[4][4].cellId);
+      return;
+    }
+    if (showData[4].title === "" && normalData[4]?.[4].title !== "") {
+      showData[4].title = "서브 목표";
+      openModal(showData[4].cellId);
+      alert("서브 목표 2 를 먼저 입력해주세요");
     } else {
       setSelectData(nowSelectItem);
       setIsModalOpen(true);
@@ -105,11 +102,10 @@ function GridLevel1_Main({
       });
       return updatedOriginalItem;
     });
-    console.log(updatedNormalData);
-    // console.log(updatedNormalData);
+
     // const uploadDataForm =  selectData.value =>
     //   ;
-    console.log(selectData);
+
     if (selectData.title === "") {
       alert("목표을 입력해주세요");
     }
@@ -128,13 +124,20 @@ function GridLevel1_Main({
         (selectData.startDate === null || selectData.finishDate === null)) ||
       (selectData.startDate < normalData?.[4]?.[4]?.startDate &&
         selectData.finishDate > normalData?.[4]?.[4]?.finishDate);
-    if (selectData.mandalartId === normalData[4]?.[4].mandalartId) {
+    if (
+      selectData.mandalartId === normalData[4]?.[4].mandalartId &&
+      selectData.startDate !== "" &&
+      selectData.finishDate !== ""
+    ) {
       getGridApiCall();
       setIsModalOpen(false);
     } else if (
-      !isDateRangeInvalid ||
       selectData.startDate === null ||
-      selectData.finishDate === null ||
+      selectData.finishDate === null
+    ) {
+      alert("날짜를 확인해주세요.");
+    } else if (
+      !isDateRangeInvalid ||
       isNormalDataInvalid ||
       isNewShowDataInvalid
     ) {
@@ -150,7 +153,6 @@ function GridLevel1_Main({
     );
     try {
       const res = await patchGridData(updatedSelectData); // 서버 동기화
-      console.log(res.data);
     } catch (error) {
       console.error("Error updating data:", error);
     }
@@ -160,11 +162,6 @@ function GridLevel1_Main({
     // console.log(showData);
     return;
     // 모달 닫기
-  };
-
-  //모달닫기
-  const closeModal = () => {
-    setIsModalOpen(false);
   };
 
   useEffect(() => {
@@ -199,7 +196,7 @@ function GridLevel1_Main({
 
       {/* 모달 */}
       {isModalOpen && (
-        <PopupLayout isVisible={isModalOpen} onClose={closeModal} title={""}>
+        <div className="modal-overlay">
           <form onSubmit={handleSubmit}>
             <div className="modal">
               <label className="modaldeaultlable">
@@ -213,7 +210,7 @@ function GridLevel1_Main({
                 />
               </label>
               <label className="modaldeaultlable">
-                시작일
+                시작 날짜:
                 <input
                   className="planDate"
                   type="date"
@@ -223,7 +220,7 @@ function GridLevel1_Main({
                 />
               </label>
               <label className="modaldeaultlable">
-                종료일
+                종료 날짜:
                 <input
                   className="planDate"
                   type="date"
@@ -233,7 +230,7 @@ function GridLevel1_Main({
                 />
               </label>
               <label className="modaldeaultlable">
-                세부 내용
+                세부 내용:
                 <textarea
                   className="contents-box"
                   name="contents"
@@ -279,20 +276,20 @@ function GridLevel1_Main({
                 </div>
               )}
 
-              <div className="buttonWrap" style={{ "margin-top": "20px" }}>
+              <div className="modal-buttons">
                 <button
-                  className="btnPopLine"
+                  className="btnLine"
                   onClick={() => setIsModalOpen(false)}
                 >
-                  취소하기
+                  삭제하기
                 </button>
-                <button className="btnPupColor" type="submit">
+                <button className="btnColor" type="submit">
                   저장하기
                 </button>
               </div>
             </div>
           </form>
-        </PopupLayout>
+        </div>
       )}
     </div>
   );
