@@ -144,22 +144,22 @@ function Index() {
           className="visualSlide"
         >
           <SwiperSlide>
-            <img src="main_swiper1.png" alt="mainVisual_1" />
+            <img src="main_swiper1.jpg" alt="mainVisual_1" />
           </SwiperSlide>
           <SwiperSlide>
-            <img src="main_swiper2.png" alt="mainVisual_2" />
+            <img src="main_swiper2.jpg" alt="mainVisual_2" />
           </SwiperSlide>
           <SwiperSlide>
-            <img src="main_swiper3.png" alt="mainVisual_3" />
+            <img src="main_swiper3.jpg" alt="mainVisual_3" />
           </SwiperSlide>
           <SwiperSlide>
-            <img src="main_swiper1.png" alt="mainVisual_1" />
+            <img src="main_swiper1.jpg" alt="mainVisual_1" />
           </SwiperSlide>
           <SwiperSlide>
-            <img src="main_swiper2.png" alt="mainVisual_2" />
+            <img src="main_swiper2.jpg" alt="mainVisual_2" />
           </SwiperSlide>
           <SwiperSlide>
-            <img src="main_swiper3.png" alt="mainVisual_3" />
+            <img src="main_swiper3.jpg" alt="mainVisual_3" />
           </SwiperSlide>
         </Swiper>
       </div>

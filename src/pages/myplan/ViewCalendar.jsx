@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import PopupLayout from "../../components/PopupLayout";
 import { deleteMyplan, getMyPlanData } from "../../apis/myplan";
-import GridLevel0View from "../mandalarttt/GridLevel0View";
 import { getSession } from "../../apis/member";
+import FullCalendar from "@fullcalendar/react";
+import dayGridPlugin from "@fullcalendar/daygrid";
 
 const LOGIN_SESSION_KEY = "login_session";
 
@@ -36,6 +37,17 @@ const MandalartDetailView = styled.div`
   .detailWrap .viewType {
     display: flex;
   }
+  .viewCalendar {
+    margin-bottom: 30px;
+  }
+  .fc-h-event {
+    border: none;
+  }
+  .fc-h-event .fc-event-main {
+    padding-left: 10px;
+    color: #444;
+    font-weight: 500;
+  }
 `;
 
 const ButtonWrap = styled.div`
@@ -46,13 +58,13 @@ const ButtonWrap = styled.div`
   border-top: 1px solid #eee;
 `;
 
-function ViewMandalart() {
+function ViewCalendar() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
   const projectId = searchParams.get("projectId"); //개별 데이터로 뜯기
   const sessionData = getSession(LOGIN_SESSION_KEY);
 
-  //const divBox = 81; //총 div
+  //const [events, setEvents] = useState([]);
   const [myPlanView, setMyPlanView] = useState([]); //만다라트 게시물 정보
   const [mandalartView, setMandalartView] = useState([]); //만다라트 정보
 
@@ -73,81 +85,29 @@ function ViewMandalart() {
     }
   };
 
-  //그래프 데이터 처리
-  const chartData = [
-    {
-      id: mandalartView[1]?.title ? mandalartView[1]?.title : "data-1",
-      label: mandalartView[1]?.title ? mandalartView[1]?.title : "data-1",
-      value:
-        mandalartView[1]?.completedPer === 0
-          ? 1
-          : mandalartView[1]?.completedPer,
-      color: "",
-    },
-    {
-      id: mandalartView[2]?.title ? mandalartView[2]?.title : "data-2",
-      label: mandalartView[2]?.title ? mandalartView[2]?.title : "data-2",
-      value:
-        mandalartView[2]?.completedPer === 0
-          ? 1
-          : mandalartView[2]?.completedPer,
-      color: "",
-    },
-    {
-      id: mandalartView[3]?.title ? mandalartView[3]?.title : "data-3",
-      label: mandalartView[3]?.title ? mandalartView[3]?.title : "data-3",
-      value:
-        mandalartView[3]?.completedPer === 0
-          ? 1
-          : mandalartView[3]?.completedPer,
-      color: "",
-    },
-    {
-      id: mandalartView[4]?.title ? mandalartView[4]?.title : "data-4",
-      label: mandalartView[4]?.title ? mandalartView[4]?.title : "data-4",
-      value:
-        mandalartView[4]?.completedPer === 0
-          ? 1
-          : mandalartView[4]?.completedPer,
-      color: "",
-    },
-    {
-      id: mandalartView[5]?.title ? mandalartView[5]?.title : "data-5",
-      label: mandalartView[5]?.title ? mandalartView[5]?.title : "data-5",
-      value:
-        mandalartView[5]?.completedPer === 0
-          ? 1
-          : mandalartView[5]?.completedPer,
-      color: "",
-    },
-    {
-      id: mandalartView[6]?.title ? mandalartView[6]?.title : "data-6",
-      label: mandalartView[6]?.title ? mandalartView[6]?.title : "data-6",
-      value:
-        mandalartView[6]?.completedPer === 0
-          ? 1
-          : mandalartView[6]?.completedPer,
-      color: "",
-    },
-    {
-      id: mandalartView[7]?.title ? mandalartView[7]?.title : "data-7",
-      label: mandalartView[7]?.title ? mandalartView[7]?.title : "data-7",
-      value:
-        mandalartView[7]?.completedPer === 0
-          ? 1
-          : mandalartView[7]?.completedPer,
-      color: "",
-    },
-    {
-      id: mandalartView[8]?.title ? mandalartView[8]?.title : "data-8",
-      label: mandalartView[8]?.title ? mandalartView[8]?.title : "data-8",
-      value:
-        mandalartView[8]?.completedPer === 0
-          ? 1
-          : mandalartView[8]?.completedPer,
-      color: "",
-    },
-  ];
+  // 랜덤색상 생성
+  const getRandomColor = () => {
+    const r = Math.floor(Math.random() * 128 + 127);
+    const g = Math.floor(Math.random() * 128 + 127);
+    const b = Math.floor(Math.random() * 128 + 127);
+    return `rgb(${r},${g},${b})`;
+  };
+
+  //데이터 변환
+  const transformData = data => {
+    return {
+      id: data.mandalartId,
+      title: data.title,
+      start: data.startDate || null,
+      end: data.finishDate || null,
+      description: data.contents || null,
+      backgroundColor: getRandomColor(),
+    };
+  };
+  const events = mandalartView
+    .filter(item => item.depth === 1)
+    .map(transformData);
+  //console.log(events);
 
   const handleDeleteSubmit = async e => {
     e.preventDefault(); //submit 동작 방지
@@ -202,93 +162,49 @@ function ViewMandalart() {
           <div className="viewType">
             <Link
               to={`/myplan/view?projectId=${projectId}`}
-              className="btnColor"
+              className="btnLine"
             >
               만다라트로 보기
             </Link>
             <Link
               to={`/myplan/calendar?projectId=${projectId}`}
-              className="btnLine"
+              className="btnColor"
             >
               캘린더로 보기
             </Link>
           </div>
         </div>
 
-        <div className="inputBox">
+        <div className="inputBox borderNone">
           <label></label>
           <div
             style={{
               gap: "20px",
             }}
           >
-            {/* 만다라트 계획표 출력 */}
-
-            <div>
-              <GridLevel0View projectId={projectId} />
+            {/* 캘린더 출력 */}
+            <div className="viewCalendar">
+              <FullCalendar
+                plugins={[dayGridPlugin]}
+                initialView="dayGridMonth"
+                headerToolbar={{
+                  left: "prev,next",
+                  center: "title",
+                  right: "today",
+                }}
+                nowIndicator={true}
+                events={events}
+                locale="ko"
+                height="auto"
+                eventDidMount={info => {
+                  if (info.event.end) {
+                    info.el.style.borderRadius = "5px";
+                  }
+                }}
+              />
             </div>
 
             <div>{myPlanView.content}</div>
-          </div>
-        </div>
-
-        <div className="inputBox borderNone">
-          <label>통계보기</label>
-          <div
-            style={{
-              minWidth: "800px",
-              height: "500px",
-              margin: "0 auto",
-            }}
-          >
-            {/*그래프 출력*/}
-            <ResponsivePie
-              data={chartData}
-              margin={{ top: 20, right: 0, bottom: 100, left: 0 }}
-              innerRadius={0.5}
-              padAngle={0.7}
-              cornerRadius={3}
-              activeOuterRadiusOffset={8}
-              borderWidth={1}
-              borderColor={{
-                from: "color",
-                modifiers: [["darker", 0.2]],
-              }}
-              arcLinkLabelsSkipAngle={10}
-              arcLinkLabelsTextColor="#333333"
-              arcLinkLabelsThickness={2}
-              arcLinkLabelsColor={{ from: "color" }}
-              arcLabelsSkipAngle={10}
-              arcLabelsTextColor={{
-                from: "color",
-                modifiers: [["darker", 2]],
-              }}
-              legends={[
-                {
-                  anchor: "bottom",
-                  direction: "row",
-                  justify: false,
-                  translateX: 0,
-                  translateY: 56,
-                  itemsSpacing: 0,
-                  itemWidth: 100,
-                  itemHeight: 18,
-                  itemTextColor: "#999",
-                  itemDirection: "left-to-right",
-                  itemOpacity: 1,
-                  symbolSize: 18,
-                  symbolShape: "circle",
-                  effects: [
-                    {
-                      on: "hover",
-                      style: {
-                        itemTextColor: "#000",
-                      },
-                    },
-                  ],
-                },
-              ]}
-            />
           </div>
         </div>
 
@@ -305,6 +221,7 @@ function ViewMandalart() {
         </ButtonWrap>
       </div>
       {/* 하단 버튼들 */}
+
       {isDeleteVisible && (
         <PopupLayout
           isVisible={isDeleteVisible}
@@ -334,4 +251,4 @@ function ViewMandalart() {
   );
 }
 
-export default ViewMandalart;
+export default ViewCalendar;

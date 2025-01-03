@@ -24,13 +24,13 @@ const ShowMandalartList = styled.div`
     align-items: center;
     position: relative;
     margin-bottom: 10px;
-    max-height: 240px;
+    max-height: 280px;
     background-color: #eee;
     font-size: 0px;
     overflow: hidden;
   }
   .profileImage img {
-    max-height: fit-content;
+    max-width: fit-content;
     object-fit: cover;
     transition: all 0.3s;
     opacity: 0.9;

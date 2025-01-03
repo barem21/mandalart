@@ -106,6 +106,7 @@ const Header = () => {
   switch (location.pathname) {
     case "/myplan":
     case "/myplan/view":
+    case "/myplan/calendar":
     case "/myplan/add":
     case "/myplan/edit":
       activeMyplan = "active";

@@ -42,6 +42,12 @@ const MemberJoinWrap = styled.div`
   .joinForm .borderNone {
     border-bottom: none !important;
   }
+  .pwdCheck {
+    margin-bottom: 20px;
+  }
+  .pwdCheck input {
+    width: 100%;
+  }
 `;
 const ErrorMessage = styled.p`
   margin-left: 10px;
@@ -97,6 +103,13 @@ const schema = yup.object({
     .max(10, "닉네임은 최대 10자까지 가능합니다."),
 });
 
+const schemaUpw = yup.object({
+  upw: yup
+    .string()
+    .required("비밀번호는 필수입니다.")
+    .min(8, "비밀번호는 8자리 이상입니다."),
+});
+
 function EditPage() {
   //  Todo 1: 사용자가 중복체크 성공시 저장한 닉네임 (Todo: 아이디어는 useRef 활용예정)
 
@@ -138,7 +151,9 @@ function EditPage() {
   } = useForm({
     defaultValues: {
       userId: "",
+      upw: "",
     },
+    resolver: yupResolver(schemaUpw),
   });
 
   //뒤로가기
@@ -201,8 +216,13 @@ function EditPage() {
 
   //회원탈퇴
   const onSubmit2 = async data => {
+    if (!data.upw) {
+      alert("비밀번호를 입력해 주세요.");
+      return;
+    }
+
     try {
-      const result = await deleteMember(data); //axios처리(삭제)
+      const result = await deleteMember(data.userId, data.upw); //axios처리(삭제)
       if (result.data) {
         alert("회원탈퇴가 완료되었습니다.");
         navigate("/logout");
@@ -369,18 +389,25 @@ function EditPage() {
                 회원을 탈퇴하시면 등록하신 만다라트 계획표 및 공유 게시물이 모두
                 삭제됩니다. 탈퇴하시겠습니까?
               </div>
-              <div className="buttonWrap">
+              <div className="pwdCheck">
                 <input
                   type="hidden"
                   {...registerForm2("userId")}
                   value={userId}
                 />
+                <input
+                  type="password"
+                  placeholder="비밀번호 입력"
+                  {...registerForm2("upw")}
+                />
+              </div>
+              <div className="buttonWrap">
                 <button
                   type="button"
                   className="btnPopLine"
                   onClick={() => setIsModalVisible(false)}
                 >
-                  창닫기
+                  취소하기
                 </button>
                 <button type="submit" className="btnPupColor">
                   탈퇴하기

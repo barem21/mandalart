@@ -105,12 +105,13 @@ export const editMember = async data => {
 };
 
 //axios연동(회원탈퇴)
-export const deleteMember = async data => {
-  console.log(data);
+export const deleteMember = async (userId, upw) => {
+  console.log(userId, upw);
   try {
-    const res = { data: "ok" };
-    //const res = await axios.post(`api/user/delete?user_id=${user_id}&upw=${upw}`);
-    //console.log("회원탈퇴 결과 : ", res.data);
+    const res = await axios.delete(
+      `api/user?userId=${userId}&upw=${encodeURIComponent(upw)}`,
+    );
+    console.log("회원탈퇴 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
     console.log(error);
