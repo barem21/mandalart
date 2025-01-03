@@ -158,7 +158,7 @@ function GridLevel1_Main({
       isNewShowDataInvalid ||
       selectData === normalData[4][4]
         ? false
-        : !isDateRangeInvalid
+        : isDateRangeInvalid
     ) {
       alert("날짜를 확인해주세요.");
     } else {
