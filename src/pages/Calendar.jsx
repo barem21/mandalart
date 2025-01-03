@@ -45,8 +45,6 @@ const addSchema = yup.object({
 });
 
 const Calendar = () => {
-  const [currentYear, setCurrentYear] = useState("");
-  const [currentMonth, setCurrentMonth] = useState("");
   const calendarRef = useRef(null);
 
   const navigate = useNavigate();
@@ -76,20 +74,16 @@ const Calendar = () => {
     const currentDate = info.view.currentStart;
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1; // month는 0부터 시작
-    setCurrentYear(year);
-    setCurrentMonth(month);
 
     const getShareView = async () => {
       try {
         const res = await axios.get(
           `/api/mand/calendar?userId=${sessionData?.userId}&year=${year}&month=${month}`,
         );
-        //console.log("공유 만다라트 상세보기 결과 : ", res.data.resultData);
         const resultArr = res.data.resultData.map(events => ({
           ...events, // 기존 데이터 복사
           backgroundColor: getRandomColor(), // 랜덤 색상 추가
         }));
-        //resultArr.background = "#aaaaaa";
         setEvents(resultArr);
         //return res.data; //결과 리턴
       } catch (error) {
@@ -119,13 +113,7 @@ const Calendar = () => {
     mode: "all",
   });
 
-  console.log(events);
-
-  const handleSubmitForm = data => {
-    alert("ok");
-    //모아둔 전송할 데이터(axios.post전송)
-    console.log(data);
-  };
+  const handleSubmitForm = data => {};
 
   /*
   // 날짜 클릭 시 새로운 일정을 추가하는 함수
@@ -143,8 +131,6 @@ const Calendar = () => {
 
   // 일정 클릭 시 수정 폼을 띄우는 함수
   const handleEventClick = info => {
-    console.log(info);
-
     setSelectedEvent({
       title: info.event.title,
       start: info.event.startStr,

@@ -14,7 +14,7 @@ const ModalPopup = styled.div`
 
   .modalWrap {
     position: relative;
-    max-width: 360px;
+    max-width: 320px;
     min-width: 320px;
     padding: 25px;
     border-radius: 10px;

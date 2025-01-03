@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import "./gridLevel1_1.css";
 import { patchGridData } from "../../apis/grid";
+import PopupLayout from "../../components/PopupLayout";
 
 function GridLevel1_Main({
   getGridApiCall,
@@ -161,6 +162,11 @@ function GridLevel1_Main({
     // 모달 닫기
   };
 
+  //모달닫기
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
+
   useEffect(() => {
     // console.log(normalData);
   }, [showData, normalData]);
@@ -193,7 +199,7 @@ function GridLevel1_Main({
 
       {/* 모달 */}
       {isModalOpen && (
-        <div className="modal-overlay">
+        <PopupLayout isVisible={isModalOpen} onClose={closeModal} title={""}>
           <form onSubmit={handleSubmit}>
             <div className="modal">
               <label className="modaldeaultlable">
@@ -207,7 +213,7 @@ function GridLevel1_Main({
                 />
               </label>
               <label className="modaldeaultlable">
-                시작 날짜:
+                시작일
                 <input
                   className="planDate"
                   type="date"
@@ -217,7 +223,7 @@ function GridLevel1_Main({
                 />
               </label>
               <label className="modaldeaultlable">
-                종료 날짜:
+                종료일
                 <input
                   className="planDate"
                   type="date"
@@ -227,7 +233,7 @@ function GridLevel1_Main({
                 />
               </label>
               <label className="modaldeaultlable">
-                세부 내용:
+                세부 내용
                 <textarea
                   className="contents-box"
                   name="contents"
@@ -273,20 +279,20 @@ function GridLevel1_Main({
                 </div>
               )}
 
-              <div className="modal-buttons">
+              <div className="buttonWrap" style={{ "margin-top": "20px" }}>
                 <button
-                  className="btnLine"
+                  className="btnPopLine"
                   onClick={() => setIsModalOpen(false)}
                 >
-                  삭제하기
+                  취소하기
                 </button>
-                <button className="btnColor" type="submit">
+                <button className="btnPupColor" type="submit">
                   저장하기
                 </button>
               </div>
             </div>
           </form>
-        </div>
+        </PopupLayout>
       )}
     </div>
   );

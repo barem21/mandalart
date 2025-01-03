@@ -58,7 +58,6 @@ const ButtonWrap = styled.div`
 //schema 먼저 생성
 const addSchema = yup.object({
   title: yup.string().required("제목을 입력해 주세요."),
-  projectId: yup.string().required("공유할 만다라트 계획표를 선택해 주세요."),
   content: yup.string().required("간단 소개글을 입력해 주세요."),
 });
 
@@ -120,6 +119,11 @@ function EditMandalart() {
     },
   };
 
+  const [myList, setMyList] = useState([]);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const projectId = searchParams.get("projectId"); //개별 데이터로 뜯기
+  const sessionData = getSession(LOGIN_SESSION_KEY);
+
   const {
     control,
     register,
@@ -130,19 +134,13 @@ function EditMandalart() {
   } = useForm({
     resolver: yupResolver(addSchema),
     defaultValues: {
-      mid: "",
       title: "",
-      share: "",
       content: "",
-      pic: "",
+      projectId: "",
+      projectViewId: projectId,
     },
     mode: "all",
   });
-
-  const [myList, setMyList] = useState([]);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const projectId = searchParams.get("projectId"); //개별 데이터로 뜯기
-  const sessionData = getSession(LOGIN_SESSION_KEY);
 
   //내 만다라트 가져오기
   const getMandalart = async () => {
@@ -222,19 +220,12 @@ function EditMandalart() {
                 공유 만다라트 선택 <span>*</span>
               </label>
               <div style={{ width: "100%" }}>
-                <select id="share" {...register("projectId")}>
-                  <option value="">선택해주세요.</option>
-                  {myList.map((item, index) => {
-                    return (
-                      <option key={index} value={item.projectId}>
-                        {item.title}
-                      </option>
-                    );
-                  })}
-                </select>
-                {errors.share?.message && (
-                  <ErrorMessage>({errors.share?.message})</ErrorMessage>
-                )}
+                {myList.map((item, index) => {
+                  if (item.projectId === parseInt(projectId)) {
+                    return <span key={index}>{item.title}</span>;
+                  }
+                  return null;
+                })}
               </div>
             </div>
             <div className="inputBox">

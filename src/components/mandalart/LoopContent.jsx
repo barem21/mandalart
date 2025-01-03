@@ -74,7 +74,7 @@ const LoopContent = ({ location, datas, viewCnt = 30 }) => {
   //console.log(datas);
   return (
     <ShowMandalartList>
-      {datas.length === 0 && (
+      {datas?.length === 0 && (
         <div className="noData">등록된 만다라트가 없습니다.</div>
       )}
       {datas.map(

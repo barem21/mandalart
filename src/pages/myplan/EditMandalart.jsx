@@ -56,7 +56,7 @@ const ButtonWrap = styled.div`
 
 //schema 먼저 생성
 const addSchema = yup.object({
-  title: yup.string().required("제목을 입력해 주세요!"),
+  title: yup.string().required("제목을 입력해 주세요."),
   content: yup.string().required("간단 소개글을 입력해 주세요."),
   pic: yup
     .mixed()
@@ -65,7 +65,8 @@ const addSchema = yup.object({
     })
     .test("filesize", "파일 크기는 500KB 이하만 가능합니다.", value => {
       return value && value[0]?.size <= 0.5 * 1024 * 1024; // 500KB 이하
-    }),
+    })
+    .required("파일을 선택해주세요."),
 });
 
 function EditMandalart() {
@@ -123,7 +124,7 @@ function EditMandalart() {
     const getMandalartInfo = async () => {
       try {
         const result = await getMyPlanData(projectId); //axios
-        console.log("만다라트 호출 : ", result.resultData);
+        //console.log("만다라트 호출 : ", result.resultData);
         setValue("title", result.resultData.title);
         setValue("content", result.resultData.content);
       } catch (error) {
@@ -177,6 +178,9 @@ function EditMandalart() {
                 섬네일 등록 <span>*</span>
               </label>
               <input type="file" {...register("pic")} />
+              {errors.pic?.message && (
+                <ErrorMessage>({errors.pic?.message})</ErrorMessage>
+              )}
 
               <button type="submit" className="btnColor">
                 저장하기

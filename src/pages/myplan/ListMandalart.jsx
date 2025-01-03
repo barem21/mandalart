@@ -254,7 +254,7 @@ function MyPlan() {
               <input
                 type="text"
                 id="title"
-                maxLength={20}
+                maxLength={30}
                 className="popupInput"
                 placeholder="제목을 입력하세요."
                 {...register("title")}
