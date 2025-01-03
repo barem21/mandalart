@@ -7,6 +7,7 @@ export const getGridData = async projectId => {
     // console.log(res.data);
     const resultObj = res.data.resultData;
     // console.log("너 누구니 ?", resultObj);
+
     return resultObj;
   } catch (error) {
     console.log(" 데이터 불러오기 실패", error);

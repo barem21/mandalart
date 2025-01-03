@@ -108,33 +108,12 @@ function GridLevel1_Main({
     // console.log(updatedNormalData);
     // const uploadDataForm =  selectData.value =>
     //   ;
-
-    // 원본 데이터와 showData 동기화
-    const updatedSelectData = newShowData.find(
-      item => item.cellId === selectData.cellId,
-    );
-    try {
-      const res = await patchGridData(updatedSelectData); // 서버 동기화
-      console.log(res.data);
-    } catch (error) {
-      console.error("Error updating data:", error);
-    }
-
-    setNormalData(updatedNormalData);
-    setShowData(newShowData);
-    setSelectData(updatedSelectData);
-
     console.log(selectData);
     if (selectData.title === "") {
       alert("목표을 입력해주세요");
     }
-    // console.log(showData);
-
     // 날짜 경고창
 
-    console.log("실패", selectData.startDate, selectData.finishDate);
-    console.log(selectData);
-    console.log(newShowData?.[4]);
     const isDateRangeInvalid =
       selectData.startDate >= normalData?.[4]?.[4]?.startDate &&
       selectData.finishDate <= normalData?.[4]?.[4]?.finishDate &&
@@ -148,24 +127,36 @@ function GridLevel1_Main({
         (selectData.startDate === null || selectData.finishDate === null)) ||
       (selectData.startDate < normalData?.[4]?.[4]?.startDate &&
         selectData.finishDate > normalData?.[4]?.[4]?.finishDate);
-    console.log("isDateRangeInvalid", !isDateRangeInvalid);
-    console.log("isNormalDataInvalid", !isNormalDataInvalid);
-    console.log("isNewShowDataInvalid", !isNewShowDataInvalid);
-    if (
+    if (selectData.mandalartId === normalData[4]?.[4].mandalartId) {
+      getGridApiCall();
+      setIsModalOpen(false);
+    } else if (
+      !isDateRangeInvalid ||
       selectData.startDate === null ||
       selectData.finishDate === null ||
       isNormalDataInvalid ||
-      isNewShowDataInvalid ||
-      selectData === normalData[4][4]
-        ? false
-        : isDateRangeInvalid
+      isNewShowDataInvalid
     ) {
       alert("날짜를 확인해주세요.");
+      return;
     } else {
       getGridApiCall();
       setIsModalOpen(false);
     }
-
+    // 원본 데이터와 showData 동기화
+    const updatedSelectData = newShowData.find(
+      item => item.cellId === selectData.cellId,
+    );
+    try {
+      const res = await patchGridData(updatedSelectData); // 서버 동기화
+      console.log(res.data);
+    } catch (error) {
+      console.error("Error updating data:", error);
+    }
+    setNormalData(updatedNormalData);
+    setShowData(newShowData);
+    setSelectData(updatedSelectData);
+    // console.log(showData);
     return;
     // 모달 닫기
   };
@@ -205,16 +196,17 @@ function GridLevel1_Main({
         <div className="modal-overlay">
           <form onSubmit={handleSubmit}>
             <div className="modal">
-              <label>
+              <label className="modaldeaultlable">
                 제목:
                 <input
+                  className="title-text"
                   type="text"
                   name="title"
                   value={selectData?.title || ""}
                   onChange={handleModalChange}
                 />
               </label>
-              <label>
+              <label className="modaldeaultlable">
                 시작 날짜:
                 <input
                   className="planDate"
@@ -224,7 +216,7 @@ function GridLevel1_Main({
                   onChange={handleModalChange}
                 />
               </label>
-              <label>
+              <label className="modaldeaultlable">
                 종료 날짜:
                 <input
                   className="planDate"
@@ -234,9 +226,10 @@ function GridLevel1_Main({
                   onChange={handleModalChange}
                 />
               </label>
-              <label>
+              <label className="modaldeaultlable">
                 세부 내용:
-                <input
+                <textarea
+                  className="contents-box"
                   name="contents"
                   type="text"
                   value={selectData?.contents || ""}
@@ -246,26 +239,49 @@ function GridLevel1_Main({
               {/* depth가 0또는 1이면 보이지 마라 */}
               {!(selectData?.depth === 0 || selectData?.depth === 1) && (
                 <div className="selectbox">
-                  <select
-                    name="completedFg"
-                    value={selectData.completedFg}
-                    onChange={handleModalChange}
-                  >
-                    <option value="0">미완료</option>
-                    <option value="1">완료</option>
-                  </select>
+                  <div name="completedFg">
+                    <label className="radiolable">
+                      달성 여부 &nbsp; &nbsp;
+                      <input
+                        value="0"
+                        type="radio"
+                        checked={selectData.completedFg === 0}
+                        onChange={() =>
+                          handleModalChange({
+                            target: { name: "completedFg", value: 0 },
+                          })
+                        }
+                        name="completedFg"
+                      />
+                      진행중
+                    </label>
+                    <label className="radiolable">
+                      <input
+                        value="1"
+                        type="radio"
+                        checked={selectData.completedFg === 1}
+                        onChange={() =>
+                          handleModalChange({
+                            target: { name: "completedFg", value: 1 },
+                          })
+                        }
+                        name="completedFg"
+                      />
+                      달성 완료
+                    </label>
+                  </div>
                 </div>
               )}
 
               <div className="modal-buttons">
-                <button className="save-button" type="submit">
-                  저장
-                </button>
                 <button
-                  className="cancel-button"
+                  className="btnLine"
                   onClick={() => setIsModalOpen(false)}
                 >
-                  취소
+                  삭제하기
+                </button>
+                <button className="btnColor" type="submit">
+                  저장하기
                 </button>
               </div>
             </div>
