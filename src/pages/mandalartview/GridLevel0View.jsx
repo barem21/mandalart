@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import "./gridlevel0.css";
+import "../mandalart/gridLevel0.css";
 
 import { getGridData } from "../../apis/grid";
-import GridLevel1_MainView from "../mandalartt/GridLevel1_MainView";
+import GridLevel1_MainView from "./GridLevel1_MainView";
 
-function GridLevel0({ projectId }) {
+function GridLevel0View({ projectId }) {
   // console.log("projectId", projectId);
   const getGridApiCall = async () => {
     const tempDatas = await getGridData(projectId);
@@ -626,4 +626,4 @@ function GridLevel0({ projectId }) {
   );
 }
 
-export default GridLevel0;
+export default GridLevel0View;

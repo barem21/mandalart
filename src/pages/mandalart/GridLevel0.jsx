@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import "./gridlevel0.css";
 
-import GridLevel1_Main from "../mandalartt/GridLevel1_Main";
 import { getGridData } from "../../apis/grid";
+import GridLevel1_Main from "./GridLevel1_Main";
 
 function GridLevel0({ projectId }) {
   console.log("projectId", projectId);
