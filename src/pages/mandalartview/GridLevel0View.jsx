@@ -8,7 +8,7 @@ function GridLevel0View({ projectId }) {
   // console.log("projectId", projectId);
   const getGridApiCall = async () => {
     const tempDatas = await getGridData(projectId);
-    console.log(tempDatas.mandalart);
+
     setMandalart(tempDatas.mandalart);
     setNormalData([
       //0-8
