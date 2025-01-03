@@ -69,7 +69,10 @@ const Calendar = () => {
           `/api/mand/calendar?userId=${sessionData?.userId}&year=${year}&month=${month}`,
         );
         console.log("공유 만다라트 상세보기 결과 : ", res.data);
-        return res.data; //결과 리턴
+        const resultArr = res.data.resultData;
+        //resultArr.background = "#aaaaaa";
+        setEvents(resultArr);
+        //return res.data; //결과 리턴
       } catch (error) {
         console.log(error);
         return error;
@@ -96,23 +99,6 @@ const Calendar = () => {
     },
     mode: "all",
   });
-
-  //axios연동(캘린더용 데이터 호출)
-  const getCalendal = async () => {
-    try {
-      const res = await axios.get(
-        `api/mand/calendar?userId=barem210@gmail.com&year=2025&month=01`,
-      );
-      console.log("목록보기 결과 : ", res.data.resultData);
-      const resultArr = res.data.resultData[0];
-      resultArr.background = "#aaaaaa";
-      setEvents(resultArr);
-      //return res.data.resultData; //결과 리턴
-    } catch (error) {
-      console.log(error);
-      return error;
-    }
-  };
 
   console.log(events);
 
@@ -168,10 +154,6 @@ const Calendar = () => {
     }
     return () => {};
   }, [sessionData, navigate]);
-
-  useEffect(() => {
-    getCalendal();
-  }, []);
 
   return (
     <CalendarWrap>
