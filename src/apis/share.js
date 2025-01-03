@@ -5,7 +5,7 @@ export const postCopy = async ({ copyProjectId, userId }) => {
   const data = { copyProjectId: copyProjectId, userId: userId };
   try {
     const res = await axios.post("/api/shared_project/copy", data);
-    console.log("복사하기 결과 : ", res.data);
+    //console.log("복사하기 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
     console.log(error);
@@ -182,7 +182,7 @@ export const getMandalartData = async (projectId, userId) => {
     const res = await axios.get(
       `/api/mand/shared?projectId=${projectId}&userId=${userId}`,
     );
-    console.log("만다라트 데이터 : ", res.data);
+    //console.log("만다라트 데이터 : ", res.data);
     return res.data;
   } catch (error) {
     console.log(" 데이터 불러오기 실패", error);

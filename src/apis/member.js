@@ -4,7 +4,7 @@ import axios from "axios";
 export const loginMember = async data => {
   try {
     const res = await axios.post("api/user/signIn", data);
-    console.log("로그인 결과 : ", res.data);
+    //console.log("로그인 결과 : ", res.data);
     return res.data; //결과 리턴
   } catch (error) {
     console.log(error);

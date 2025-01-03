@@ -25,6 +25,7 @@ const ModalPopup = styled.div`
     font-size: 18px;
     font-weight: 500;
   }
+
   .modalWrap .guideText {
     color: #666;
     font-size: 14px;

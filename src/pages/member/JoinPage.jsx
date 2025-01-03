@@ -114,6 +114,7 @@ const schema = yup.object({
   nickName: yup
     .string()
     .required("닉네임은 필수입니다.")
+    .min(4, "닉네임은 최소 4글자 이상 입력해 주세요.")
     .max(10, "닉네임은 최대 10자까지 가능합니다."),
   policy: yup.boolean().oneOf([true], "필수"),
 });
