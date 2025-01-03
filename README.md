@@ -9,6 +9,10 @@
 - FE : 김재범(팀장), 서동욱
 - BE : 사공수기(팀장), 권혜지, 송은아, 임현찬, 장재웅
 
+| 디폴트 정렬 | 왼쪽 정렬 | 오른쪽 정렬 | 가운데 정렬 |
+| ----------- | :-------- | ----------: | :---------: |
+| 🥕          | 🥕        |          🥕 |     🥕      |
+
 ## 📚 Overview
 
 - 이 프로젝트는 사용자가 일정 관리, 할 일 목록, 메모 등의 기능을 제공하는 웹 애플리케이션입니다. Node.js와 React를 사용하여 개발되었습니다.
@@ -96,7 +100,7 @@ git push origin 브랜치명
 ### 6. 폴더/파일 구조
 
 ```
-todo_project
+manda
 ├─ .gitignore
 ├─ .prettierrc
 ├─ eslint.config.js
@@ -105,18 +109,30 @@ todo_project
 ├─ package.json
 ├─ public
 │  ├─ about_mandalart.png
+│  ├─ flower.png
+│  ├─ flower_orig.png
 │  ├─ main_swiper1.png
 │  ├─ main_swiper2.png
 │  ├─ main_swiper3.png
 │  ├─ share_mandalart.png
 │  ├─ share_mandalart2.png
+│  ├─ share_mandalart3.png
+│  ├─ share_mandalart4.png
+│  ├─ share_mandalart5.png
+│  ├─ share_mandalart6.png
+│  ├─ share_mandalart7.png
+│  ├─ share_mandalart8.png
+│  ├─ share_mandalart9.png
 │  ├─ top_about.png
 │  ├─ top_member.png
 │  └─ top_member_orig.png
 ├─ README.md
 ├─ src
 │  ├─ apis
-│  │  └─ member.js
+│  │  ├─ grid.js
+│  │  ├─ member.js
+│  │  ├─ myplan.js
+│  │  └─ share.js
 │  ├─ App.css
 │  ├─ App.jsx
 │  ├─ assets
@@ -128,13 +144,13 @@ todo_project
 │  │  ├─ Layout.jsx
 │  │  ├─ mandalart
 │  │  │  └─ LoopContent.jsx
+│  │  ├─ PopupLayout.jsx
 │  │  ├─ ScrollTop.jsx
 │  │  ├─ ShareSns.jsx
 │  │  └─ subpageVisual
 │  │     └─ SubpageVisual.jsx
 │  ├─ contants
 │  ├─ contexts
-│  │  ├─ PopupLayout.jsx
 │  │  └─ UserInfoContext.jsx
 │  ├─ index.css
 │  ├─ main.jsx
@@ -142,22 +158,34 @@ todo_project
 │  │  ├─ About.jsx
 │  │  ├─ Calendar.jsx
 │  │  ├─ Index.jsx
+│  │  ├─ mandalartt
+│  │  │  ├─ gridLevel1_1.css
+│  │  │  ├─ GridLevel1_Main.jsx
+│  │  │  └─ GridLevel1_MainView.jsx
+│  │  ├─ mandalarttt
+│  │  │  ├─ gridLevel0.css
+│  │  │  ├─ GridLevel0.jsx
+│  │  │  ├─ GridLevel0View.jsx
+│  │  │  └─ memo
 │  │  ├─ member
+│  │  │  ├─ ChangePwPage.jsx
 │  │  │  ├─ EditPage.jsx
+│  │  │  ├─ JoinEndPage.jsx
 │  │  │  ├─ JoinPage.jsx
 │  │  │  ├─ LoginPage.jsx
 │  │  │  └─ LogoutPage.jsx
 │  │  ├─ myplan
 │  │  │  ├─ AddMandalart.jsx
-│  │  │  ├─ DetailMandalart.jsx
 │  │  │  ├─ EditMandalart.jsx
-│  │  │  └─ ListMandalart.jsx
+│  │  │  ├─ ListMandalart.jsx
+│  │  │  ├─ ViewCalendar.jsx
+│  │  │  └─ ViewMandalart.jsx
 │  │  ├─ NotFoundPage.jsx
 │  │  └─ share
-│  │     ├─ DetailMandalart.jsx
+│  │     ├─ AddMandalart.jsx
 │  │     ├─ EditMandalart.jsx
 │  │     ├─ ListMandalart.jsx
-│  │     └─ WriteMandalart.jsx
+│  │     └─ ViewMandalart.jsx
 │  └─ utils
 └─ vite.config.js
 ```

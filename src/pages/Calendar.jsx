@@ -18,6 +18,14 @@ const CalendarWrap = styled.div`
   min-width: 1200px;
   margin: 0 auto;
   padding: 0px 50px;
+  .fc-h-event {
+    border: none;
+  }
+  .fc-h-event .fc-event-main {
+    padding-left: 10px;
+    color: #444;
+    font-weight: 500;
+  }
 `;
 
 //schema 먼저 생성
@@ -55,6 +63,14 @@ const Calendar = () => {
     id: null, // 이벤트 ID 추가
   });
 
+  // 랜덤색상 생성
+  const getRandomColor = () => {
+    const r = Math.floor(Math.random() * 128 + 127); // R: 127~255
+    const g = Math.floor(Math.random() * 128 + 127); // G: 127~255
+    const b = Math.floor(Math.random() * 128 + 127); // B: 127~255
+    return `rgb(${r},${g},${b})`;
+  };
+
   // datesSet 이벤트를 사용하여 년/월 정보를 가져옴
   const handleDatesSet = info => {
     const currentDate = info.view.currentStart;
@@ -68,8 +84,11 @@ const Calendar = () => {
         const res = await axios.get(
           `/api/mand/calendar?userId=${sessionData?.userId}&year=${year}&month=${month}`,
         );
-        console.log("공유 만다라트 상세보기 결과 : ", res.data);
-        const resultArr = res.data.resultData;
+        //console.log("공유 만다라트 상세보기 결과 : ", res.data.resultData);
+        const resultArr = res.data.resultData.map(events => ({
+          ...events, // 기존 데이터 복사
+          backgroundColor: getRandomColor(), // 랜덤 색상 추가
+        }));
         //resultArr.background = "#aaaaaa";
         setEvents(resultArr);
         //return res.data; //결과 리턴
@@ -157,9 +176,6 @@ const Calendar = () => {
 
   return (
     <CalendarWrap>
-      <div>
-        {currentYear}/{currentMonth}
-      </div>
       <h1 className="subTitle">계획표 캘린더</h1>
       <FullCalendar
         ref={calendarRef}
@@ -180,8 +196,8 @@ const Calendar = () => {
             info.el.style.borderRadius = "5px";
           }
         }}
-        // dateClick={handleDateClick}
-        eventClick={handleEventClick} // 일정 클릭 시 수정 모달 열기
+        //dateClick={handleDateClick}
+        //eventClick={handleEventClick} // 일정 클릭 시 수정 모달 열기
       />
 
       {/* 수정 또는 추가 일정 모달 */}

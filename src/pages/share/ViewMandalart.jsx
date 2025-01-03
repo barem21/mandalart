@@ -281,7 +281,7 @@ function ViewMandalart() {
   };
 
   const snsSendProc = type => {
-    let shareTitle = "공유 테스트";
+    let shareTitle = infoMandalart.title;
     let shareURL = `http://localhost:5173/share/view?projectId=${projectId}`;
     //let imagesrc = `http://112.222.157.156:5211/pic/project/${projectId}/${pic}`;
     let a;

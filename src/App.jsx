@@ -16,6 +16,7 @@ import AddMandalart from "./pages/myplan/AddMandalart";
 import AddShareMandalart from "./pages/share/AddMandalart";
 import ViewShareMandalart from "./pages/share/ViewMandalart";
 import ViewMandalart from "./pages/myplan/ViewMandalart";
+import ViewCalendar from "./pages/myplan/ViewCalendar";
 import EditMandalart from "./pages/myplan/EditMandalart";
 import EditShareMandalart from "./pages/share/EditMandalart";
 import ScrollToTop from "./components/ScrollTop";
@@ -39,6 +40,7 @@ function App() {
               <Route index element={<Mypage />} />
               <Route path="/myplan/add" element={<AddMandalart />} />
               <Route path="/myplan/view" element={<ViewMandalart />} />
+              <Route path="/myplan/calendar" element={<ViewCalendar />} />
               <Route path="/myplan/edit" element={<EditMandalart />} />
             </Route>
 

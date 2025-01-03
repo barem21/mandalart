@@ -44,7 +44,6 @@ export const searchMyplan = async data => {
 
 //axios연동(나의 만다라트 등록하기)
 export const postMyplan = async data => {
-  console.log(data);
   try {
     const res = await axios.post("api/project", data);
     //console.log("등록하기 결과 : ", res.data);
@@ -57,7 +56,6 @@ export const postMyplan = async data => {
 
 //axios연동(나의 만다라트 수정하기)
 export const editMyplan = async data => {
-  console.log(data);
   try {
     //파일은 string가 아니라 binary
     const formData = new FormData();
@@ -90,8 +88,7 @@ export const editMyplan = async data => {
       },
     };
     const res = await axios.patch("/api/project", formData, header);
-    //const res = await axios.patch("api/project", data);
-    console.log("등록하기 결과 : ", res.data);
+    //console.log("등록하기 결과 : ", res.data);
     return res.data; //결과 리턴
   } catch (error) {
     console.log(error);
@@ -101,7 +98,6 @@ export const editMyplan = async data => {
 
 //axios연동(나의 만다라트 삭제하기)
 export const deleteMyplan = async ({ projectId, userId }) => {
-  console.log(projectId);
   try {
     const res = await axios.delete(
       `/api/project?projectId=${projectId}&userId=${userId}`,
