@@ -127,13 +127,20 @@ function GridLevel1_Main({
         (selectData.startDate === null || selectData.finishDate === null)) ||
       (selectData.startDate < normalData?.[4]?.[4]?.startDate &&
         selectData.finishDate > normalData?.[4]?.[4]?.finishDate);
-    if (selectData.mandalartId === normalData[4]?.[4].mandalartId) {
+    if (
+      selectData.mandalartId === normalData[4]?.[4].mandalartId &&
+      selectData.startDate !== "" &&
+      selectData.finishDate !== ""
+    ) {
       getGridApiCall();
       setIsModalOpen(false);
     } else if (
-      !isDateRangeInvalid ||
       selectData.startDate === null ||
-      selectData.finishDate === null ||
+      selectData.finishDate === null
+    ) {
+      alert("날짜를 확인해주세요.");
+    } else if (
+      !isDateRangeInvalid ||
       isNormalDataInvalid ||
       isNewShowDataInvalid
     ) {
