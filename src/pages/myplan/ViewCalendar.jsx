@@ -37,6 +37,9 @@ const MandalartDetailView = styled.div`
   .detailWrap .viewType {
     display: flex;
   }
+  .detailWrap .content {
+    margin: 20px 0px;
+  }
   .viewCalendar {
     margin-bottom: 30px;
   }
@@ -204,7 +207,7 @@ function ViewCalendar() {
               />
             </div>
 
-            <div>{myPlanView.content}</div>
+            <div className="content">{myPlanView.content}</div>
           </div>
         </div>
 

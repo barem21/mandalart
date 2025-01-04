@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 import styled from "@emotion/styled";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import PopupLayout from "../../components/PopupLayout";
+import { useForm } from "react-hook-form";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import * as yup from "yup";
 import { getSession } from "../../apis/member";
 import GridLevel0 from "../mandalart/GridLevel0";
+import MandalartVer2 from "../../components/mandalart/Mandalart";
 
 const LOGIN_SESSION_KEY = "login_session";
 
@@ -192,7 +192,8 @@ function AddMandalart() {
               4. 계획표 관리 : 계획표를 정기적으로 검토하고 수정하며 실행합니다.
             </div>
 
-            <GridLevel0 projectId={projectId} />
+            {/* <GridLevel0 projectId={projectId} /> */}
+            <MandalartVer2 projectId={projectId} />
           </div>
         </div>
 
