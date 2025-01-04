@@ -2,6 +2,7 @@ import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
 import { FaXTwitter, FaFacebookF, FaGoogle } from "react-icons/fa6";
 import { IoIosArrowUp } from "react-icons/io";
+import { getSession } from "../../apis/member";
 //import SnsShare from "../ShareSns";
 
 const FooterWrap = styled.div`

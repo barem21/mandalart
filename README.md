@@ -110,22 +110,12 @@ manda
 ├─ public
 │  ├─ about_mandalart.png
 │  ├─ flower.png
-│  ├─ flower_orig.png
 │  ├─ main_swiper1.png
 │  ├─ main_swiper2.png
 │  ├─ main_swiper3.png
-│  ├─ share_mandalart.png
-│  ├─ share_mandalart2.png
-│  ├─ share_mandalart3.png
-│  ├─ share_mandalart4.png
-│  ├─ share_mandalart5.png
-│  ├─ share_mandalart6.png
-│  ├─ share_mandalart7.png
-│  ├─ share_mandalart8.png
-│  ├─ share_mandalart9.png
 │  ├─ top_about.png
 │  ├─ top_member.png
-│  └─ top_member_orig.png
+│  └─ no_image.png
 ├─ README.md
 ├─ src
 │  ├─ apis

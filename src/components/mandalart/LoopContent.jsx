@@ -87,7 +87,7 @@ const LoopContent = ({ location, datas, viewCnt = 30 }) => {
                     src={
                       item.pic
                         ? `http://112.222.157.156:5211/pic/project/${item.projectId}/${item.pic}`
-                        : "share_mandalart2.png"
+                        : "no_image.png"
                     }
                     alt=""
                   />

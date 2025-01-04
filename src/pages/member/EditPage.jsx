@@ -172,7 +172,7 @@ function EditPage() {
 
     try {
       const res = await axios.get(`api/user/nickName?nickName=${userNick}`);
-      console.log(res.data);
+      //console.log(res.data);
 
       if (res.data.resultData === 1) {
         setIsNicknameAvailable(true); //사용가능
@@ -198,6 +198,10 @@ function EditPage() {
         "이미 사용중인 닉네임입니다.\n닉네임 중복체크를 다시 진행해 주세요.",
       );
       return;
+    }
+    if (userNick === sessionData?.nickName) {
+      //닉네임 안 바꿨으면 빈값 전달
+      data.nickName = "";
     }
 
     try {
