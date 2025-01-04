@@ -56,7 +56,10 @@ const ButtonWrap = styled.div`
 
 //schema 먼저 생성
 const addSchema = yup.object({
-  title: yup.string().required("제목을 입력해 주세요."),
+  title: yup
+    .string()
+    .required("제목을 입력해 주세요.")
+    .max(20, "제목은 최대 20자까지 입력가능합니다."),
   content: yup.string().required("간단 소개글을 입력해 주세요."),
   pic: yup
     .mixed()
@@ -152,7 +155,12 @@ function EditMandalart() {
                 제목 <span>*</span>
               </label>
               <div style={{ width: "100%" }}>
-                <input type="text" id="title" {...register("title")} />
+                <input
+                  type="text"
+                  id="title"
+                  maxLength={20}
+                  {...register("title")}
+                />
                 {errors.title?.message && (
                   <ErrorMessage>({errors.title?.message})</ErrorMessage>
                 )}

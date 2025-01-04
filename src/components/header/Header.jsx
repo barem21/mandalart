@@ -154,7 +154,11 @@ const Header = () => {
           <>
             <div className="profileImg">
               <img
-                src={`http://112.222.157.156:5211/pic/user/${sessionData?.userId}/${sessionData?.pic}`}
+                src={
+                  sessionData?.pic
+                    ? `http://112.222.157.156:5211/pic/user/${sessionData?.userId}/${sessionData?.pic}`
+                    : `no_image.png`
+                }
                 alt=""
               />
             </div>

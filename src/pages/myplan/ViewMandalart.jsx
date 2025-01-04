@@ -6,6 +6,7 @@ import PopupLayout from "../../components/PopupLayout";
 import { deleteMyplan, getMyPlanData } from "../../apis/myplan";
 import { getSession } from "../../apis/member";
 import GridLevel0View from "../mandalartview/GridLevel0View";
+import DOMPurify from "dompurify";
 
 const LOGIN_SESSION_KEY = "login_session";
 
@@ -158,7 +159,8 @@ function ViewMandalart() {
         userId: sessionData.userId,
       }); //axios(삭제요청)
 
-      if (result.resultData === 1) {
+      const resultStatus = result.statusCode.toString().charAt(0);
+      if (resultStatus === "2") {
         alert("나의 만다라트 계획표를 삭제하였습니다.");
         navigate("/myplan");
       } else {
@@ -228,7 +230,11 @@ function ViewMandalart() {
               <GridLevel0View projectId={projectId} />
             </div>
 
-            <div>{myPlanView.content}</div>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(myPlanView.content),
+              }}
+            ></div>
           </div>
         </div>
 

@@ -7,6 +7,7 @@ import "swiper/css";
 import { useEffect, useState } from "react";
 import { getSession } from "../apis/member";
 import { getShare } from "../apis/share";
+import axios from "axios";
 
 const LOGIN_SESSION_KEY = "login_session";
 
@@ -73,9 +74,36 @@ const MainLayout = styled.div`
   .mainContent div {
     text-align: center;
   }
+  .limitPlan {
+    position: fixed;
+    bottom: 0px;
+    right: 170px;
+    max-height: 200px;
+    padding: 25px 30px;
+    border: 1px solid #eee;
+    border-radius: 10px 10px 0px 0px;
+    border-bottom: 1px solid #fff;
+    background: #fff;
+    overflow-y: auto;
+    z-index: 10;
+  }
+  .limitPlan h4 {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .limitPlan h4 button {
+    border: none;
+    background: none;
+  }
+  .limitPlan a {
+    color: #666;
+    font-size: 14px;
+  }
 `;
 
 function Index() {
+  const [isLimitPlan, setIsLimitPlan] = useState([]);
   const [isShare, setIsShare] = useState([]);
   const sessionData = getSession(LOGIN_SESSION_KEY);
 
@@ -92,12 +120,33 @@ function Index() {
     }
   };
 
+  //종료일 임박한 계획
+  const getLimitPlan = async () => {
+    const sessionData = getSession("login_session");
+    try {
+      const res = await axios.get(
+        `api/mand/imminent?userId=${sessionData?.userId}`,
+      );
+      //console.log(res.data.resultData);
+      setIsLimitPlan(res.data.resultData);
+    } catch (error) {
+      console.log(error);
+      return error;
+    }
+  };
+
   const handleScroll = () => {
     let image = document.getElementById("reload");
     image.style.transform = "rotate(" + window.pageYOffset / 2 + "deg)";
   };
 
+  const handleClose = () => {
+    alert("close");
+  };
+
   useEffect(() => {
+    getLimitPlan(); //종료일 임박 계획 가져오기
+
     window.addEventListener("scroll", handleScroll);
     getSharedMandalart();
     return () => {
@@ -178,6 +227,21 @@ function Index() {
         </div>
 
         <LoopContent location={"share"} datas={isShare} viewCnt={4} />
+      </div>
+
+      <div className="limitPlan">
+        <h4>
+          종료일이 임박한 계획표<button onClick={e => handleClose(e)}>×</button>
+        </h4>
+        <ul>
+          {isLimitPlan.map((item, index) => (
+            <li key={index}>
+              <Link to={`/myplan/view?projectId=${item.projectId}`}>
+                {index + 1}. {item.title} ({item.startDate} ~ {item.finishDate})
+              </Link>
+            </li>
+          ))}
+        </ul>
       </div>
     </MainLayout>
   );

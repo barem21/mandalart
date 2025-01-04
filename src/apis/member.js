@@ -55,7 +55,7 @@ export const joinMember = async data => {
 
 //axios연동(회원정보 수정)
 export const editMember = async data => {
-  console.log(data);
+  //console.log(data);
   try {
     const formData = new FormData();
 
