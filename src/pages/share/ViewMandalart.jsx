@@ -22,6 +22,7 @@ import {
 } from "../../apis/share";
 import PopupLayout from "../../components/PopupLayout";
 import GridLevel0View from "../mandalartview/GridLevel0View";
+import MandalartVer2 from "../../components/mandalart/Mandalart";
 
 const LOGIN_SESSION_KEY = "login_session";
 
@@ -83,6 +84,9 @@ const MandalartDetailView = styled.div`
     background: none;
     color: #aaa;
     cursor: pointer;
+  }
+  .detailWrap .content {
+    margin: 20px 0px;
   }
   .snsShareWrap {
     position: relative;
@@ -498,10 +502,12 @@ function ViewMandalart() {
           <div>
             <div>
               {/* 만다라트 계획표 출력 */}
-              <GridLevel0View projectId={projectId} />
+              {/* <GridLevel0View projectId={projectId} /> */}
+              <MandalartVer2 projectId={projectId} />
             </div>
 
             <div
+              className="content"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(infoMandalart.content),
               }}

@@ -109,13 +109,19 @@ manda
 ├─ package.json
 ├─ public
 │  ├─ about_mandalart.png
+│  ├─ favicon.png
 │  ├─ flower.png
-│  ├─ main_swiper1.png
-│  ├─ main_swiper2.png
-│  ├─ main_swiper3.png
+│  ├─ flower_back.png
+│  ├─ logo_basic.png
+│  ├─ logo_favicon_psd.psd
+│  ├─ logo_large.png
+│  ├─ main_swiper1.jpg
+│  ├─ main_swiper2.jpg
+│  ├─ main_swiper3.jpg
+│  ├─ no_image.png
 │  ├─ top_about.png
 │  ├─ top_member.png
-│  └─ no_image.png
+│  └─ top_member_orig.png
 ├─ README.md
 ├─ src
 │  ├─ apis
@@ -125,7 +131,6 @@ manda
 │  │  └─ share.js
 │  ├─ App.css
 │  ├─ App.jsx
-│  ├─ assets
 │  ├─ components
 │  │  ├─ footer
 │  │  │  └─ Footer.jsx
@@ -133,50 +138,52 @@ manda
 │  │  │  └─ Header.jsx
 │  │  ├─ Layout.jsx
 │  │  ├─ mandalart
-│  │  │  └─ LoopContent.jsx
+│  │  │  ├─ LoopContent.jsx
+│  │  │  ├─ Mandalart.jsx
+│  │  │  ├─ Mandalart.module.css
+│  │  │  ├─ MandalartSingle.jsx
+│  │  │  └─ MandalartSingle.module.css
 │  │  ├─ PopupLayout.jsx
 │  │  ├─ ScrollTop.jsx
 │  │  ├─ ShareSns.jsx
 │  │  └─ subpageVisual
 │  │     └─ SubpageVisual.jsx
-│  ├─ contants
 │  ├─ contexts
 │  │  └─ UserInfoContext.jsx
 │  ├─ index.css
 │  ├─ main.jsx
-│  ├─ pages
-│  │  ├─ About.jsx
-│  │  ├─ Calendar.jsx
-│  │  ├─ Index.jsx
-│  │  ├─ mandalartt
-│  │  │  ├─ gridLevel1_1.css
-│  │  │  ├─ GridLevel1_Main.jsx
-│  │  │  └─ GridLevel1_MainView.jsx
-│  │  ├─ mandalarttt
-│  │  │  ├─ gridLevel0.css
-│  │  │  ├─ GridLevel0.jsx
-│  │  │  ├─ GridLevel0View.jsx
-│  │  │  └─ memo
-│  │  ├─ member
-│  │  │  ├─ ChangePwPage.jsx
-│  │  │  ├─ EditPage.jsx
-│  │  │  ├─ JoinEndPage.jsx
-│  │  │  ├─ JoinPage.jsx
-│  │  │  ├─ LoginPage.jsx
-│  │  │  └─ LogoutPage.jsx
-│  │  ├─ myplan
-│  │  │  ├─ AddMandalart.jsx
-│  │  │  ├─ EditMandalart.jsx
-│  │  │  ├─ ListMandalart.jsx
-│  │  │  ├─ ViewCalendar.jsx
-│  │  │  └─ ViewMandalart.jsx
-│  │  ├─ NotFoundPage.jsx
-│  │  └─ share
-│  │     ├─ AddMandalart.jsx
-│  │     ├─ EditMandalart.jsx
-│  │     ├─ ListMandalart.jsx
-│  │     └─ ViewMandalart.jsx
-│  └─ utils
+│  └─ pages
+│     ├─ About.jsx
+│     ├─ Calendar.jsx
+│     ├─ Index.jsx
+│     ├─ mandalart
+│     │  ├─ gridLevel0.css
+│     │  ├─ GridLevel0.jsx
+│     │  ├─ gridLevel1_1.css
+│     │  ├─ GridLevel1_Main.jsx
+│     │  └─ memo.jsx
+│     ├─ mandalartview
+│     │  ├─ GridLevel0View.jsx
+│     │  └─ GridLevel1_MainView.jsx
+│     ├─ member
+│     │  ├─ ChangePwPage.jsx
+│     │  ├─ EditPage.jsx
+│     │  ├─ JoinEndPage.jsx
+│     │  ├─ JoinPage.jsx
+│     │  ├─ LoginPage.jsx
+│     │  └─ LogoutPage.jsx
+│     ├─ myplan
+│     │  ├─ AddMandalart.jsx
+│     │  ├─ EditMandalart.jsx
+│     │  ├─ ListMandalart.jsx
+│     │  ├─ ViewCalendar.jsx
+│     │  └─ ViewMandalart.jsx
+│     ├─ NotFoundPage.jsx
+│     └─ share
+│        ├─ AddMandalart.jsx
+│        ├─ EditMandalart.jsx
+│        ├─ ListMandalart.jsx
+│        └─ ViewMandalart.jsx
 └─ vite.config.js
 ```
 

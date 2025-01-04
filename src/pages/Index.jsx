@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import LoopContent from "../components/mandalart/LoopContent";
 import "swiper/css";
 import { useEffect, useState } from "react";
-import { getSession } from "../apis/member";
+import { getSession, setSession } from "../apis/member";
 import { getShare } from "../apis/share";
 import axios from "axios";
 
@@ -77,34 +77,64 @@ const MainLayout = styled.div`
   .limitPlan {
     position: fixed;
     bottom: 0px;
-    right: 170px;
-    max-height: 200px;
-    padding: 25px 30px;
+    right: 30px;
+    max-width: 300px;
     border: 1px solid #eee;
     border-radius: 10px 10px 0px 0px;
     border-bottom: 1px solid #fff;
     background: #fff;
-    overflow-y: auto;
-    z-index: 10;
+    box-shadow: 0px -10px 20px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s;
+    overflow: hidden;
+    z-index: 20;
+  }
+  .limitPlan div {
+    padding: 25px 30px 20px 30px;
   }
   .limitPlan h4 {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
   }
   .limitPlan h4 button {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    width: 24px;
     border: none;
     background: none;
+    font-size: 17px;
+    font-weight: 700;
+    cursor: pointer;
   }
   .limitPlan a {
-    color: #666;
     font-size: 14px;
+  }
+  .limitPlan ul {
+    max-height: 117px;
+    overflow-y: auto;
+  }
+  .limitPlan li {
+    padding: 10px 0px;
+    border-bottom: 1px solid #eee;
+  }
+  .limitPlan li:last-child {
+    border-bottom: none;
+  }
+  .limitPlan li h5 {
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .limitPlan li p {
+    color: #aaa;
+    font-size: 12px;
   }
 `;
 
 function Index() {
   const [isLimitPlan, setIsLimitPlan] = useState([]);
   const [isShare, setIsShare] = useState([]);
+  const [alrimHeight, setAlrimHeight] = useState("190px");
   const sessionData = getSession(LOGIN_SESSION_KEY);
 
   //공유 만다라트 가져오기
@@ -127,7 +157,6 @@ function Index() {
       const res = await axios.get(
         `api/mand/imminent?userId=${sessionData?.userId}`,
       );
-      //console.log(res.data.resultData);
       setIsLimitPlan(res.data.resultData);
     } catch (error) {
       console.log(error);
@@ -141,8 +170,11 @@ function Index() {
   };
 
   const handleClose = () => {
-    alert("close");
+    setAlrimHeight("0px");
+    sessionStorage.setItem("alrim_session", "close");
   };
+
+  const alrimView = sessionStorage.getItem("alrim_session");
 
   useEffect(() => {
     getLimitPlan(); //종료일 임박 계획 가져오기
@@ -212,7 +244,6 @@ function Index() {
           </SwiperSlide>
         </Swiper>
       </div>
-
       <div className="mainContent">
         <div className="titleWrap">
           <h4>
@@ -229,20 +260,36 @@ function Index() {
         <LoopContent location={"share"} datas={isShare} viewCnt={4} />
       </div>
 
-      <div className="limitPlan">
-        <h4>
-          종료일이 임박한 계획표<button onClick={e => handleClose(e)}>×</button>
-        </h4>
-        <ul>
-          {isLimitPlan.map((item, index) => (
-            <li key={index}>
-              <Link to={`/myplan/view?projectId=${item.projectId}`}>
-                {index + 1}. {item.title} ({item.startDate} ~ {item.finishDate})
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
+      {isLimitPlan ? (
+        alrimView !== "close" ? (
+          <div className="limitPlan" style={{ height: alrimHeight }}>
+            <div>
+              <h4>
+                종료일이 임박한 계획표
+                <button onClick={e => handleClose(e)} title="다시 열지 않음">
+                  ×
+                </button>
+              </h4>
+              <ul>
+                {isLimitPlan.map((item, index) => (
+                  <li key={index}>
+                    <Link to={`/myplan/view?projectId=${item.projectId}`}>
+                      <h5>{item.title}</h5>
+                      <p>
+                        ({item.startDate} ~ {item.finishDate})
+                      </p>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : (
+          ""
+        )
+      ) : (
+        ""
+      )}
     </MainLayout>
   );
 }

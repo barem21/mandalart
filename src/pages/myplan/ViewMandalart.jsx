@@ -7,6 +7,7 @@ import { deleteMyplan, getMyPlanData } from "../../apis/myplan";
 import { getSession } from "../../apis/member";
 import GridLevel0View from "../mandalartview/GridLevel0View";
 import DOMPurify from "dompurify";
+import MandalartVer2 from "../../components/mandalart/Mandalart";
 
 const LOGIN_SESSION_KEY = "login_session";
 
@@ -36,6 +37,9 @@ const MandalartDetailView = styled.div`
   }
   .detailWrap .viewType {
     display: flex;
+  }
+  .detailWrap .content {
+    margin: 20px 0px;
   }
 `;
 
@@ -227,10 +231,12 @@ function ViewMandalart() {
             {/* 만다라트 계획표 출력 */}
 
             <div>
-              <GridLevel0View projectId={projectId} />
+              {/* <GridLevel0View projectId={projectId} /> */}
+              <MandalartVer2 projectId={projectId} />
             </div>
 
             <div
+              className="content"
               dangerouslySetInnerHTML={{
                 __html: DOMPurify.sanitize(myPlanView.content),
               }}
@@ -275,7 +281,7 @@ function ViewMandalart() {
                   direction: "row",
                   justify: false,
                   translateX: 0,
-                  translateY: 56,
+                  translateY: 60,
                   itemsSpacing: 0,
                   itemWidth: 100,
                   itemHeight: 18,
