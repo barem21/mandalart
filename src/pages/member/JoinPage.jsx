@@ -361,12 +361,7 @@ function JoinPage() {
             <div className="inputBox">
               <label htmlFor="profile">프로필 등록</label>
               <div style={{ padding: "10px 0px" }}>
-                <input
-                  type="file"
-                  id="profile"
-                  style={{ display: "none" }}
-                  {...register("pic")}
-                />
+                <input type="file" id="profile" {...register("pic")} />
               </div>
             </div>
 

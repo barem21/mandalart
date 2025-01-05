@@ -1,8 +1,8 @@
 import styled from "@emotion/styled";
 import { useEffect, useState } from "react";
-import { FaXTwitter, FaFacebookF, FaGoogle } from "react-icons/fa6";
+import { FaFacebookF, FaXTwitter } from "react-icons/fa6";
 import { IoIosArrowUp } from "react-icons/io";
-import { getSession } from "../../apis/member";
+import { SiNaver } from "react-icons/si";
 //import SnsShare from "../ShareSns";
 
 const FooterWrap = styled.div`
@@ -107,7 +107,7 @@ const Footer = () => {
           <FaFacebookF />
         </button>
         <button type="button">
-          <FaGoogle />
+          <SiNaver />
         </button>
       </FooterRight>
 
