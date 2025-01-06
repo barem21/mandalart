@@ -228,21 +228,6 @@ function Index() {
 
         <LoopContent location={"share"} datas={isShare} viewCnt={4} />
       </div>
-
-      <div className="limitPlan">
-        <h4>
-          종료일이 임박한 계획표<button onClick={e => handleClose(e)}>×</button>
-        </h4>
-        <ul>
-          {isLimitPlan.map((item, index) => (
-            <li key={index}>
-              <Link to={`/myplan/view?projectId=${item.projectId}`}>
-                {index + 1}. {item.title} ({item.startDate} ~ {item.finishDate})
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </div>
     </MainLayout>
   );
 }
