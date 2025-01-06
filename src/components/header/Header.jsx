@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 //세션 생성
 const LOGIN_SESSION_KEY = "login_session";
 
-const HeaderWrap = styled.div`
+const HeaderWrap = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;

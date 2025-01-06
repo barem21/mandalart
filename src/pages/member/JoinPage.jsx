@@ -1,12 +1,13 @@
 import styled from "@emotion/styled";
+import { yupResolver } from "@hookform/resolvers/yup";
+import axios from "axios";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { FadeLoader } from "react-spinners";
 import * as yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup";
 import { joinMember } from "../../apis/member";
 import SubpageVisual from "../../components/subpageVisual/SubpageVisual";
-import { useState } from "react";
-import axios from "axios";
 
 const MemberJoinWrap = styled.div`
   padding: 0px 50px;
@@ -79,13 +80,17 @@ const Agreements = styled.div`
   }
 `;
 
-const labelStyle = styled.div`
-  display: inline-block;
-  padding: 10px 20px;
-  background: #4caf50;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
+const LoadingWrap = styled.div`
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
 `;
 
 const ButtonWrap = styled.div`
@@ -133,6 +138,7 @@ function JoinPage() {
   const [isUserIdAvailable, setIsUserIdAvailable] = useState(null);
   const [isChecking, setIsChecking] = useState(false);
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const navigate = useNavigate();
 
@@ -171,7 +177,7 @@ function JoinPage() {
     try {
       //const res = { resultData: 0 };
       const res = await axios.get(`api/user/email?userId=${userId}`);
-      console.log(res.data.resultData);
+      //console.log(res.data.resultData);
 
       if (res.data.resultData === 1) {
         setIsUserIdAvailable(true); //사용가능
@@ -197,7 +203,7 @@ function JoinPage() {
 
     try {
       const res = await axios.get(`api/user/nickName?nickName=${userNick}`);
-      console.log(res.data);
+      //console.log(res.data);
 
       if (res.data.resultData === 1) {
         setIsNicknameAvailable(true); //사용가능
@@ -227,6 +233,7 @@ function JoinPage() {
     }
 
     try {
+      setIsLoading(true);
       const result = await joinMember(data); //axios 전송하기(등록)
       if (result.data) {
         navigate("/joinEnd");
@@ -234,6 +241,7 @@ function JoinPage() {
         //회원가입 실패
         alert("회원가입이 실패되었습니다.\n다시 시도해 주세요.");
       }
+      setIsLoading(false);
     } catch (error) {
       console.log("회원가입 실패:", error);
     }
@@ -474,6 +482,12 @@ function JoinPage() {
             </ButtonWrap>
           </div>
         </form>
+
+        {isLoading && (
+          <LoadingWrap>
+            <FadeLoader color="#fff" width={10} height={30} margin={20} />
+          </LoadingWrap>
+        )}
       </MemberJoinWrap>
     </>
   );
