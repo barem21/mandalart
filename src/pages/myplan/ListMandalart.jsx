@@ -159,10 +159,12 @@ function MyPlan() {
   };
 
   //정렬순서 변경
+  /*
   const changeSort = value => {
     setValueSearch("sort", value);
     handleSubmitSearch(onSubmitSearch)();
   };
+  */
   // 등록하기 클릭시 데이터 전송
 
   useEffect(() => {
@@ -216,7 +218,7 @@ function MyPlan() {
           </div>
 
           <div className="boardSearch">
-            <select {...registerSearch("type")}>
+            <select {...registerSearch("searchFilter")}>
               <option value="1">제목</option>
               <option value="2">내용</option>
               <option value="3">제목+내용</option>

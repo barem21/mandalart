@@ -11,6 +11,7 @@ const NotFoundContent = styled.div`
   padding: 40px;
   background: #f5f5f5;
   align-items: center;
+  z-index: 20;
 
   .ButtonWrap {
     display: flex;

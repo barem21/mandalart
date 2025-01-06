@@ -198,6 +198,7 @@ function AddMandalart() {
         </div>
 
         <ButtonWrap>
+          <Link to>저장</Link>
           <Link to={"/myplan"} className="btnColor">
             목록으로
           </Link>

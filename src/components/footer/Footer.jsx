@@ -5,7 +5,7 @@ import { IoIosArrowUp } from "react-icons/io";
 import { SiNaver } from "react-icons/si";
 //import SnsShare from "../ShareSns";
 
-const FooterWrap = styled.div`
+const FooterWrap = styled.footer`
   position: relative;
   display: flex;
   justify-content: space-between;

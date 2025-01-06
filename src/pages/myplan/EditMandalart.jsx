@@ -190,10 +190,6 @@ function EditMandalart() {
               {errors.pic?.message && (
                 <ErrorMessage>({errors.pic?.message})</ErrorMessage>
               )}
-
-              <button type="submit" className="btnColor">
-                저장하기
-              </button>
             </div>
           </div>
         </form>
@@ -223,7 +219,14 @@ function EditMandalart() {
         </div>
 
         <ButtonWrap>
-          <Link to={"/myplan"} className="btnColor">
+          <button
+            type="button"
+            className="btnColor"
+            onClick={handleSubmit(handleSubmitForm)}
+          >
+            저장하기
+          </button>
+          <Link to={"/myplan"} className="btnLine">
             목록으로
           </Link>
         </ButtonWrap>

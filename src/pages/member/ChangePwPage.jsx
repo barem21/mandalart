@@ -3,8 +3,10 @@ import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { FadeLoader } from "react-spinners";
 import { changePassword } from "../../apis/member";
 import SubpageVisual from "../../components/subpageVisual/SubpageVisual";
+import { useState } from "react";
 
 const FindPwWrap = styled.div`
   .findPwForm {
@@ -56,6 +58,19 @@ const ButtonWrap = styled.div`
   }
 `;
 
+const LoadingWrap = styled.div`
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 100;
+`;
+
 //yup 관련 설정
 const schema = yup.object({
   userId: yup
@@ -71,6 +86,7 @@ const schema = yup.object({
 
 function ChangePwPage() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const {
     handleSubmit,
@@ -86,6 +102,7 @@ function ChangePwPage() {
 
   const onSubmit = async data => {
     try {
+      setIsLoading(true);
       const result = await changePassword(data); //axios 전송하기
 
       if (result.resultData === 1) {
@@ -94,6 +111,7 @@ function ChangePwPage() {
       } else {
         alert("회원정보가 잘못되었습니다.\n다시 확인해 주세요.");
       }
+      setIsLoading(false);
     } catch (error) {
       console.log("이메일 발송 실패:", error);
     }
@@ -140,6 +158,12 @@ function ChangePwPage() {
               </button>
             </div>
           </form>
+
+          {isLoading && (
+            <LoadingWrap>
+              <FadeLoader color="#fff" width={10} height={30} margin={20} />
+            </LoadingWrap>
+          )}
         </div>
       </FindPwWrap>
     </>
