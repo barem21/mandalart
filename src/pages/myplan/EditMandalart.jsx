@@ -64,13 +64,22 @@ const addSchema = yup.object({
   content: yup.string().required("간단 소개글을 입력해 주세요."),
   pic: yup
     .mixed()
-    .test("fileType", "이미지(jpg, png) 파일만 첨부가능합니다.", value => {
-      return value && ["image/jpeg", "image/png"].includes(value[0]?.type);
+    .test("required", "섬네일 이미지를 첨부해 주세요.", value => {
+      return value && value.length > 0;
     })
-    .test("filesize", "파일 크기는 500KB 이하만 가능합니다.", value => {
-      return value && value[0]?.size <= 0.5 * 1024 * 1024; // 500KB 이하
-    })
-    .required("파일을 선택해주세요."),
+    .test(
+      "fileType",
+      "1MB 이하의 이미지(jpg, gif, png) 파일만 첨부가능합니다.",
+      value => {
+        return (
+          value &&
+          ["image/gif", "image/jpeg", "image/png"].includes(value[0]?.type)
+        );
+      },
+    )
+    .test("filesize", "파일 크기는 1MB 이하만 가능합니다.", value => {
+      return value && value[0]?.size <= 1 * 1024 * 1024; // 500KB 이하
+    }),
 });
 
 function EditMandalart() {
