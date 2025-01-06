@@ -93,9 +93,9 @@ const schema = yup.object({
       "신규 비밀번호는 영어/숫자/특수문자 포함 8자리 이상으로 입력해주세요.",
     ),
   */
-  new_upw_confirm: yup
+  checkUpw: yup
     .string()
-    .oneOf([yup.ref("new_upw")], "비밀번호가 일치하지 않습니다."),
+    .oneOf([yup.ref("newUpw")], "비밀번호가 일치하지 않습니다."),
   nickName: yup
     .string()
     .required("닉네임은 필수입니다.")
