@@ -104,6 +104,7 @@ git push origin 브랜치명
 ### 6. 폴더/파일 구조
 
 ```
+
 manda
 ├─ .gitignore
 ├─ .prettierrc
@@ -115,10 +116,6 @@ manda
 │  ├─ about_mandalart.png
 │  ├─ favicon.png
 │  ├─ flower.png
-│  ├─ flower_back.png
-│  ├─ logo_basic.png
-│  ├─ logo_favicon_psd.psd
-│  ├─ logo_large.png
 │  ├─ main_swiper1.jpg
 │  ├─ main_swiper2.jpg
 │  ├─ main_swiper3.jpg
@@ -141,6 +138,7 @@ manda
 │  │  ├─ header
 │  │  │  └─ Header.jsx
 │  │  ├─ Layout.jsx
+│  │  ├─ Loading.jsx
 │  │  ├─ mandalart
 │  │  │  ├─ LoopContent.jsx
 │  │  │  ├─ Mandalart.jsx
