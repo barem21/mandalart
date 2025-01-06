@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const NotFoundContent = styled.div`
   position: fixed;
@@ -19,14 +19,24 @@ const NotFoundContent = styled.div`
 `;
 
 function NotFoundPage() {
+  const navigate = useNavigate();
+  //뒤로가기
+  const historyBack = () => {
+    navigate(-1);
+  };
+
   return (
     <NotFoundContent>
       <div>
         <h1 className="subTitle">요청하신 페이지를 찾을 수 없습니다.</h1>
         <div className="ButtonWrap">
-          <Link to={"/"} className="btnLine">
+          <button
+            type="button"
+            className="btnLine"
+            onClick={() => historyBack()}
+          >
             이전 페이지로
-          </Link>
+          </button>
           <Link to={"/"} className="btnColor">
             메인 페이지로
           </Link>
