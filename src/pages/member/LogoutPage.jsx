@@ -8,6 +8,7 @@ const LOGIN_SESSION_KEY = "login_session";
 function LogoutPage() {
   const navigate = useNavigate();
   clearSession(LOGIN_SESSION_KEY); //세션 삭제
+  sessionStorage.setItem("alrim_session", "open");
 
   useEffect(() => {
     navigate("/"); //홈으로 이동

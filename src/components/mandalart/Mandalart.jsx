@@ -15,7 +15,7 @@ function MandalartVer2({ projectId }) {
   const [isModalVisible, setIsModalVisible] = useState(false); // 모달 팝업 상태
   const [modalData, setModalData] = useState(null); // 모달에 전달할 데이터
   const [mandalatsArrResult, setMandalartArrResult] = useState([]); // 그러질 만다라트 리스트
-
+  const [madalatsData, setMandalatsData] = useState();
   // 함수 선언
 
   //모달 닫기
@@ -86,7 +86,11 @@ function MandalartVer2({ projectId }) {
     let dept2MandalartArr = mandalarts.filter(obj =>
       obj.depth == 2 ? true : false,
     );
-
+    setMandalatsData(() => [
+      dept0Mandalart,
+      ...dept1MandalartArr,
+      ...dept2MandalartArr,
+    ]);
     // orderId 순으로 정렬
     dept1MandalartArr = dept1MandalartArr.sort((a, b) => a.orderId - b.orderId);
     dept2MandalartArr = dept2MandalartArr.sort((a, b) => a.orderId - b.orderId);
@@ -165,7 +169,35 @@ function MandalartVer2({ projectId }) {
           </div>
 
           <div className="inputBox">
-            <label htmlFor="startDate">시작일</label>
+            <label htmlFor="startDate">
+              시작일
+              {modalData?.depth == 1 && (
+                <span
+                  style={{
+                    color: "#999",
+                    fontWeight: "400",
+                  }}
+                >
+                  &nbsp;({mandalatsArrResult[4].startDate}부터)
+                </span>
+              )}
+              {modalData?.depth == 2 && (
+                <span
+                  style={{
+                    color: "#999",
+                    fontWeight: "400",
+                  }}
+                >
+                  &nbsp;(
+                  {
+                    madalatsData?.find(
+                      item => item?.mandalartId === modalData?.parentId,
+                    )?.startDate
+                  }
+                  부터)
+                </span>
+              )}
+            </label>
             <input
               type="date"
               id="startDate"
@@ -177,7 +209,35 @@ function MandalartVer2({ projectId }) {
           </div>
 
           <div className="inputBox">
-            <label htmlFor="startDate">종료일</label>
+            <label htmlFor="startDate">
+              종료일
+              {modalData?.depth == 1 && (
+                <span
+                  style={{
+                    color: "#999",
+                    fontWeight: "400",
+                  }}
+                >
+                  &nbsp;({mandalatsArrResult[4].finishDate}까지)
+                </span>
+              )}
+              {modalData?.depth == 2 && (
+                <span
+                  style={{
+                    color: "#999",
+                    fontWeight: "400",
+                  }}
+                >
+                  &nbsp; (
+                  {
+                    madalatsData?.find(
+                      item => item?.mandalartId === modalData?.parentId,
+                    )?.finishDate
+                  }
+                  까지)
+                </span>
+              )}
+            </label>
             <input
               type="date"
               id="finishDate"
