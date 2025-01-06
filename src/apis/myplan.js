@@ -34,7 +34,7 @@ export const searchMyplan = async data => {
     const res = await axios.get(
       `api/project?searchFilter=${data.searchFilter ? data.searchFilter : 1}&searchText=${data.searchText}&userId=${data.userId}&page=1&size=30`,
     );
-    console.log("검색 결과 : ", res.data);
+    //console.log("검색 결과 : ", res.data);
     return res.data; //결과 리턴
   } catch (error) {
     console.log(error);
