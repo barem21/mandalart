@@ -39,7 +39,10 @@ export const patchGridData = async updatedSelectData => {
     };
     const res = await axios.patch("/api/mand/update", objData);
 
-    console.log(objData);
+    if (res.statusCode !== 200) {
+      console.log(res.data.resultMsg);
+      alert(`${res.data.resultMsg}`);
+    }
 
     return res;
   } catch (error) {

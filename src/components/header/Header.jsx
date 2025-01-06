@@ -1,6 +1,7 @@
 import styled from "@emotion/styled";
 import { Link, useLocation } from "react-router-dom";
 import { getSession } from "../../apis/member";
+import { useEffect, useState } from "react";
 
 //세션 생성
 const LOGIN_SESSION_KEY = "login_session";
@@ -101,6 +102,17 @@ const Header = () => {
   const sessionData = getSession(LOGIN_SESSION_KEY);
   //const { nickName } = sessionData.resultData;
 
+  //프로그래스 바
+  const [progressBar, setProgressBar] = useState(0);
+
+  const handleScroll = () => {
+    const documentHeight =
+      document.documentElement.scrollHeight - window.innerHeight;
+    const scrollPosition = window.scrollY;
+    const scrollPercent = (scrollPosition / documentHeight) * 100;
+    setProgressBar(scrollPercent);
+  };
+
   let activeMyplan;
   let activeShare;
   switch (location.pathname) {
@@ -120,8 +132,40 @@ const Header = () => {
     default:
   }
 
+  useEffect(() => {
+    setProgressBar(0);
+  }, [location]);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   return (
     <HeaderWrap>
+      <div
+        className="progress-bar"
+        style={{
+          position: "fixed",
+          top: "0px",
+          left: "0px",
+          width: "100%",
+          height: "4px",
+          zIndex: "20",
+        }}
+      >
+        <div
+          className="bar"
+          style={{
+            background: "#55ad9b",
+            width: `${progressBar}%`,
+            height: "100%",
+          }}
+        ></div>
+      </div>
+
       <HeaderLeft>
         <HeaderLogo>
           <Link to={"/"}>manda</Link>

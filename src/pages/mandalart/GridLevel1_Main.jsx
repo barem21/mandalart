@@ -20,6 +20,8 @@ function GridLevel1_Main({
     startDate: "",
     finishDate: "",
     completedFg: "0",
+    mandalartId: "",
+    parentId: "",
   });
   // 현재 9칸의 데이터를 가지고 있음.
   const [showData, setShowData] = useState();
@@ -36,28 +38,10 @@ function GridLevel1_Main({
   const openModal = id => {
     // 선택된 객체 정보 한개를 보관]
     const nowSelectItem = showData.find(item => item.cellId === id);
-
-    if (
-      (Array.isArray(showData) &&
-        showData[4].title === "" &&
-        showData[4] === normalData[4]?.[4]) ||
-      normalData[4]?.[4].title === ""
-    ) {
-      normalData[4][4].title = "주 목표";
-      alert("주 목표 1 를 먼저 입력해주세요");
-      openModal(normalData[4][4].cellId);
-      return;
-    }
-    if (showData[4].title === "" && normalData[4]?.[4].title !== "") {
-      showData[4].title = "서브 목표";
-      openModal(showData[4].cellId);
-      alert("서브 목표 2 를 먼저 입력해주세요");
-    } else {
-      setSelectData(nowSelectItem);
-      setIsModalOpen(true);
-    }
-    // 완료미완료 선택창 제외 셀 case
+    setSelectData(nowSelectItem);
+    setIsModalOpen(true);
   };
+  // 완료미완료 선택창 제외 셀 case
 
   // 모달 입력값 변경 처리
   const handleModalChange = e => {
@@ -105,48 +89,6 @@ function GridLevel1_Main({
 
     // const uploadDataForm =  selectData.value =>
     //   ;
-
-    if (selectData.title === "") {
-      alert("목표을 입력해주세요");
-    }
-    // 날짜 경고창
-
-    const isDateRangeInvalid =
-      selectData.startDate >= normalData?.[4]?.[4]?.startDate &&
-      selectData.finishDate <= normalData?.[4]?.[4]?.finishDate &&
-      selectData.startDate >= newShowData?.[4]?.startDate &&
-      selectData.finishDate <= newShowData?.[4]?.finishDate;
-    const isNormalDataInvalid =
-      selectData === normalData?.[4]?.[4] &&
-      (selectData.startDate === null || selectData.finishDate === null);
-    const isNewShowDataInvalid =
-      (selectData === newShowData?.[4] &&
-        (selectData.startDate === null || selectData.finishDate === null)) ||
-      (selectData.startDate < normalData?.[4]?.[4]?.startDate &&
-        selectData.finishDate > normalData?.[4]?.[4]?.finishDate);
-    if (
-      selectData.mandalartId === normalData[4]?.[4].mandalartId &&
-      selectData.startDate !== "" &&
-      selectData.finishDate !== ""
-    ) {
-      getGridApiCall();
-      setIsModalOpen(false);
-    } else if (
-      selectData.startDate === null ||
-      selectData.finishDate === null
-    ) {
-      alert("날짜를 확인해주세요.");
-    } else if (
-      !isDateRangeInvalid ||
-      isNormalDataInvalid ||
-      isNewShowDataInvalid
-    ) {
-      alert("날짜를 확인해주세요.");
-      return;
-    } else {
-      getGridApiCall();
-      setIsModalOpen(false);
-    }
     // 원본 데이터와 showData 동기화
     const updatedSelectData = newShowData.find(
       item => item.cellId === selectData.cellId,

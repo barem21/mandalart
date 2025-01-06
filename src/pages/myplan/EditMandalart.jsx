@@ -9,6 +9,7 @@ import PopupLayout from "../../components/PopupLayout";
 import { getSession } from "../../apis/member";
 import { editMyplan, getMyPlanData, getMyplanView } from "../../apis/myplan";
 import GridLevel0 from "../mandalart/GridLevel0";
+import MandalartVer2 from "../../components/mandalart/Mandalart";
 
 const LOGIN_SESSION_KEY = "login_session";
 
@@ -215,7 +216,8 @@ function EditMandalart() {
             </div>
 
             <div>
-              <GridLevel0 projectId={projectId} />
+              {/* <GridLevel0 projectId={projectId} /> */}
+              <MandalartVer2 projectId={projectId} />
             </div>
           </div>
         </div>

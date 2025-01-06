@@ -1,0 +1,21 @@
+.MandalartWrap {
+  display: flex;
+  flex-wrap: wrap;
+  max-width: 999px;
+  min-width: 999px;
+  border: 2px solid black;
+}
+
+.MandalartWrap div {
+  min-height: 330px;
+  border-right: 1px solid #000;
+  border-bottom: 1px solid #000;
+}
+.MandalartWrap div:nth-child(3n) {
+  border-right: none;
+}
+.MandalartWrap div:nth-child(7n),
+.MandalartWrap div:nth-child(8n),
+.MandalartWrap div:nth-child(9n) {
+  border-bottom: none;
+}

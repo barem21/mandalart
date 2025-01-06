@@ -1,0 +1,27 @@
+.MandalartSingleTable {
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.MandalartSingleTable td {
+  border: 1px solid #d1d1d1;
+  width: 110px;
+  height: 110px;
+  text-align: center;
+  vertical-align: middle;
+  font-size: 14px;
+}
+
+.MandalartSingleTable td button {
+  display: inline-block;
+  width: 80%;
+  height: 80%;
+  border: 0;
+  background-color: rgba(0, 0, 0, 0);
+  text-align: center;
+  cursor: pointer;
+}
+
+.MandalartSingleTable td .desable {
+  color: #929292;
+}

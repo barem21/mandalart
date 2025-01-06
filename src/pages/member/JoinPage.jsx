@@ -133,7 +133,6 @@ function JoinPage() {
   const [isUserIdAvailable, setIsUserIdAvailable] = useState(null);
   const [isChecking, setIsChecking] = useState(false);
   const [isNicknameAvailable, setIsNicknameAvailable] = useState(null);
-  const [fileName, setFileName] = useState("");
 
   const navigate = useNavigate();
 
@@ -362,19 +361,7 @@ function JoinPage() {
             <div className="inputBox">
               <label htmlFor="profile">프로필 등록</label>
               <div style={{ padding: "10px 0px" }}>
-                <input
-                  type="file"
-                  id="profile"
-                  style={{ display: "none" }}
-                  {...register("pic")}
-                  onChange={e => {
-                    field.onChange(e); // React Hook Form에 파일 변경 처리
-                    handleFileChange(e); // 커스텀 파일 처리
-                  }}
-                />
-                <label htmlFor="file-input" style={labelStyle}>
-                  {fileName ? fileName : "파일 선택하기"}
-                </label>
+                <input type="file" id="profile" {...register("pic")} />
               </div>
             </div>
 
