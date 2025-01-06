@@ -1,27 +1,34 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { lazy, Suspense } from "react";
 import Layout from "./components/Layout";
-import Index from "./pages/Index";
-import About from "./pages/About";
-import Mypage from "./pages/myplan/ListMandalart";
-import NotFoundPage from "./pages/NotFoundPage";
-import Calendar from "./pages/Calendar";
-import LoginPage from "./pages/member/LoginPage";
-import LogoutPage from "./pages/member/LogoutPage";
-import ChangePwPage from "./pages/member/ChangePwPage";
-import JoinPage from "./pages/member/JoinPage";
-import ModifyPage from "./pages/member/EditPage";
-import ListMandalart from "./pages/share/ListMandalart";
-import AddMandalart from "./pages/myplan/AddMandalart";
-import AddShareMandalart from "./pages/share/AddMandalart";
-import ViewShareMandalart from "./pages/share/ViewMandalart";
-import ViewMandalart from "./pages/myplan/ViewMandalart";
-import ViewCalendar from "./pages/myplan/ViewCalendar";
-import EditMandalart from "./pages/myplan/EditMandalart";
-import EditShareMandalart from "./pages/share/EditMandalart";
 import ScrollToTop from "./components/ScrollTop";
 import { UserInfoProvider } from "./contexts/UserInfoContext";
-import JoinEndPage from "./pages/member/JoinEndPage";
+import Loading from "./components/Loading";
+
+const LazyIndex = lazy(() => import("./pages/Index"));
+const LazyAbout = lazy(() => import("./pages/About"));
+const LazyMypage = lazy(() => import("./pages/myplan/ListMandalart"));
+const LazyAddMandalart = lazy(() => import("./pages/myplan/AddMandalart"));
+const LazyViewMandalart = lazy(() => import("./pages/myplan/ViewMandalart"));
+const LazyViewCalendar = lazy(() => import("./pages/myplan/ViewCalendar"));
+const LazyEditMandalart = lazy(() => import("./pages/myplan/EditMandalart"));
+const LazyListMandalart = lazy(() => import("./pages/share/ListMandalart"));
+const LazyAddShareMandalart = lazy(() => import("./pages/share/AddMandalart"));
+const LazyViewShareMandalart = lazy(
+  () => import("./pages/share/ViewMandalart"),
+);
+const LazyEditShareMandalart = lazy(
+  () => import("./pages/share/EditMandalart"),
+);
+const LazyCalendar = lazy(() => import("./pages/Calendar"));
+const LazyLoginPage = lazy(() => import("./pages/member/LoginPage"));
+const LazyLogoutPage = lazy(() => import("./pages/member/LogoutPage"));
+const LazyChangePwPage = lazy(() => import("./pages/member/ChangePwPage"));
+const LazyJoinPage = lazy(() => import("./pages/member/JoinPage"));
+const LazyJoinEndPage = lazy(() => import("./pages/member/JoinEndPage"));
+const LazyModifyPage = lazy(() => import("./pages/member/EditPage"));
+const LazyNotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 
 function App() {
   return (
@@ -30,51 +37,156 @@ function App() {
       <UserInfoProvider>
         <Layout>
           <Routes>
-            <Route path="/" element={<Index />} />
+            <Route
+              path="/"
+              element={
+                <Suspense fallback={<Loading />}>
+                  <LazyIndex />
+                </Suspense>
+              }
+            />
 
             {/* 만다라트란? */}
-            <Route path="/about" element={<About />} />
+            <Route
+              path="/about"
+              element={
+                <Suspense fallback={<Loading />}>
+                  <LazyAbout />
+                </Suspense>
+              }
+            />
 
             {/* 나의 만다라트 */}
             <Route path="/myplan">
-              <Route index element={<Mypage />} />
-              <Route path="/myplan/add" element={<AddMandalart />} />
-              <Route path="/myplan/view" element={<ViewMandalart />} />
-              <Route path="/myplan/calendar" element={<ViewCalendar />} />
-              <Route path="/myplan/edit" element={<EditMandalart />} />
+              <Route
+                index
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <LazyMypage />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/myplan/add"
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <LazyAddMandalart />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/myplan/view"
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <LazyViewMandalart />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/myplan/calendar"
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <LazyViewCalendar />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/myplan/edit"
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <LazyEditMandalart />
+                  </Suspense>
+                }
+              />
             </Route>
 
             {/* 만다라트 공유 */}
             <Route path="/share">
-              <Route index element={<ListMandalart />} />
-              <Route path="/share/add" element={<AddShareMandalart />} />
-              <Route path="/share/view" element={<ViewShareMandalart />} />
-              <Route path="/share/edit" element={<EditShareMandalart />} />
+              <Route
+                index
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <LazyListMandalart />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/share/add"
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <LazyAddShareMandalart />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/share/view"
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <LazyViewShareMandalart />
+                  </Suspense>
+                }
+              />
+              <Route
+                path="/share/edit"
+                element={
+                  <Suspense fallback={<Loading />}>
+                    <LazyEditShareMandalart />
+                  </Suspense>
+                }
+              />
             </Route>
 
             {/* 계획표 캘린더 */}
-            <Route path="/calendar" element={<Calendar />} />
+            <Route
+              path="/calendar"
+              element={
+                <Suspense fallback={<Loading />}>
+                  <LazyCalendar />
+                </Suspense>
+              }
+            />
 
             {/* 로그인 */}
-            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/login"
+              element={
+                <Suspense fallback={<Loading />}>
+                  <LazyLoginPage />
+                </Suspense>
+              }
+            />
 
             {/* 로그아웃 */}
-            <Route path="/logout" element={<LogoutPage />} />
+            <Route path="/logout" element={<LazyLogoutPage />} />
 
             {/* 임시 비밀번호 발급 */}
-            <Route path="/change" element={<ChangePwPage />} />
+            <Route path="/change" element={<LazyChangePwPage />} />
 
             {/* 회원가입 */}
-            <Route path="/join" element={<JoinPage />} />
+            <Route
+              path="/join"
+              element={
+                <Suspense fallback={<Loading />}>
+                  <LazyJoinPage />
+                </Suspense>
+              }
+            />
 
             {/* 회원가입 완료 */}
-            <Route path="/joinEnd" element={<JoinEndPage />} />
+            <Route path="/joinEnd" element={<LazyJoinEndPage />} />
 
             {/* 회원정보 수정 */}
-            <Route path="/modify" element={<ModifyPage />} />
+            <Route
+              path="/modify"
+              element={
+                <Suspense fallback={<Loading />}>
+                  <LazyModifyPage />
+                </Suspense>
+              }
+            />
 
             {/* 잘못된 패스 */}
-            <Route path="*" element={<NotFoundPage />} />
+            <Route path="*" element={<LazyNotFoundPage />} />
           </Routes>
         </Layout>
       </UserInfoProvider>
