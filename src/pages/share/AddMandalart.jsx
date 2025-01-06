@@ -30,6 +30,9 @@ const ShareWriteWrap = styled.div`
     padding: 15px 10px;
     resize: vertical;
   }
+  .writeWrap select {
+    min-width: 40%;
+  }
   .ql-editor {
     height: 250px;
   }
