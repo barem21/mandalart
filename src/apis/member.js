@@ -45,7 +45,7 @@ export const joinMember = async data => {
     };
 
     const res = await axios.post("api/user/signUp", formData, header);
-    console.log("회원가입 결과 : ", res.data);
+    //console.log("회원가입 결과 : ", res.data);
     return res; //결과 리턴
   } catch (error) {
     console.log(error);
@@ -106,7 +106,7 @@ export const editMember = async data => {
 
 //axios연동(회원탈퇴)
 export const deleteMember = async (userId, upw) => {
-  console.log(userId, upw);
+  //console.log(userId, upw);
   try {
     const res = await axios.delete(
       `api/user?userId=${userId}&upw=${encodeURIComponent(upw)}`,
