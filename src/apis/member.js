@@ -111,8 +111,8 @@ export const deleteMember = async (userId, upw) => {
     const res = await axios.delete(
       `api/user?userId=${userId}&upw=${encodeURIComponent(upw)}`,
     );
-    console.log("회원탈퇴 결과 : ", res.data);
-    return res; //결과 리턴
+    //console.log("회원탈퇴 결과 : ", res.data);
+    return res.data; //결과 리턴
   } catch (error) {
     console.log(error);
     return error;

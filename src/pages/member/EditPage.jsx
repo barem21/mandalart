@@ -227,9 +227,12 @@ function EditPage() {
 
     try {
       const result = await deleteMember(data.userId, data.upw); //axios처리(삭제)
-      if (result.data) {
+      if (result.resultData === 1) {
         alert("회원탈퇴가 완료되었습니다.");
         navigate("/logout");
+      }
+      if (result.resultData === 0) {
+        alert("회원정보가 잘못되었습니다.\n다시 시도해 주세요.");
       } else {
         alert("회원탈퇴가 실패되었습니다.\n다시 시도해 주세요.");
       }
