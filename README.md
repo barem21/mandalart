@@ -34,7 +34,7 @@
 ### 1. 레포지토리 클론 (현재 폴더)
 
 ```
-git clone https://github.com/barem21/todo_project.git .
+git clone https://github.com/barem21/mandalart.git .
 ```
 
 ### 2. 의존선 설치 :
